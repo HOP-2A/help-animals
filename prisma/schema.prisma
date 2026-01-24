@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+}
+ 
+datasource db {
+  provider = "postgresql"
+}
+ 
+ 
+enum HelpStatus {
+LOST
+  IN_PROGRESS
+  RESCUED
+  CLOSED
+}
+ 
+enum AnimalCondition {
+  HEALTHY
+  INJURED
+  STARVING
+}
+ 
+ 
+enum AdoptStatus {
+  TEMPORARY
+  PERMANENT
+}
+ 
+enum Gender {
+  MALE
+  FEMALE
+}
+ 
+enum Location {
+  ULAANBAATAR
+  ARKHANGAI
+  BAYANKHONGOR
+  BAYAN_OLGII
+  BULGAN
+  GOVI_ALTAI
+  GOVI_SUMBER
+  DARKHAN
+  DORNOD
+  DORNOGOVI
+  DUNDGOVI
+  ZAVKHAN
+  ORKHON
+  UVURKHANGAI
+  UMNUGOVI
+  SUKHBAATAR
+  SELENGE
+  TUV
+  UVS
+  KHOVD
+  KHUVSGUL
+}
+enum ReactionType {
+  LIKE
+  HEART
+  SAD
+  ANGRY
+  WOW
+}
+ 
+model User {
+  id          String @id @default(nanoid())
+  username    String
+  email       String @unique
+  profileImg  String?
+  birthdate   DateTime
+  createdAt   DateTime @default(now())
+
+  pet         Pet[]
+  helpPosts   HelpAnimal[]
+  adoptPosts  AdoptAnimal[]
+  comments    Comment[]
+  messages    Message[]
+  reactions   Reaction[]       
+  conversations Conversation[]  
+  adoptionForms AdoptionForm[]  
+  experiences ExperienceExchange[]
+}
+
+ 
+model Pet {
+  id          String  @id @default(nanoid())
+  name        String
+  breed       String
+  gender      Gender
+  age         Int
+  healthInfo  String?
+  ownerId     String
+  owner       User    @relation(fields: [ownerId], references: [id])
+}
+ 
+ 
+model HelpAnimal {
+  id          String     @id @default(nanoid())
+  location    Location
+  description String
+  images      String[]
+  status      HelpStatus @default(LOST)
+ 
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  condition AnimalCondition
+  comments    Comment[]
+  reactions   Reaction[]
+ 
+  createdAt   DateTime   @default(now())
+}
+ 
+model Comment {
+  id          String   @id @default(nanoid())
+  content     String
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  helpPostId  String?
+  helpPost    HelpAnimal? @relation(fields: [helpPostId], references: [id])
+
+  adoptPostId String?
+  adoptPost   AdoptAnimal? @relation(fields: [adoptPostId], references: [id])
+
+  experienceId String?               
+  experience   ExperienceExchange[]
+
+  createdAt   DateTime @default(now())
+}
+
+model Reaction {
+  id        String @id @default(nanoid())
+  type      ReactionType
+
+  userId    String
+  user      User   @relation(fields: [userId], references: [id])
+
+  helpPostId String?
+  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id])
+
+  experienceId String?
+  experience   ExperienceExchange? @relation(fields: [experienceId], references: [id])
+}
+
+ 
+model AdoptAnimal {
+  id          String      @id @default(nanoid())
+  description String
+  images      String[]
+  status      AdoptStatus
+
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+
+  comments    Comment[]
+  adoptionForms AdoptionForm[]
+
+  createdAt   DateTime    @default(now())
+}
+
+ 
+ 
+model AdoptionForm {
+  id             String   @id @default(nanoid())
+  age            Int
+  firstName      String
+  lastName       String
+  phoneNumber    String
+  secondaryPhone String?
+  location       Location
+  district       String
+  address String?
+  email          String
+  hasPet         Boolean
+  petId String  
+  pet AdoptAnimal @relation (fields:[petId], references: [id])
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+}
+ 
+ 
+model Conversation {
+  id        String   @id @default(nanoid())
+  users     User[]
+  messages  Message[]
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id              String   @id @default(nanoid())
+  content         String
+ 
+  senderId        String
+  sender          User     @relation(fields: [senderId], references: [id])
+ 
+  conversationId  String
+  conversation    Conversation @relation(fields: [conversationId], references: [id])
+ 
+  createdAt       DateTime @default(now())
+}
+ 
+ 
+model ExperienceExchange {
+  id          String   @id @default(nanoid())
+ 
+  description String
+  images      String[]
+ 
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+ 
+  comments    Comment[]
+  reactions   Reaction[]
+ 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
