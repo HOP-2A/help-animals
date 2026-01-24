@@ -49,7 +49,7 @@ enum Location {
   UMNUGOVI
   SUKHBAATAR
   SELENGE
-  TUV
+  TUV 
   UVS
   KHOVD
   KHUVSGUL
@@ -149,10 +149,8 @@ model AdoptAnimal {
   description String
   images      String[]
   status      AdoptStatus
-
-  userId      String
+  userId      String   @unique
   user        User        @relation(fields: [userId], references: [id])
-
   comments    Comment[]
   adoptionForms AdoptionForm[]
 
