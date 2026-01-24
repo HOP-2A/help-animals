@@ -1,43 +1,36 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js"
 }
-
+ 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
-
+ 
+ 
 enum HelpStatus {
- LOST
+LOST
   IN_PROGRESS
   RESCUED
   CLOSED
 }
-
+ 
 enum AnimalCondition {
   HEALTHY
   INJURED
   STARVING
 }
-
-
+ 
+ 
 enum AdoptStatus {
   TEMPORARY
   PERMANENT
 }
-
+ 
 enum Gender {
   MALE
   FEMALE
 }
-
+ 
 enum Location {
   ULAANBAATAR
   ARKHANGAI
@@ -68,21 +61,27 @@ enum ReactionType {
   ANGRY
   WOW
 }
-
+ 
 model User {
-  id String @id @default(nanoid())
-  username String 
-  email String @unique
-  profileImg String?
-  birthdate DateTime 
-  createdAt DateTime @default(now())
-  pet  Pet[]
+  id          String @id @default(nanoid())
+  username    String
+  email       String @unique
+  profileImg  String?
+  birthdate   DateTime
+  createdAt   DateTime @default(now())
+
+  pet         Pet[]
   helpPosts   HelpAnimal[]
   adoptPosts  AdoptAnimal[]
   comments    Comment[]
   messages    Message[]
+  reactions   Reaction[]       
+  conversations Conversation[]  
+  adoptionForms AdoptionForm[]  
+  experiences ExperienceExchange[]
 }
 
+ 
 model Pet {
   id          String  @id @default(nanoid())
   name        String
@@ -93,37 +92,43 @@ model Pet {
   ownerId     String
   owner       User    @relation(fields: [ownerId], references: [id])
 }
-
-
+ 
+ 
 model HelpAnimal {
   id          String     @id @default(nanoid())
   location    Location
   description String
   images      String[]
   status      HelpStatus @default(LOST)
-
+ 
   userId      String
   user        User       @relation(fields: [userId], references: [id])
   condition AnimalCondition
   comments    Comment[]
   reactions   Reaction[]
-
+ 
   createdAt   DateTime   @default(now())
 }
-
+ 
 model Comment {
   id          String   @id @default(nanoid())
   content     String
 
   userId      String
   user        User     @relation(fields: [userId], references: [id])
+
   helpPostId  String?
   helpPost    HelpAnimal? @relation(fields: [helpPostId], references: [id])
 
   adoptPostId String?
   adoptPost   AdoptAnimal? @relation(fields: [adoptPostId], references: [id])
+
+  experienceId String?               
+  experience   ExperienceExchange[]
+
   createdAt   DateTime @default(now())
 }
+
 model Reaction {
   id        String @id @default(nanoid())
   type      ReactionType
@@ -131,10 +136,14 @@ model Reaction {
   userId    String
   user      User   @relation(fields: [userId], references: [id])
 
-  postId    String
-  post      HelpAnimal @relation(fields: [postId], references: [id])
+  helpPostId String?
+  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id])
+
+  experienceId String?
+  experience   ExperienceExchange? @relation(fields: [experienceId], references: [id])
 }
 
+ 
 model AdoptAnimal {
   id          String      @id @default(nanoid())
   description String
@@ -145,11 +154,13 @@ model AdoptAnimal {
   user        User        @relation(fields: [userId], references: [id])
 
   comments    Comment[]
+  adoptionForms AdoptionForm[]
 
   createdAt   DateTime    @default(now())
 }
 
-
+ 
+ 
 model AdoptionForm {
   id             String   @id @default(nanoid())
   age            Int
@@ -167,8 +178,8 @@ model AdoptionForm {
   userId         String
   user           User     @relation(fields: [userId], references: [id])
 }
-
-
+ 
+ 
 model Conversation {
   id        String   @id @default(nanoid())
   users     User[]
@@ -179,29 +190,29 @@ model Conversation {
 model Message {
   id              String   @id @default(nanoid())
   content         String
-
+ 
   senderId        String
   sender          User     @relation(fields: [senderId], references: [id])
-
+ 
   conversationId  String
   conversation    Conversation @relation(fields: [conversationId], references: [id])
-
+ 
   createdAt       DateTime @default(now())
 }
-
-
+ 
+ 
 model ExperienceExchange {
   id          String   @id @default(nanoid())
-
+ 
   description String
   images      String[]
-
+ 
   userId      String
   user        User     @relation(fields: [userId], references: [id])
-
+ 
   comments    Comment[]
   reactions   Reaction[]
-
+ 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
