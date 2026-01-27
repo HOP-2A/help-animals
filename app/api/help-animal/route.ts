@@ -31,7 +31,6 @@ export async function POST (req:Request) {
                 userId
             }
         })
-
         return NextResponse.json(createdHelpAnimal, {status : 200})
     }catch(err) {
        return NextResponse.json({error : err}, {status : 500})
