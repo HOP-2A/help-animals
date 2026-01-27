@@ -85,6 +85,7 @@ model Pet {
   breed      String
   gender     Gender
   age        Int
+  petImg     String[]
   healthInfo String?
   ownerId    String
   owner      User    @relation(fields: [ownerId], references: [id])
@@ -92,7 +93,7 @@ model Pet {
 
 model HelpAnimal {
   id          String     @id @default(nanoid())
-  location    Location
+  location    String
   description String
   images      String[]
   status      HelpStatus @default(LOST)
@@ -101,7 +102,6 @@ model HelpAnimal {
   condition AnimalCondition
   comments  Comment[]
   reactions Reaction[]
-
   createdAt DateTime @default(now())
 }
 
