@@ -98,7 +98,6 @@ model HelpAnimal {
   description String
   images      String[]
   status      HelpStatus @default(LOST)
-
   userId    String
   user      User            @relation(fields: [userId], references: [id])
   condition AnimalCondition
