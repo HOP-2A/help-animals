@@ -108,19 +108,14 @@ model HelpAnimal {
 model Comment {
   id      String @id @default(nanoid())
   content String
-
   userId String
   user   User   @relation(fields: [userId], references: [id])
-
   helpPostId String?
-  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id])
-
+  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id], onDelete: Cascade)
   adoptPostId String?
-  adoptPost   AdoptAnimal? @relation(fields: [adoptPostId], references: [id])
-
+  adoptPost   AdoptAnimal? @relation(fields: [adoptPostId], references: [id], onDelete: Cascade)
   experienceId String?
-  experience   ExperienceExchange[]
-
+  experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 
@@ -132,10 +127,10 @@ model Reaction {
   user   User   @relation(fields: [userId], references: [id])
 
   helpPostId String?
-  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id])
+  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id], onDelete: Cascade)
 
   experienceId String?
-  experience   ExperienceExchange? @relation(fields: [experienceId], references: [id])
+  experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
 }
 
 model AdoptAnimal {
