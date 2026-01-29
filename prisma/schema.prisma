@@ -62,22 +62,21 @@ enum ReactionType {
 }
 
 model User {
-  id         String   @id @default(nanoid())
-  username   String
-  email      String   @unique
-  profileImg String?
-  birthdate  DateTime
-  createdAt  DateTime @default(now())
-
-  pet           Pet[]
-  helpPosts     HelpAnimal[]
-  adoptPosts    AdoptAnimal[]
-  comments      Comment[]
-  messages      Message[]
-  reactions     Reaction[]
-  conversations Conversation[]
-  adoptionForms AdoptionForm[]
-  experiences   ExperienceExchange[]
+  id          String @id @default(nanoid())
+  username    String
+  email       String @unique
+  profileImg  String?
+  birthdate   DateTime
+  createdAt   DateTime @default(now())
+  pet         Pet[]
+  helpPosts   HelpAnimal[]
+  adoptPosts  AdoptAnimal[]
+  comments    Comment[]
+  messages    Message[]
+  reactions   Reaction[]       
+  conversations Conversation[]  
+  adoptionForms AdoptionForm[]  
+  experiences ExperienceExchange[]
 }
 
 model Pet {
@@ -103,26 +102,20 @@ model HelpAnimal {
   condition AnimalCondition
   comments  Comment[]
   reactions Reaction[]
-
   createdAt DateTime @default(now())
 }
 
 model Comment {
   id      String @id @default(nanoid())
   content String
-
   userId String
   user   User   @relation(fields: [userId], references: [id])
-
   helpPostId String?
-  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id])
-
+  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id], onDelete: Cascade)
   adoptPostId String?
-  adoptPost   AdoptAnimal? @relation(fields: [adoptPostId], references: [id])
-
+  adoptPost   AdoptAnimal? @relation(fields: [adoptPostId], references: [id], onDelete: Cascade)
   experienceId String?
-  experience   ExperienceExchange[]
-
+  experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 
@@ -134,10 +127,10 @@ model Reaction {
   user   User   @relation(fields: [userId], references: [id])
 
   helpPostId String?
-  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id])
+  helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id], onDelete: Cascade)
 
   experienceId String?
-  experience   ExperienceExchange? @relation(fields: [experienceId], references: [id])
+  experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
 }
 
 model AdoptAnimal {
@@ -145,10 +138,11 @@ model AdoptAnimal {
   description String
   images      String[]
   status      AdoptStatus
-  userId      String @unique
-  user        User   @relation(fields: [userId], references: [id])
+  userId      String   @unique
+  user        User        @relation(fields: [userId], references: [id])
   comments    Comment[]
   adoptionForms AdoptionForm[]
+
   createdAt DateTime @default(now())
 }
 
