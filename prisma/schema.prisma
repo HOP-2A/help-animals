@@ -67,6 +67,7 @@ model User {
   email       String @unique
   profileImg  String?
   birthdate   DateTime
+  clerkId String @unique
   createdAt   DateTime @default(now())
   pet         Pet[]
   helpPosts   HelpAnimal[]
@@ -142,10 +143,9 @@ model AdoptAnimal {
   user        User        @relation(fields: [userId], references: [id])
   comments    Comment[]
   adoptionForms AdoptionForm[]
-
+   
   createdAt DateTime @default(now())
 }
-
 model AdoptionForm {
   id             String      @id @default(nanoid())
   age            Int
@@ -158,13 +158,15 @@ model AdoptionForm {
   address        String?
   email          String
   hasPet         Boolean
-  petInfo       String?
-  petId          String
-  pet            AdoptAnimal @relation(fields: [petId], references: [id])
-  userId         String      @unique
+  petInfo        String?
+ 
+  petId          String?
+  pet            AdoptAnimal? @relation(fields: [petId], references: [id])
+ 
+  userId         String
   user           User        @relation(fields: [userId], references: [id])
 }
-
+ 
 model Conversation {
   id        String    @id @default(nanoid())
   users     User[]
