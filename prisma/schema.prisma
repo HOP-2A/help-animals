@@ -66,9 +66,9 @@ model User {
   username   String
   email      String   @unique
   profileImg String?
-  birthdate  DateTime
+  birthdate  DateTime?
   createdAt  DateTime @default(now())
-
+  clerkId        String      @unique
   pet           Pet[]
   helpPosts     HelpAnimal[]
   adoptPosts    AdoptAnimal[]
