@@ -62,22 +62,22 @@ enum ReactionType {
 }
 
 model User {
-  id          String @id @default(nanoid())
-  username    String
-  email       String @unique
-  profileImg  String?
-  birthdate   DateTime
-  clerkId String @unique
-  createdAt   DateTime @default(now())
-  pet         Pet[]
-  helpPosts   HelpAnimal[]
-  adoptPosts  AdoptAnimal[]
-  comments    Comment[]
-  messages    Message[]
-  reactions   Reaction[]       
-  conversations Conversation[]  
-  adoptionForms AdoptionForm[]  
-  experiences ExperienceExchange[]
+  id         String   @id @default(nanoid())
+  username   String
+  email      String   @unique
+  profileImg String?
+  birthdate  DateTime?
+  createdAt  DateTime @default(now())
+  clerkId        String      @unique
+  pet           Pet[]
+  helpPosts     HelpAnimal[]
+  adoptPosts    AdoptAnimal[]
+  comments      Comment[]
+  messages      Message[]
+  reactions     Reaction[]
+  conversations Conversation[]
+  adoptionForms AdoptionForm[]
+  experiences   ExperienceExchange[]
 }
 
 model Pet {
