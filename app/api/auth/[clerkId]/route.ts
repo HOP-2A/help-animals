@@ -18,7 +18,7 @@ export const GET = async (
     }
 
     return NextResponse.json(userData, { status: 200 });
-  } catch (err: any) {
-    return NextResponse.json({ message: err?.message }, { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ error: err }, { status: 500 });
   }
 };

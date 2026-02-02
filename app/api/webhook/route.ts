@@ -33,14 +33,20 @@ export async function POST(req: Request) {
   const lastName = user.last_name || "";
   const firstName = user.first_name || "";
   if (eventType === "user.created") {
-    await prisma.user.create({
-      data: {
-        clerkId: user.id,
-        email,
-        firstName,
-        lastName,
-      },
+    const existing = await prisma.user.findUnique({
+      where: { clerkId: user.id },
     });
+
+    if (!existing) {
+      await prisma.user.create({
+        data: {
+          clerkId: user.id,
+          email,
+          firstName,
+          lastName,
+        },
+      });
+    }
   }
 
   return NextResponse.json({ ok: true });

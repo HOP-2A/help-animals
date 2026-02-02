@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
-    const { email, firstName, lastName } = await req.json();
+    const { email, firstName, lastName, birthdate } = await req.json();
 
     if (!email || !firstName || !lastName) {
       return NextResponse.json({ error: "buren boglooroi" }, { status: 400 });
@@ -19,7 +19,8 @@ export async function POST(req: Request) {
     }
 
     const clerk = await clerkClient();
-    await clerk.users.createUser({
+
+    const clerkUser = await clerk.users.createUser({
       emailAddress: [email],
       skipPasswordChecks: true,
       skipPasswordRequirement: true,
@@ -27,12 +28,15 @@ export async function POST(req: Request) {
       lastName,
     });
 
-    return NextResponse.json({ message: "signup success" }, { status: 201 });
-  } catch (error: any) {
-    console.error(error);
+    const user = await prisma.user.create({
+      data: { email, firstName, lastName, clerkId: clerkUser.id, birthdate },
+    });
+
     return NextResponse.json(
-      { message: "aldaa garlaa", error: error?.message },
-      { status: 500 },
+      { message: "successfully registered" },
+      { status: 200 },
     );
+  } catch (error) {
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }
