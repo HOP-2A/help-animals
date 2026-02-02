@@ -4,7 +4,6 @@ import { UserJSON, UserWebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-
 export async function POST(req: Request) {
   const WH_SECRET = process.env.CLERK_WEBHOOK_SECRET;
   if (!WH_SECRET) throw new Error("Missing CLERK_WEBHOOK_SECRET");
@@ -31,15 +30,15 @@ export async function POST(req: Request) {
   const user = evt.data as UserJSON;
 
   const email = user.email_addresses?.[0]?.email_address ?? null;
-  const username = user.first_name || "";
-
+  const lastName = user.last_name || "";
+  const firstName = user.first_name || "";
   if (eventType === "user.created") {
     await prisma.user.create({
       data: {
         clerkId: user.id,
         email,
-        username,
-
+        firstName,
+        lastName,
       },
     });
   }
