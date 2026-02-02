@@ -8,9 +8,9 @@ datasource db {
 
 enum HelpStatus {
   LOST
+  HOMELESS  
   IN_PROGRESS
   RESCUED
-  CLOSED
 }
 
 enum AnimalCondition {
@@ -97,6 +97,8 @@ model HelpAnimal {
   id          String     @id @default(nanoid())
   location    String
   description String
+  lat Float?
+  lng Float?
   images      String[]
   status      HelpStatus @default(LOST)
   userId    String
