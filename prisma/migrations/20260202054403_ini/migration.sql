@@ -19,11 +19,13 @@ CREATE TYPE "ReactionType" AS ENUM ('LIKE', 'HEART', 'SAD', 'ANGRY', 'WOW');
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
-    "username" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
+    "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "profileImg" TEXT,
-    "birthdate" TIMESTAMP(3) NOT NULL,
+    "birthdate" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "clerkId" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -153,6 +155,9 @@ CREATE TABLE "_ConversationToUser" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_clerkId_key" ON "User"("clerkId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "AdoptAnimal_userId_key" ON "AdoptAnimal"("userId");
