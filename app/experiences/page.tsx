@@ -12,13 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import { useAuth } from "@/providers/useAuth";
-import {
-  MessageCircle,
-  ThumbsUp,
-  Image as ImageIcon,
-  X,
-  HeartIcon,
-} from "lucide-react";
+import { MessageCircle, Image as ImageIcon, X, HeartIcon } from "lucide-react";
 
 export default function Page() {
   const [posts, setPosts] = useState([]);
@@ -38,7 +32,7 @@ export default function Page() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: "VMLtNjm4xbnXaJixDNPMB",
+        userId: "242424",
         description,
         images: ["aa"],
       }),
@@ -60,7 +54,7 @@ export default function Page() {
   useEffect(() => {
     getExperiences();
   }, []);
-
+  console.log(posts);
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       <div className="max-w-2xl mx-auto p-4 py-8">
