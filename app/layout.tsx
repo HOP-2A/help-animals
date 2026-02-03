@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
+
 import {
   ClerkProvider,
   SignInButton,
@@ -8,7 +10,7 @@ import {
   SignedIn,
   SignedOut,
   UserButton,
-} from '@clerk/nextjs'
+} from "@clerk/nextjs";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -31,12 +33,12 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div>
-             <SignedOut>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <div>
+            <SignedOut>
               <SignInButton />
               <SignUpButton>
                 <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
@@ -47,9 +49,11 @@ export default function RootLayout({
             <SignedIn>
               <UserButton />
             </SignedIn>
-        </div>
-        {children}
-      </body>
-    </html></ClerkProvider>
+          </div>
+          {children}
+          <Toaster toastOptions={{ duration: 1500 }} richColors={true} />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

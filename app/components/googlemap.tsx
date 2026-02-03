@@ -47,6 +47,15 @@ export default function SelectLocationMap({ onSelect }: Props) {
     setPosition([lat, lng]);
     onSelect(lat, lng);
   };
+  function FlyToLocation({ position }: { position: [number, number] | null }) {
+    const map = useMap();
+
+    if (position) {
+      map.flyTo(position, 15);
+    }
+
+    return null;
+  }
 
   return (
     <div className="space-y-2">
@@ -74,6 +83,8 @@ export default function SelectLocationMap({ onSelect }: Props) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        <FlyToLocation position={position} />
       </MapContainer>
     </div>
   );

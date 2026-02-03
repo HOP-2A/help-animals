@@ -28,6 +28,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { PawPrint, MapPin, HeartPulse, Image as ImageIcon } from "lucide-react";
+import { toast } from "sonner";
 
 const SelectLocationMap = dynamic(() => import("../components/googlemap"), {
   ssr: false,
@@ -43,6 +44,7 @@ const Page = () => {
   const clerkId = clerkUser?.id;
   const { user } = useAuth(clerkId ?? "");
 
+  const userId = user?.id;
   const [inputValues, setInputValues] = useState({
     animalStatus: "",
     healthCondition: "",
@@ -87,18 +89,27 @@ const Page = () => {
   };
 
   const createdHelpAnimal = async () => {
+    if (!location) {
+      toast.error("Байршлаа сонгоно уу");
+      return;
+    }
     const response = await fetch("/api/help-animal", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        location: location,
         description: inputValues.description,
         images: images.map((img) => img.url),
         status: inputValues.animalStatus,
-        userId: "some-user-id",
+        userId: userId,
         condition: inputValues.healthCondition,
+        lat: location.lat,
+        lng: location.lng,
       }),
     });
+
+    if (response.ok) {
+      toast.success("Амьтан аврах хүсэлт амжилттай илгээгдлээ!");
+    }
   };
 
   const handleInputs = (
@@ -108,7 +119,8 @@ const Page = () => {
     setInputValues({ ...inputValues, [name]: value });
   };
 
-  console.log(inputValues.animalStatus, "qwe");
+  console.log(inputValues.description);
+
   return (
     <div className="p-6">
       <Dialog>
@@ -125,10 +137,7 @@ const Page = () => {
       transition-transform duration-200
     "
           >
-            {/* Хэрэв хэрэглэгч идэвхтэй бол */}
             <PawPrint className="w-5 h-5 text-white animate-bounce" />
-            {/* Хэрэв унтаж байгаа мэт дүрслэх бол */}
-            {/* <SleepyCat className="w-5 h-5 text-white animate-pulse" /> */}
             Тусламж хэрэгтэй амьтан нэмэх
           </Button>
         </DialogTrigger>
@@ -196,7 +205,12 @@ const Page = () => {
                 <MapPin className="w-4 h-4 text-red-600" />
                 Байршил
               </Label>
-              <Input placeholder="Жишээ: Баянзүрх дүүрэг, 13-р хороолол..." />
+              <Input
+                placeholder="Жишээ: Баянзүрх дүүрэг, 13-р хороолол..."
+                value={inputValues.location || ""}
+                name="location"
+                onChange={handleInputs}
+              />
             </div>
             <div className="rounded-xl border p-3 space-y-2">
               <Label className="flex items-center gap-2">
@@ -220,6 +234,9 @@ const Page = () => {
               <Textarea
                 placeholder="Амьтны байдал, хэр удаан тэнд байсан, ямар тусламж хэрэгтэй мэт..."
                 rows={4}
+                value={inputValues.description || ""}
+                name="description"
+                onChange={handleInputs}
               />
             </div>
 
@@ -267,7 +284,9 @@ const Page = () => {
               </Button>
             </div>
 
-            <Button className="w-full mt-4">Тусламжийн хүсэлт илгээх</Button>
+            <Button className="w-full mt-4" onClick={createdHelpAnimal}>
+              Тусламжийн хүсэлт илгээх
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

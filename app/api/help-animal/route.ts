@@ -4,7 +4,16 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { location, description, images, status, userId, condition } = body;
+    const {
+      location,
+      description,
+      images,
+      status,
+      userId,
+      condition,
+      lat,
+      lng,
+    } = body;
 
     if (
       !location ||
@@ -12,7 +21,9 @@ export async function POST(req: Request) {
       !userId ||
       !description ||
       !condition ||
-      !status
+      !status ||
+      !lat ||
+      !lng
     ) {
       return NextResponse.json({ error: "Missing field" });
     }
@@ -35,6 +46,8 @@ export async function POST(req: Request) {
         status,
         condition,
         userId,
+        lat,
+        lng,
       },
     });
     return NextResponse.json(createdHelpAnimal, { status: 200 });
