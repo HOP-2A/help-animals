@@ -50,6 +50,21 @@ export default function Page() {
     const data = await response.json();
     setPosts(data);
   };
+  const reaction = async (experienceId: string) => {
+    await fetch("/api/experience-exchange/reaction", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: "242424",
+        type: "WOW",
+        experienceId: experienceId,
+      }),
+    });
+    console.log(experienceId);
+    getExperiences();
+  };
 
   useEffect(() => {
     getExperiences();
@@ -156,14 +171,50 @@ export default function Page() {
 
               <div className="border-t border-gray-100 px-4 py-2">
                 <div className="flex gap-1">
-                  <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-600 hover:text-red-600">
+                  <button
+                    className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-600 hover:text-red-600"
+                    onClick={() => reaction(post.id)}
+                  >
                     <HeartIcon className="w-5 h-5" />
-                    <span className="font-medium text-sm">Like</span>
+                    <span className="font-medium text-sm">
+                      Likes {post.reactions.length}
+                    </span>
                   </button>
-                  <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-600 hover:text-green-600">
-                    <MessageCircle className="w-5 h-5" />
-                    <span className="font-medium text-sm">Comment</span>
-                  </button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-600 hover:text-green-600">
+                        <MessageCircle className="w-5 h-5" />
+                        <span className="font-medium text-sm">
+                          Comments {post.comments.length}
+                        </span>
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle className="text-xl font-semibold">
+                          Comments
+                        </DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 mt-4">
+                        <div className="gap 2">
+                          <Input
+                            placeholder="Left a your thought..."
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            className=" resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-60"
+                          />
+                          <Button
+                            onClick={createExperience}
+                            disabled={!description.trim()}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                            size="sm"
+                          >
+                            Comment
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </div>
