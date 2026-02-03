@@ -107,8 +107,22 @@ const Page = () => {
     <div className="p-6">
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="flex gap-2">
-            <PawPrint className="w-4 h-4" />
+          <Button
+            className="
+      flex items-center gap-2 
+      px-4 py-2 
+      bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-400 
+      text-white font-semibold 
+      rounded-lg 
+      shadow-lg 
+      hover:scale-105 hover:shadow-xl 
+      transition-transform duration-200
+    "
+          >
+            {/* Хэрэв хэрэглэгч идэвхтэй бол */}
+            <PawPrint className="w-5 h-5 text-white animate-bounce" />
+            {/* Хэрэв унтаж байгаа мэт дүрслэх бол */}
+            {/* <SleepyCat className="w-5 h-5 text-white animate-pulse" /> */}
             Тусламж хэрэгтэй амьтан нэмэх
           </Button>
         </DialogTrigger>
