@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { upload } from "@vercel/blob/client";
 import dynamic from "next/dynamic";
 import { MapPinned } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/providers/useAuth";
 
 import {
   Dialog,
@@ -37,6 +39,10 @@ type ImageItem = {
 };
 
 const Page = () => {
+  const { user: clerkUser } = useUser();
+  const clerkId = clerkUser?.id;
+  const { user } = useAuth(clerkId ?? "");
+
   const [inputValues, setInputValues] = useState({
     animalStatus: "",
     healthCondition: "",
