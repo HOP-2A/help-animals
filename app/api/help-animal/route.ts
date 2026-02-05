@@ -85,3 +85,16 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: err }, { status: 500 });
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const helpAnimals = await prisma.helpAnimal.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    return NextResponse.json(helpAnimals, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ error: err }, { status: 500 });
+  }
+}
