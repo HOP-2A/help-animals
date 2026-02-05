@@ -32,7 +32,6 @@ export default function SignUpPage() {
         firstName,
         lastName,
         birthdate: new Date(birthdate).toISOString(),
-        password,
       }),
     });
 
@@ -89,13 +88,6 @@ export default function SignUpPage() {
             placeholder="Birthdate"
             value={birthdate}
             onChange={(e) => setBirthdate(e.target.value)}
-            className="rounded-lg"
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             className="rounded-lg"
           />
         </div>
