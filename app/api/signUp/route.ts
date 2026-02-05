@@ -7,13 +7,16 @@ export async function POST(req: Request) {
     const { email, firstName, lastName, birthdate } = await req.json();
 
     if (!email || !firstName || !lastName) {
-      return NextResponse.json({ error: "buren boglooroi" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing required fields" },
+        { status: 400 },
+      );
     }
 
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) {
       return NextResponse.json(
-        { error: "ene email ali hezeenii burtgeltei bn" },
+        { error: "Email already exists" },
         { status: 400 },
       );
     }
