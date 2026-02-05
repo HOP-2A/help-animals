@@ -108,7 +108,7 @@ const Page = () => {
       description: inputValues.description,
       images: images.map((img) => img.url),
       status: inputValues.animalStatus,
-      userId: userId,
+      userId: "JXtOgO3jC3yae76ZXdKtt",
       condition: inputValues.healthCondition,
       lat: location.lat,
       lng: location.lng,
@@ -149,6 +149,8 @@ const Page = () => {
     const { name, value } = e.target;
     setInputValues({ ...inputValues, [name]: value });
   };
+
+  console.log(inputValues.healthCondition, inputValues.animalStatus);
 
   return (
     <div className="p-6">
@@ -200,33 +202,42 @@ const Page = () => {
                   <PawPrint className="w-4 h-4 text-brown-200" />
                   Амьтны байдал
                 </Label>
-                <Select>
+
+                <Select
+                  value={inputValues.animalStatus}
+                  onValueChange={(value: string) =>
+                    setInputValues({ ...inputValues, animalStatus: value })
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Сонгох..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="lost">Алга болсон</SelectItem>
-                    <SelectItem value="homeless">Эзэнгүй / гудамжны</SelectItem>
-                    <SelectItem value="abandoned"> Хаягдсан</SelectItem>
+                    <SelectItem value="LOST">Алга болсон</SelectItem>
+                    <SelectItem value="HOMELESS">Эзэнгүй / гудамжны</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              <div>
                 <Label className="flex items-center gap-2 mb-2">
                   <HeartPulse className="w-4 h-4 text-red-400" />
                   Эрүүл мэндийн байдал
                 </Label>
-                <Select>
+                <Select
+                  value={inputValues.healthCondition}
+                  onValueChange={(value: string) =>
+                    setInputValues({ ...inputValues, healthCondition: value })
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Сонгох..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="healthy"> Эрүүл</SelectItem>
-                    <SelectItem value="injured"> Бэртсэн</SelectItem>
-                    <SelectItem value="starving">Өлссөн / сульдсан</SelectItem>
+                    <SelectItem value="HEALTHY">Эрүүл</SelectItem>
+                    <SelectItem value="INJURED">Бэртсэн</SelectItem>
+                    <SelectItem value="STARVING">Өлссөн / сульдсан</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+              <div></div>
             </div>
 
             <div className="space-y-2">
