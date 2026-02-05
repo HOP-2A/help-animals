@@ -36,7 +36,6 @@ export default function SelectLocationMap({ onSelect }: Props) {
         query,
       )}`,
     );
-
     const data = await res.json();
 
     if (!data.length) return;
@@ -47,22 +46,13 @@ export default function SelectLocationMap({ onSelect }: Props) {
     setPosition([lat, lng]);
     onSelect(lat, lng);
   };
-  function FlyToLocation({ position }: { position: [number, number] | null }) {
-    const map = useMap();
-
-    if (position) {
-      map.flyTo(position, 15);
-    }
-
-    return null;
-  }
 
   return (
     <div className="space-y-2">
       <div className="flex gap-2">
         <input
           className="border rounded px-3 py-2 w-full"
-          placeholder="Байршил хайх (ж: Zorig San )"
+          placeholder="Байршил хайх (ж: Zorig San)"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -85,6 +75,8 @@ export default function SelectLocationMap({ onSelect }: Props) {
         />
 
         <FlyToLocation position={position} />
+
+        {position && <Marker position={position} icon={markerIcon} />}
       </MapContainer>
     </div>
   );

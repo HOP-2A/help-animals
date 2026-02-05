@@ -45,6 +45,8 @@ const Page = () => {
   const { user } = useAuth(clerkId ?? "");
 
   const userId = user?.id;
+
+  console.log(userId);
   const [inputValues, setInputValues] = useState({
     animalStatus: "",
     healthCondition: "",
@@ -85,6 +87,7 @@ const Page = () => {
     );
 
     setImages(updatedImages);
+    toast.success("Амжилттай upload хийгдлээ!");
     setUploading(false);
   };
 
@@ -93,22 +96,50 @@ const Page = () => {
       toast.error("Байршлаа сонгоно уу");
       return;
     }
-    const response = await fetch("/api/help-animal", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        description: inputValues.description,
-        images: images.map((img) => img.url),
-        status: inputValues.animalStatus,
-        userId: userId,
-        condition: inputValues.healthCondition,
-        lat: location.lat,
-        lng: location.lng,
-      }),
-    });
 
-    if (response.ok) {
-      toast.success("Амьтан аврах хүсэлт амжилттай илгээгдлээ!");
+    await uploadImages();
+
+    if (!images.length) {
+      toast.error("Зургуудыг оруулна уу");
+      return;
+    }
+
+    const payload = {
+      description: inputValues.description,
+      images: images.map((img) => img.url),
+      status: inputValues.animalStatus,
+      userId: userId,
+      condition: inputValues.healthCondition,
+      lat: location.lat,
+      lng: location.lng,
+      location: inputValues.location,
+    };
+
+    try {
+      const response = await fetch("/api/help-animal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        toast.success("Амьтан аврах хүсэлт амжилттай илгээгдлээ!");
+
+        setInputValues({
+          animalStatus: "",
+          healthCondition: "",
+          location: "",
+          description: "",
+          images: [],
+        });
+        setImages([]);
+        setLocation(null);
+      } else {
+        const data = await response.json();
+        toast.error(data.error || "Алдаа гарлаа");
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Алдаа гарлаа");
     }
   };
 
@@ -118,8 +149,6 @@ const Page = () => {
     const { name, value } = e.target;
     setInputValues({ ...inputValues, [name]: value });
   };
-
-  console.log(inputValues.description);
 
   return (
     <div className="p-6">
