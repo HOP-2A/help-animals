@@ -13,6 +13,7 @@ export async function POST(req: Request) {
       condition,
       lat,
       lng,
+      phoneNumber,
     } = body;
 
     if (
@@ -48,6 +49,7 @@ export async function POST(req: Request) {
         userId,
         lat,
         lng,
+        phoneNumber,
       },
     });
     return NextResponse.json(createdHelpAnimal, { status: 200 });
@@ -104,6 +106,9 @@ export async function GET(req: Request) {
     const helpAnimals = await prisma.helpAnimal.findMany({
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        user: true,
       },
     });
     return NextResponse.json(helpAnimals, { status: 200 });

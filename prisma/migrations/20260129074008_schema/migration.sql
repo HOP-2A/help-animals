@@ -1,10 +1,4 @@
 -- CreateEnum
-CREATE TYPE "HelpStatus" AS ENUM ('LOST', 'IN_PROGRESS', 'RESCUED', 'CLOSED');
-
--- CreateEnum
-CREATE TYPE "AnimalCondition" AS ENUM ('HEALTHY', 'INJURED', 'STARVING');
-
--- CreateEnum
 CREATE TYPE "AdoptStatus" AS ENUM ('TEMPORARY', 'PERMANENT');
 
 -- CreateEnum
