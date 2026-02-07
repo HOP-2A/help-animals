@@ -179,6 +179,7 @@ const Page = () => {
         });
         setImages([]);
         setLocation(null);
+        helpAnimals();
       } else {
         const data = await response.json();
         toast.error(data.error || "Алдаа гарлаа");
@@ -217,7 +218,7 @@ const Page = () => {
               className="
       flex items-center gap-2 
       px-4 py-2 
-      bg-gradient-to-r from-purple-400 via-pink-500 to-yellow-400 
+      bg-linear-to-r from-purple-400 via-pink-500 to-yellow-400 
       text-white font-semibold 
       rounded-lg 
       shadow-lg 

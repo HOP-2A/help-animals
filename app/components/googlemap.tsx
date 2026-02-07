@@ -1,6 +1,12 @@
 "use client";
 
-import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvent,
+  useMap,
+} from "react-leaflet";
 import { useState } from "react";
 import L from "leaflet";
 
@@ -24,6 +30,18 @@ function FlyToLocation({ position }: { position: [number, number] | null }) {
   return null;
 }
 
+function ClickHandler({
+  onSelect,
+}: {
+  onSelect: (lat: number, lng: number) => void;
+}) {
+  useMapEvent("click", (e) => {
+    const { lat, lng } = e.latlng;
+    onSelect(lat, lng);
+  });
+  return null;
+}
+
 export default function SelectLocationMap({ onSelect }: Props) {
   const [query, setQuery] = useState("");
   const [position, setPosition] = useState<[number, number] | null>(null);
@@ -32,13 +50,14 @@ export default function SelectLocationMap({ onSelect }: Props) {
     if (!query) return;
 
     const res = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        query,
-      )}`,
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`,
     );
     const data = await res.json();
 
-    if (!data.length) return;
+    if (!data.length) {
+      alert("Байршил олдсонгүй, өөр байршил оруулна уу.");
+      return;
+    }
 
     const lat = parseFloat(data[0].lat);
     const lng = parseFloat(data[0].lon);
@@ -77,6 +96,13 @@ export default function SelectLocationMap({ onSelect }: Props) {
         <FlyToLocation position={position} />
 
         {position && <Marker position={position} icon={markerIcon} />}
+
+        <ClickHandler
+          onSelect={(lat, lng) => {
+            setPosition([lat, lng]);
+            onSelect(lat, lng);
+          }}
+        />
       </MapContainer>
     </div>
   );
