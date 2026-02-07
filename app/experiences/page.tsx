@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import {
   Dialog,
@@ -9,237 +10,374 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import { Button } from "@/components/ui/button";
-import { useUser } from "@clerk/nextjs";
+import {
+  Heart,
+  ThumbsUp,
+  Angry,
+  Frown,
+  Sparkles,
+  MessageCircle,
+  Ellipsis,
+  Pen,
+  Trash,
+} from "lucide-react";
 import { useAuth } from "@/providers/useAuth";
-import { MessageCircle, Image as ImageIcon, X, HeartIcon } from "lucide-react";
-
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
 export default function Page() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<any[]>([]);
   const [description, setDescription] = useState("");
+  const [content, setContent] = useState("");
+  const [comments, setComments] = useState<any[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newDescription, setNewDescription] = useState("");
   const { user: clerkUser } = useUser();
-
   const clerkId = clerkUser?.id;
-  const user = useAuth(clerkId ?? "");
-
-  const createExperience = async () => {
-    if (!description.trim()) return;
-
-    const response = await fetch("/api/experience-exchange/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: "242424",
-        description,
-        images: ["aa"],
-      }),
-    });
-
-    if (response.ok) {
-      setDescription("");
-      setIsDialogOpen(false);
-      getExperiences();
-    }
-  };
-
+  const { user } = useAuth(clerkId ?? "");
+  const [editingPost, setEditingPost] = useState<any | null>(null);
+  const [newComment, setNewComment] = useState("");
+  const [editingComment, setEditingComment] = useState<any | null>(null);
   const getExperiences = async () => {
-    const response = await fetch("/api/experience-exchange/get-all");
-    const data = await response.json();
+    const res = await fetch("/api/experience-exchange/get-all");
+    const data = await res.json();
     setPosts(data);
-  };
-  const reaction = async (experienceId: string) => {
-    await fetch("/api/experience-exchange/reaction", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: "242424",
-        type: "WOW",
-        experienceId: experienceId,
-      }),
-    });
-    console.log(experienceId);
-    getExperiences();
   };
 
   useEffect(() => {
     getExperiences();
   }, []);
-  console.log(posts);
+  console.log(user);
+  const createExperience = async () => {
+    if (!description.trim()) return;
+
+    await fetch("/api/experience-exchange/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: "393939",
+        description,
+        images: [],
+      }),
+    });
+
+    setDescription("");
+    setIsDialogOpen(false);
+    getExperiences();
+  };
+
+  const editPost = async (id: string) => {
+    await fetch("/api/experience-exchange/edit", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        description: newDescription,
+        id,
+      }),
+    });
+    getExperiences();
+  };
+  const deletePost = async (id: string) => {
+    await fetch("/api/experience-exchange/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id,
+        userId: "393939",
+      }),
+    });
+    getExperiences();
+  };
+  const reaction = async (experienceId: string, type: string) => {
+    await fetch("/api/experience-exchange/reaction", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: "393939",
+        type,
+        experienceId,
+      }),
+    });
+
+    setHoveredPost(null);
+    getExperiences();
+  };
+
+  const getComment = async (experienceId: string) => {
+    const res = await fetch("/api/experience-exchange/comment/get", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ experienceId }),
+    });
+
+    const data = await res.json();
+    setComments(data);
+  };
+
+  const comment = async (experienceId: string) => {
+    if (!content.trim()) return;
+
+    await fetch("/api/experience-exchange/comment/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: "393939",
+        content,
+        experienceId,
+      }),
+    });
+
+    setContent("");
+    getComment(experienceId);
+    getExperiences();
+  };
+  const editComment = async (id: string) => {
+    await fetch("/api/experience-exchange/comment/edit", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: newComment,
+        id,
+      }),
+    });
+    getComment();
+  };
+  const deleteComment = async (id: string) => {
+    await fetch("/api/experience-exchange/comment/delete", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id,
+        userId: "393939",
+      }),
+    });
+    getComment();
+  };
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-100">
       <div className="max-w-2xl mx-auto p-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Experience Exchange
-          </h1>
-          <p className="text-gray-600">
-            Share your thoughts and connect with others
-          </p>
-        </div>
+        <h1 className="text-3xl font-bold mb-6">Туршлага Солилцох </h1>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <button className="w-full bg-gray-100 hover:bg-gray-200 rounded-full px-6 py-3 text-left text-gray-600 transition-colors duration-200 font-medium">
-                What is on your mind?
-              </button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle className="text-xl font-semibold">
-                  Create Post
-                </DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 mt-4">
-                <Input
-                  placeholder="What's on your mind..."
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="min-h-25 resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                />
-                <div className="flex justify-between items-center pt-2">
-                  <Input type="file" className="w-23 hover:bg-gray-200" />
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <button className="w-full bg-white p-4 rounded-xl border mb-6 text-left text-gray-500">
+              What is on your mind?
+            </button>
+          </DialogTrigger>
 
-                  <div className="flex gap-2">
-                    <DialogClose asChild>
-                      <Button variant="outline" size="sm">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button
-                      onClick={createExperience}
-                      disabled={!description.trim()}
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
-                      size="sm"
-                    >
-                      Post
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create Post</DialogTitle>
+            </DialogHeader>
+
+            <Input
+              placeholder="What's on your mind?"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+
+            <div className="flex justify-end gap-2">
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button onClick={createExperience}>Post</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
 
         <div className="space-y-4">
           {posts.map((post) => (
-            <div
-              key={post.id}
-              className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="p-4 pb-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold">
-                    {post.user.firstName?.[0]}
-                    {post.user.lastName?.[0]}
-                  </div>
-                  <div>
-                    <div className="font-semibold text-gray-900">
-                      {post.user.firstName} {post.user.lastName}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {post.createdAt}
-                    </div>
-                  </div>
-                </div>
+            <div key={post.id} className="bg-white p-4 rounded-xl border">
+              <div className="flex justify-end">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Ellipsis className="cursor-pointer" />
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setEditingPost(post);
+                        setNewDescription(post.description);
+                      }}
+                      className="cursor-pointer"
+                    >
+                      Засаx <Pen />
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      className="cursor-pointer"
+                      onClick={() => deletePost(post.id)}
+                    >
+                      Устгаx <Trash />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
 
-              <div className="px-4 pb-3">
-                <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">
-                  {post.description}
-                </p>
-              </div>
-              {post.images && post.images.length > 0 && (
-                <div className="px-4 pb-3">
-                  <div className="grid grid-cols-2 gap-2">
-                    {post.images.map((img: string, index: number) => (
-                      <img
-                        key={index}
-                        src={img}
-                        alt={`Post image ${index + 1}`}
-                        className="w-max h-48 object-cover rounded-lg"
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
+              <Dialog
+                open={!!editingPost}
+                onOpenChange={() => setEditingPost(null)}
+              >
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Post</DialogTitle>
+                  </DialogHeader>
 
-              <div className="border-t border-gray-100 px-4 py-2">
-                <div className="flex gap-1">
+                  <Input
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                  />
+
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setEditingPost(null)}
+                    >
+                      Cancel
+                    </Button>
+
+                    <Button
+                      onClick={() => {
+                        editPost(post.id);
+                      }}
+                    >
+                      Save Changes
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+
+              <div className="font-semibold">
+                {post.user.firstName} {post.user.lastName}
+              </div>
+              <p className="my-3">{post.description}</p>
+              <img src={post.images} className="rounded-2xl" />
+              <div className="flex gap-2 border-t pt-2">
+                <div className="relative flex-1">
                   <button
-                    className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-600 hover:text-red-600"
-                    onClick={() => reaction(post.id)}
+                    onClick={() => reaction(post.id, "LIKE")}
+                    className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-red-600"
                   >
-                    <HeartIcon className="w-5 h-5" />
-                    <span className="font-medium text-sm">
-                      Likes {post.reactions.length}
-                    </span>
+                    <Heart className="w-5 h-5" />
+                    {post.reactions.length}
                   </button>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <button className="flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors duration-200 text-gray-600 hover:text-green-600">
-                        <MessageCircle className="w-5 h-5" />
-                        <span className="font-medium text-sm">
-                          Comments {post.comments.length}
-                        </span>
-                      </button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                      <DialogHeader>
-                        <DialogTitle className="text-xl font-semibold">
-                          Comments
-                        </DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-4 mt-4">
-                        <div className="gap 2">
-                          <Input
-                            placeholder="Left a your thought..."
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            className=" resize-none border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-60"
-                          />
-                          <Button
-                            onClick={createExperience}
-                            disabled={!description.trim()}
-                            className="bg-blue-600 hover:bg-blue-700 text-white"
-                            size="sm"
-                          >
-                            Comment
-                          </Button>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
                 </div>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button
+                      onClick={() => getComment(post.id)}
+                      className="flex-1 flex items-center justify-center gap-2 text-gray-600 hover:text-green-600"
+                    >
+                      <MessageCircle className="w-5 h-5" />
+                      {post.comments.length}
+                    </button>
+                  </DialogTrigger>
+
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Сэтгэгдэлүүд</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Leave a comment..."
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                      />
+                      <Button onClick={() => comment(post.id)}>Send</Button>
+                    </div>
+
+                    <div className="mt-4 space-y-3 max-h-60 overflow-y-auto">
+                      {comments.length === 0 && (
+                        <p className="text-sm text-gray-500 text-center">
+                          No comments yet
+                        </p>
+                      )}
+
+                      {comments.map((c) => (
+                        <div key={c.id} className="bg-gray-100 rounded-lg p-3">
+                          <div className="flex justify-end">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Ellipsis className="cursor-pointer" />
+                              </DropdownMenuTrigger>
+
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                  onClick={() => {
+                                    setEditingComment(c);
+                                    setNewDescription(c.description);
+                                  }}
+                                  className="cursor-pointer"
+                                >
+                                  Засаx <Pen />
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem
+                                  className="cursor-pointer"
+                                  onClick={() => deleteComment(c.id)}
+                                >
+                                  Устгаx <Trash />
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                            <Dialog
+                              open={!!editingComment}
+                              onOpenChange={() => setEditingComment(null)}
+                            >
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>Edit Comment</DialogTitle>
+                                </DialogHeader>
+
+                                <Input
+                                  value={newComment}
+                                  onChange={(e) =>
+                                    setNewComment(e.target.value)
+                                  }
+                                />
+
+                                <div className="flex justify-end gap-2">
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => setEditingPost(null)}
+                                  >
+                                    Cancel
+                                  </Button>
+
+                                  <Button
+                                    onClick={() => {
+                                      editComment(c.id);
+                                    }}
+                                  >
+                                    Save Changes
+                                  </Button>
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                          </div>
+                          <div className="font-semibold text-sm">
+                            {c.user.firstName} {c.user.lastName}
+                          </div>
+                          <p className="text-sm">{c.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           ))}
         </div>
-
-        {posts.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-              <MessageCircle className="w-12 h-12 text-gray-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">
-              No posts yet
-            </h3>
-            <p className="text-gray-500 mb-6 max-w-sm">
-              Be the first to share your experience with the community!
-            </p>
-            <Button
-              onClick={() => setIsDialogOpen(true)}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Create First Post
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );

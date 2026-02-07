@@ -1,34 +1,34 @@
 generator client {
   provider = "prisma-client-js"
 }
-
+ 
 datasource db {
   provider = "postgresql"
 }
-
+ 
 enum HelpStatus {
   LOST
   HOMELESS  
   IN_PROGRESS
   RESCUED
 }
-
+ 
 enum AnimalCondition {
   HEALTHY
   INJURED
   STARVING
 }
-
+ 
 enum AdoptStatus {
   TEMPORARY
   PERMANENT
 }
-
+ 
 enum Gender {
   MALE
   FEMALE
 }
-
+ 
 enum Location {
   ULAANBAATAR
   ARKHANGAI
@@ -47,12 +47,11 @@ enum Location {
   UMNUGOVI
   SUKHBAATAR
   SELENGE
-  TUV 
+  TUV
   UVS
   KHOVD
   KHUVSGUL
 }
-
 model User {
   id         String   @id @default(nanoid())
   firstName  String
@@ -72,7 +71,7 @@ model User {
   adoptionForms AdoptionForm[]
   experiences   ExperienceExchange[]
 }
-
+ 
 model Pet {
   id         String  @id @default(nanoid())
   name       String
@@ -84,7 +83,7 @@ model Pet {
   ownerId    String
   owner      User    @relation(fields: [ownerId], references: [id])
 }
-
+ 
 model HelpAnimal {
   id          String     @id @default(nanoid())
   location    String
@@ -101,7 +100,7 @@ model HelpAnimal {
   reactions Reaction[]
   createdAt DateTime @default(now())
 }
-
+ 
 model Comment {
   id      String @id @default(nanoid())
   content String
@@ -115,20 +114,19 @@ model Comment {
   experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
-
+ 
 model Reaction {
   id   String       @id @default(nanoid())
-
   userId String
   user   User   @relation(fields: [userId], references: [id])
-
+ 
   helpPostId String?
   helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id], onDelete: Cascade)
-
+ 
   experienceId String?
   experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
 }
-
+ 
 model AdoptAnimal {
   id          String      @id @default(nanoid())
   description String
@@ -168,32 +166,34 @@ model Conversation {
   messages  Message[]
   createdAt DateTime  @default(now())
 }
-
+ 
 model Message {
   id      String @id @default(nanoid())
   content String
-
+ 
   senderId String
   sender   User   @relation(fields: [senderId], references: [id])
-
+ 
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-
+ 
   createdAt DateTime @default(now())
 }
-
+ 
 model ExperienceExchange {
   id String @id @default(nanoid())
-
+ 
   description String
   images      String[]
-
+ 
   userId String
   user   User   @relation(fields: [userId], references: [id])
-
+ 
   comments  Comment[]
   reactions Reaction[]
-
+ 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+ 
+ 
