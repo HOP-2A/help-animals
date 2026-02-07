@@ -11,6 +11,7 @@ enum HelpStatus {
   IN_PROGRESS
   RESCUED
   CLOSED
+  HOMELESS
 }
 
 enum AnimalCondition {
