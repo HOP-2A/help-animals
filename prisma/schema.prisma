@@ -8,10 +8,9 @@ datasource db {
 
 enum HelpStatus {
   LOST
+  HOMELESS  
   IN_PROGRESS
   RESCUED
-  CLOSED
-  HOMELESS
 }
 
 enum AnimalCondition {
@@ -54,13 +53,7 @@ enum Location {
   KHUVSGUL
 }
 
-enum ReactionType {
-  LIKE
-  HEART
-  SAD
-  ANGRY
-  WOW
-}
+
 
 model User {
   id         String   @id @default(nanoid())
@@ -94,19 +87,22 @@ model Pet {
   owner      User    @relation(fields: [ownerId], references: [id])
 }
 
-model HelpAnimal {
-  id          String     @id @default(nanoid())
-  location    String
-  description String
-  images      String[]
-  status      HelpStatus @default(LOST)
-  userId    String
-  user      User            @relation(fields: [userId], references: [id])
-  condition AnimalCondition
-  comments  Comment[]
-  reactions Reaction[]
-  createdAt DateTime @default(now())
-}
+  model HelpAnimal {
+    id          String     @id @default(nanoid())
+    location    String
+    description String
+    phoneNumber String?
+    lat Float?
+    lng Float? 
+    images      String[]
+    status      HelpStatus @default(LOST)
+    userId    String
+    user      User            @relation(fields: [userId], references: [id])
+    condition AnimalCondition
+    comments  Comment[]
+    reactions Reaction[]
+    createdAt DateTime @default(now())
+  }
 
 model Comment {
   id      String @id @default(nanoid())
