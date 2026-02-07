@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import {
   Dialog,
   DialogClose,
@@ -10,6 +10,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { upload } from "@vercel/blob/client";
+import { toast } from "sonner";
+import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/providers/useAuth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,6 +49,32 @@ export default function Page() {
   const [editingPost, setEditingPost] = useState<any | null>(null);
   const [newComment, setNewComment] = useState("");
   const [editingComment, setEditingComment] = useState<any | null>(null);
+  const [images, setImages] = useState<ImageItem[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const newImages = Array.from(files).map((file) => ({ file, url: "" }));
+    setImages((prev) => [...prev, ...newImages]);
+  };
+  const uploadImages = async () => {
+    setUploading(true);
+
+    const updatedImages = await Promise.all(
+      images.map(async (img) => {
+        if (img.url) return img;
+        const uploaded = await upload(img.file.name, img.file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+        });
+        return { ...img, url: uploaded.url };
+      }),
+    );
+
+    setImages(updatedImages);
+    setUploading(false);
+  };
   const getExperiences = async () => {
     const res = await fetch("/api/experience-exchange/get-all");
     const data = await res.json();
@@ -64,7 +94,7 @@ export default function Page() {
       body: JSON.stringify({
         userId: "393939",
         description,
-        images: [],
+        images: images.map((img) => img.url),
       }),
     });
 
@@ -106,7 +136,6 @@ export default function Page() {
       }),
     });
 
-    setHoveredPost(null);
     getExperiences();
   };
 
