@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 import {
   ClerkProvider,
   SignInButton,
@@ -42,6 +43,7 @@ export default function RootLayout({
             </SignedIn>
           </div>
           {children}
+          <Toaster toastOptions={{ duration: 3000 }} richColors={true} />
         </body>
       </html>
     </ClerkProvider>

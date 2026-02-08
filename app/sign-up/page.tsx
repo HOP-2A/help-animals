@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/providers/useAuth";
 import { SignInButton, useUser } from "@clerk/nextjs";
-
-import { RedirectToSignIn } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
+import { toast } from "sonner";
+import { SignIn } from "@clerk/nextjs";
 
 export default function SignUpPage() {
   const [firstName, setFirstName] = useState("");
@@ -20,6 +21,8 @@ export default function SignUpPage() {
   const clerkId = clerkUser?.id;
   const { user } = useAuth(clerkId ?? "");
   const router = useRouter();
+  const { openSignIn } = useClerk();
+  const { isSignedIn } = useUser();
 
   const handleSubmit = async () => {
     setError(null);
@@ -46,9 +49,16 @@ export default function SignUpPage() {
         setError("Something went wrong");
       }
     } else {
-      return <RedirectToSignIn />;
+      toast.success("successfully registered");
+      openSignIn();
     }
   };
+
+  useEffect(() => {
+    if (isSignedIn) {
+      router.push("/help-animal");
+    }
+  }, [isSignedIn]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
