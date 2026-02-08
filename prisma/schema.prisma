@@ -53,14 +53,6 @@ enum Location {
   KHUVSGUL
 }
 
-enum ReactionType {
-  LIKE
-  HEART
-  SAD
-  ANGRY
-  WOW
-}
-
 model User {
   id         String   @id @default(nanoid())
   firstName  String
@@ -99,6 +91,7 @@ model HelpAnimal {
   description String
   lat       Float?
   lng       Float?
+  phoneNumber String?
   images      String[]
   status      HelpStatus @default(LOST)
   userId    String
@@ -125,7 +118,6 @@ model Comment {
 
 model Reaction {
   id   String       @id @default(nanoid())
-  type ReactionType
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
