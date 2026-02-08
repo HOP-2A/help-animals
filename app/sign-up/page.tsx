@@ -41,13 +41,7 @@ export default function SignUpPage() {
     const data = await res.json();
 
     if (!res.ok) {
-      if (typeof data.error === "string") {
-        setError(data.error);
-      } else if (data.error?.errors?.[0]?.message) {
-        setError(data.error.errors[0].message);
-      } else {
-        setError("Something went wrong");
-      }
+      toast.error(data.error);
     } else {
       toast.success("successfully registered");
       openSignIn();
