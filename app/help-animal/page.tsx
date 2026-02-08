@@ -86,6 +86,7 @@ const Page = () => {
   const { user } = useAuth(clerkId ?? "");
   const userId = user?.id;
 
+  const [liked, setLiked] = useState(false);
   console.log(userId);
   const [inputValues, setInputValues] = useState({
     animalStatus: "",
@@ -205,6 +206,25 @@ const Page = () => {
   };
 
   console.log(allHelpAnimals);
+
+  const like = async (postId: string) => {
+    const response = await fetch(`/api/help-animal-like/${postId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: "1010",
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.message === "liked") {
+        setLiked(true);
+      } else if (data.message === "remove like") {
+        setLiked(false);
+      }
+    }
+  };
 
   useEffect(() => {
     helpAnimals();
@@ -456,7 +476,16 @@ const Page = () => {
 
                     <div className="flex items-center justify-between px-4 py-3">
                       <div className="flex gap-4">
-                        <Heart className="cursor-pointer" />
+                        <Heart
+                          className={`cursor-pointer transition-colors duration-300 ${
+                            liked
+                              ? "fill-red-500 text-red-500"
+                              : "text-gray-400"
+                          }`}
+                          onClick={() => like(animal.id)}
+                          size={24}
+                        />
+
                         <MessageCircle className="cursor-pointer" />
                         <Send className="cursor-pointer" />
                       </div>
