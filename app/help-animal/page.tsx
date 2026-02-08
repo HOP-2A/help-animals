@@ -17,6 +17,7 @@ import { useUser } from "@clerk/nextjs";
 import { useAuth } from "@/providers/useAuth";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useRouter } from "next/navigation";
 
 import {
   Dialog,
@@ -35,16 +36,10 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-import {
-  PawPrint,
-  MapPin,
-  HeartPulse,
-  Image as ImageIcon,
-  Phone,
-} from "lucide-react";
+import { PawPrint, MapPin, HeartPulse, Image as ImageIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Carousel,
@@ -88,6 +83,7 @@ const Page = () => {
 
   const [liked, setLiked] = useState(false);
   console.log(userId);
+
   const [inputValues, setInputValues] = useState({
     animalStatus: "",
     healthCondition: "",
@@ -197,6 +193,7 @@ const Page = () => {
     setInputValues({ ...inputValues, [name]: value });
   };
 
+  const { push } = useRouter();
   const helpAnimals = async () => {
     const response = await fetch("/api/help-animal");
     const data = await response.json();
@@ -529,8 +526,15 @@ const Page = () => {
                       </p>
 
                       <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <MapPin size={12} />
-                        <span>{animal.location}</span>
+                        <MapPin size={17} />
+                        <Button
+                          variant="link"
+                          onClick={() =>
+                            push(`/help-animal/location/${animal.id}`)
+                          }
+                        >
+                          {animal.location}
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
