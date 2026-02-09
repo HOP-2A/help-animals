@@ -14,7 +14,7 @@ export const GET = async (
     });
 
     if (!userData) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json(userData, { status: 200 });
