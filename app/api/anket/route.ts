@@ -21,19 +21,20 @@ export async function POST(req: Request) {
     } = body;
 
     if (
-      !age ||
-      !firstName ||
-      !lastName ||
-      !phoneNumber ||
-      !location ||
-      !district ||
-      !email ||
-      hasPet === undefined ||
-      !petId ||
-      !userId
-    ) {
-      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-    }
+  age == null ||
+  !firstName ||
+  !lastName ||
+  !phoneNumber ||
+  !location ||
+  !district ||
+  !email ||
+  hasPet === undefined ||
+  !userId ||
+  (hasPet === true && !petId)
+) {
+  return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+}
+
 
     const isUser = await prisma.user.findUnique({ where: { id: userId } });
     if (!isUser) {
