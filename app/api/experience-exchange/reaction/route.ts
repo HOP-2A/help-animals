@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { type, userId, experienceId } = await req.json();
+    const { userId, experienceId } = await req.json();
 
-    if (!experienceId || !userId || !type) {
+    if (!experienceId || !userId) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
@@ -21,7 +21,6 @@ export async function POST(req: Request) {
       where: {
         userId,
         experienceId,
-        type,
       },
     });
 
@@ -38,7 +37,6 @@ export async function POST(req: Request) {
 
     const reaction = await prisma.reaction.create({
       data: {
-        type,
         userId,
         experienceId,
       },

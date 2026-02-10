@@ -21,10 +21,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Heart,
-  ThumbsUp,
-  Angry,
-  Frown,
-  Sparkles,
   MessageCircle,
   Ellipsis,
   Pen,
