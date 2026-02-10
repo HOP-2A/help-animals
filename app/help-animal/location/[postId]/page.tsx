@@ -51,16 +51,32 @@ import dynamic from "next/dynamic";
 import AnimalMap from "@/app/components/AnimalMap";
 import { Input } from "@/components/ui/input";
 import { MapPin, PawPrint } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/providers/useAuth";
 const Page = () => {
   const params = useParams();
   const postId = params.postId as string;
+  const { user: clerkUser } = useUser();
+  const clerkId = clerkUser?.id ?? null;
+  const { user, error } = useAuth(clerkId);
 
+  const userId = user?.id;
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [comment, setComment] = useState("");
 
+  const handleComment = async (postId: string) => {
+    const response = await fetch("/api/help-comment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        postId,
+        content: comment,
+        userId,
+      }),
+    });
+  };
   useEffect(() => {
     if (!postId) return;
 
@@ -170,12 +186,26 @@ const Page = () => {
                 {animal.description}
               </p>
 
-              <div className="border-t-2 border-t-amber-400">
-                <div className="text-2xl font-bold text-blue-900 pb-4 pt-3">
-                  Сэтгэгдэл
+              <div>
+                <div className="border-t-2 border-t-amber-400 mt-6">
+                  <h2 className="text-2xl font-bold text-blue-900 pb-4 pt-3">
+                    Сэтгэгдэл
+                  </h2>
+
+                  <textarea
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Сэтгэгдэл үлдээх..."
+                    className="w-full border rounded-xl p-3"
+                  />
+
+                  <button
+                    onClick={() => handleComment(animal.id)}
+                    className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-xl"
+                  >
+                    Илгээх
+                  </button>
                 </div>
-                <textarea placeholder="Сэтгэгдэл үлдээх..."></textarea>
-                <Input />
               </div>
             </div>
           </div>
