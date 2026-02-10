@@ -106,6 +106,9 @@ model Comment {
   id      String @id @default(nanoid())
   content String
   userId String
+  parentCommentId String?
+  parent Comment? @relation("Thread", fields : [parentCommentId], references: [id])
+  replies Comment[] @relation("Thread")
   user   User   @relation(fields: [userId], references: [id])
   helpPostId String?
   helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id], onDelete: Cascade)
