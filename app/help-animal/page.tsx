@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/carousel";
 
 type HelpAnimal = {
+  id: string;
   location: string;
   description: string;
   images: string[];
@@ -77,12 +78,12 @@ type ImageItem = {
 
 const Page = () => {
   const { user: clerkUser } = useUser();
-  const clerkId = clerkUser?.id;
-  const { user } = useAuth(clerkId ?? "");
+  const clerkId = clerkUser?.id ?? null;
+  const { user, loading, error } = useAuth(clerkId);
+
   const userId = user?.id;
 
   const [liked, setLiked] = useState(false);
-  console.log(userId);
 
   const [inputValues, setInputValues] = useState({
     animalStatus: "",
@@ -148,7 +149,7 @@ const Page = () => {
       description: inputValues.description,
       images: images.map((img) => img.url),
       status: inputValues.animalStatus,
-      userId: "1010",
+      userId,
       condition: inputValues.healthCondition,
       lat: location.lat,
       lng: location.lng,
@@ -181,8 +182,8 @@ const Page = () => {
         const data = await response.json();
         toast.error(data.error || "Алдаа гарлаа");
       }
-    } catch (err: any) {
-      toast.error(err.message || "Алдаа гарлаа");
+    } catch (err) {
+      toast.error("Алдаа гарлаа");
     }
   };
 
@@ -209,7 +210,7 @@ const Page = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: "1010",
+        userId: userId,
       }),
     });
 
@@ -226,323 +227,332 @@ const Page = () => {
   useEffect(() => {
     helpAnimals();
   }, []);
+
+  const statusColors: any = {
+    LOST: "bg-red-400 text-white",
+    HOMELESS: "bg-blue-800 text-white",
+    IN_PROGRESS: "bg-yellow-400 text-white",
+    SAFE: "bg-green-800 text-white",
+  };
+
+  const conditionColors: any = {
+    HEALTHY: "border-green-500 text-green-600",
+    INJURED: "border-red-500 text-red-600",
+    STARVING: "border-orange-500 text-orange-600",
+  };
+
+  const bgVariants = [
+    "bg-rose-50",
+    "bg-yellow-50",
+    "bg-emerald-50",
+    "bg-sky-50",
+  ];
+
   return (
-    <div>
-      <div className="p-6 flex justify-center">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button
-              className="
-      flex items-center gap-2 
-      px-4 py-2 
-      bg-linear-to-r from-purple-400 via-pink-500 to-yellow-400 
-      text-white font-semibold 
-      rounded-lg 
-      shadow-lg 
-      hover:scale-105 hover:shadow-xl 
-      transition-transform duration-200
-    "
-            >
-              <PawPrint className="w-5 h-5 text-white animate-bounce" />
-              Тусламж хэрэгтэй амьтан нэмэх
-            </Button>
-          </DialogTrigger>
+    <div className="min-h-screen bg-neutral-50">
+      <div className="text-center py-10 space-y-3">
+        <h1 className="text-4xl font-bold text-blue-900 flex justify-center items-center gap-2">
+          🐾 Тусламж хэрэгтэй амьтад
+        </h1>
+        <p className="text-2xl text-blue-900">
+          Нэг товшилт нэг амийг аварч чадна
+        </p>
+        <div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="flex justify-center">
+                <Button
+                  className="
+    bg-yellow-400 text-white rounded-3xl font-bold
+    text-base sm:text-lg md:text-xl
+    px-5 sm:px-6 md:px-8
+    py-2.5 sm:py-3 md:py-4
 
-          <DialogContent
-            className="
-    max-w-lg 
-    w-[95vw] 
-    sm:rounded-2xl 
-    rounded-xl 
-    p-4 
-    sm:p-6
-    max-h-[90vh] 
-    overflow-y-auto
-"
-          >
-            <DialogHeader className="text-center space-y-2">
-              <DialogTitle className="text-xl sm:text-2xl font-bold flex justify-center items-center gap-2">
-                🐾 Амьтан аврах хүсэлт
-              </DialogTitle>
-              <DialogDescription className="text-sm sm:text-base text-gray-800">
-                Тусламж хэрэгтэй байгаа амьтны мэдээллийг аль болох дэлгэрэнгүй
-                оруулна уу. Таны оруулсан мэдээлэл нэг амьтны амийг аварч чадна
-                ❤️
-              </DialogDescription>
-            </DialogHeader>
+    shadow-[0_6px_0_#27408B]
+    transition-all duration-300
 
-            <div className="space-y-4 mt-4">
-              <div className="flex  gap-10">
-                <div className="flex">
-                  <div className="space-y-2">
-                    <Label className="flex items-center gap-2">
-                      <PawPrint className="w-4 h-4 text-brown-200" />
-                      Амьтны байдал{" "}
-                      <span className="text-red-500 font-bold">*</span>
-                    </Label>
+    hover:bg-yellow-300
+    hover:brightness-110
+    hover:scale-105
+    active:translate-y-1
+    active:shadow-amber-200
 
-                    <Select
-                      value={inputValues.animalStatus}
-                      onValueChange={(value: string) =>
-                        setInputValues({ ...inputValues, animalStatus: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Сонгох..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="LOST">Алга болсон</SelectItem>
-                        <SelectItem value="HOMELESS">
-                          Эзэнгүй / гудамжны
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Label className="flex items-center gap-2 mb-2">
-                      <HeartPulse className="w-4 h-4 text-red-400" />
-                      Эрүүл мэндийн байдал{" "}
-                      <span className="text-red-500 font-bold">*</span>
-                    </Label>
-                    <Select
-                      value={inputValues.healthCondition}
-                      onValueChange={(value: string) =>
-                        setInputValues({
-                          ...inputValues,
-                          healthCondition: value,
-                        })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Сонгох..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="HEALTHY">Эрүүл</SelectItem>
-                        <SelectItem value="INJURED">Бэртсэн</SelectItem>
-                        <SelectItem value="STARVING">
-                          Өлссөн / сульдсан
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+    sun-glow sun-glow-hover
+    flex items-center gap-2
+    cursor-pointer
+
+  "
+                >
+                  <PawPrint className="text-3xl" />
+                  Тусламж хэрэгтэй амьтан нэмэх
+                </Button>
+              </div>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-lg w-[95vw] sm:rounded-2xl rounded-xl p-4 sm:p-6 max-h-[90vh] overflow-y-auto">
+              <DialogHeader className="text-center space-y-2">
+                <DialogTitle className="text-xl sm:text-2xl font-bold flex  justify-center items-center gap-2 text-blue-900">
+                  🐾 Амьтан аврах хүсэлт
+                </DialogTitle>
+                <DialogDescription className="text-sm sm:text-base text-gray-800">
+                  Тусламж хэрэгтэй байгаа амьтны мэдээллийг аль болох
+                  дэлгэрэнгүй оруулна уу. Таны оруулсан мэдээлэл нэг амьтны
+                  амийг аварч чадна ❤️
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="space-y-4 mt-4">
+                <div className="flex gap-10">
+                  <div className="flex">
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2">
+                        <PawPrint className="w-4 h-4 text-brown-200" /> Амьтны
+                        байдал <span className="text-red-500 font-bold">*</span>
+                      </Label>
+                      <Select
+                        value={inputValues.animalStatus}
+                        onValueChange={(value: string) =>
+                          setInputValues({
+                            ...inputValues,
+                            animalStatus: value,
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Сонгох..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="LOST">Алга болсон</SelectItem>
+                          <SelectItem value="HOMELESS">
+                            Эзэнгүй / гудамжны
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Label className="flex items-center gap-2 mb-2">
+                        <HeartPulse className="w-4 h-4 text-red-400" /> Эрүүл
+                        мэндийн байдал{" "}
+                        <span className="text-red-500 font-bold">*</span>
+                      </Label>
+                      <Select
+                        value={inputValues.healthCondition}
+                        onValueChange={(value: string) =>
+                          setInputValues({
+                            ...inputValues,
+                            healthCondition: value,
+                          })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Сонгох..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="HEALTHY">Эрүүл</SelectItem>
+                          <SelectItem value="INJURED">Бэртсэн</SelectItem>
+                          <SelectItem value="STARVING">
+                            Өлссөн / сульдсан
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-red-600" />
-                  Байршил <span className="text-red-500 font-bold">*</span>
-                </Label>
-                <Input
-                  placeholder="Жишээ: Баянзүрх дүүрэг, 13-р хороолол..."
-                  value={inputValues.location || ""}
-                  name="location"
-                  onChange={handleInputs}
-                />
-              </div>
-              <div className="rounded-xl border p-3 space-y-2">
-                <Label className="flex items-center gap-2">
-                  <MapPinned className="w-4 h-4 text-red-500" />
-                  Байршлаа map дээр дарж сонгоно уу{" "}
-                  <span className="text-red-500 font-bold">*</span>
-                </Label>
-
-                <div className="overflow-hidden rounded-xl border">
-                  <SelectLocationMap onSelect={handleLocationSelect} />
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-red-600" /> Байршил{" "}
+                    <span className="text-red-500 font-bold">*</span>
+                  </Label>
+                  <Input
+                    placeholder="Жишээ: Баянзүрх дүүрэг, 13-р хороолол..."
+                    value={inputValues.location || ""}
+                    name="location"
+                    onChange={handleInputs}
+                  />
                 </div>
 
-                {location && (
-                  <p className="text-xs text-muted-foreground">
-                    {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
-                  </p>
-                )}
-              </div>
+                <div className="rounded-xl border p-3 space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <MapPinned className="w-4 h-4 text-red-500" /> Байршлаа map
+                    дээр дарж сонгоно уу{" "}
+                    <span className="text-red-500 font-bold">*</span>
+                  </Label>
+                  <div className="overflow-hidden rounded-xl border">
+                    <SelectLocationMap onSelect={handleLocationSelect} />
+                  </div>
+                  {location && (
+                    <p className="text-xs text-muted-foreground">
+                      {location.lat.toFixed(5)}, {location.lng.toFixed(5)}
+                    </p>
+                  )}
+                </div>
 
-              <div className="space-y-2">
-                <Label>Утасны дугаар</Label>
-                <Input
-                  placeholder="Утасны дугаар оруулах"
-                  value={inputValues.phoneNumber || ""}
-                  name="phoneNumber"
-                  onChange={handleInputs}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>
-                  Тайлбар <span className="text-red-500 font-bold">*</span>
-                </Label>
-                <Textarea
-                  placeholder="Амьтны байдал, хэр удаан тэнд байсан, ямар тусламж хэрэгтэй мэт..."
-                  rows={4}
-                  value={inputValues.description || ""}
-                  name="description"
-                  onChange={handleInputs}
-                />
-              </div>
+                <div className="space-y-2">
+                  <Label>Утасны дугаар</Label>
+                  <Input
+                    placeholder="Утасны дугаар оруулах"
+                    value={inputValues.phoneNumber || ""}
+                    name="phoneNumber"
+                    onChange={handleInputs}
+                  />
+                </div>
 
-              <div className="rounded-xl border p-4 space-y-2">
-                <Label className="flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4 text-pink-500" />
-                  Амьтны зураг <span className="text-red-500 font-bold">*</span>
-                </Label>
+                <div className="space-y-2">
+                  <Label>
+                    Тайлбар <span className="text-red-500 font-bold">*</span>
+                  </Label>
+                  <Textarea
+                    placeholder="Амьтны байдал, хэр удаан тэнд байсан, ямар тусламж хэрэгтэй мэт..."
+                    rows={4}
+                    value={inputValues.description || ""}
+                    name="description"
+                    onChange={handleInputs}
+                  />
+                </div>
 
-                <Input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleFile}
-                  className="cursor-pointer"
-                />
-
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  {images.map((img, idx) => (
-                    <div key={idx} className="relative">
-                      <img
-                        src={img.url ? img.url : URL.createObjectURL(img.file)}
-                        alt={`preview ${idx}`}
-                        className="rounded-lg object-cover h-32 w-full"
-                      />
-                      <button
-                        onClick={() => {
-                          setImages((prev) => prev.filter((_, i) => i !== idx));
-                        }}
-                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
+                <div className="rounded-xl border p-4 space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <ImageIcon className="w-4 h-4 text-pink-500" /> Амьтны зураг{" "}
+                    <span className="text-red-500 font-bold">*</span>
+                  </Label>
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFile}
+                    className="cursor-pointer"
+                  />
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {images.map((img, idx) => (
+                      <div key={idx} className="relative">
+                        <img
+                          src={
+                            img.url ? img.url : URL.createObjectURL(img.file)
+                          }
+                          alt={`preview ${idx}`}
+                          className="rounded-lg object-cover h-32 w-full"
+                        />
+                        <button
+                          onClick={() =>
+                            setImages((prev) =>
+                              prev.filter((_, i) => i !== idx),
+                            )
+                          }
+                          className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <Button
+                    onClick={() => uploadImages()}
+                    disabled={uploading}
+                    className="bg-amber-500 text-white rounded-3xl font-bold text-base sm:text-lg md:text-xl px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4
+                     shadow-[0_4px_0_#27409B] hover:scale-105 hover:shadow-amber-500 active:translate-y-1 active:shadow-amber-200
+                     transition-all hover:bg-orange-500 hover:text-white cursor-pointer"
+                  >
+                    {uploading ? "Upload хийж байна..." : "Зураг оруулах"}
+                  </Button>
                 </div>
 
                 <Button
-                  onClick={(updatedImages) => uploadImages()}
-                  disabled={uploading}
-                  className="w-full"
-                  variant="secondary"
+                  className=" w-full bg-yellow-400 text-white rounded-3xl font-bold text-base sm:text-lg md:text-xl px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4
+                     shadow-[0_4px_0_#27408B] hover:scale-105 hover:shadow-amber-500 active:translate-y-1 active:shadow-amber-200
+                     transition-all hover:bg-yellow-300 hover:text-white shadow-hover:text-yellow:hover shadow-2xl cursor-pointer"
+                  onClick={createdHelpAnimal}
                 >
-                  {uploading ? "Upload хийж байна..." : "Зураг оруулах"}
+                  Тусламжийн хүсэлт илгээх
                 </Button>
               </div>
-
-              <Button className="w-full mt-4" onClick={createdHelpAnimal}>
-                Тусламжийн хүсэлт илгээх
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-      <div>
-        {allHelpAnimals.map((animal, index) => {
-          return (
-            <div key={index}>
-              <div className="max-w-md mx-auto space-y-8">
-                {allHelpAnimals.map((animal: any) => (
-                  <Card
-                    key={animal.id}
-                    className="border-none shadow-none rounded-none"
-                  >
-                    <div className="flex items-center justify-between px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <Avatar>
-                          <AvatarImage src={animal.user.profileImg} />
-                          <AvatarFallback>
-                            {animal.user.firstName.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="font-semibold text-sm">
-                          {animal.user.firstName}
-                        </span>
-                      </div>
 
-                      <MoreHorizontal size={18} />
-                    </div>
+      <div className="flex justify-center">
+        <div
+          className="
+  grid
+  grid-cols-2
+  sm:grid-cols-4
+  lg:grid-cols-4
+  gap-4
+     max-w-6xl
+      w-full
+         mx-auto
+        "
+        >
+          {allHelpAnimals.map((animal: HelpAnimal, index: number) => (
+            <Card
+              key={animal.id}
+              className="
+    rounded-2xl
+    overflow-hidden
+    bg-white
+    shadow-md
+    transition-all
+    hover:shadow-xl
+    hover:-translate-y-1
+    border-2 hover:border-amber-300 
+  "
+            >
+              <div className="relative">
+                <img
+                  src={animal.images?.[0] || "/placeholder.png"}
+                  alt="Animal"
+                  className="
+      w-full
+      aspect-square
+      object-cover
+    "
+                />
 
-                    <Carousel className="w-full">
-                      <CarouselContent>
-                        {animal.images.map((img: string, i: number) => (
-                          <CarouselItem key={i}>
-                            <img
-                              src={img}
-                              alt="Animal"
-                              className="w-full aspect-square object-cover"
-                            />
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious />
-                      <CarouselNext />
-                    </Carousel>
-
-                    <div className="flex items-center justify-between px-4 py-3">
-                      <div className="flex gap-4">
-                        <Heart
-                          className={`cursor-pointer transition-colors duration-300 ${
-                            liked
-                              ? "fill-red-500 text-red-500"
-                              : "text-gray-400"
-                          }`}
-                          onClick={() => like(animal.id)}
-                          size={24}
-                        />
-
-                        <MessageCircle className="cursor-pointer" />
-                        <Send className="cursor-pointer" />
-                      </div>
-                    </div>
-
-                    <CardContent className="px-4 space-y-2">
-                      <div className="flex gap-2">
-                        <Badge
-                          className={
-                            animal.status === "LOST"
-                              ? "bg-yellow-400 text-black"
-                              : animal.status === "HOMELESS"
-                                ? "bg-orange-400 text-white"
-                                : animal.status === "IN_PROGRESS"
-                                  ? "bg-blue-500 text-white"
-                                  : "bg-green-500 text-white"
-                          }
-                        >
-                          {animal.status}
-                        </Badge>
-
-                        <Badge
-                          variant="outline"
-                          className={
-                            animal.condition === "HEALTHY"
-                              ? "border-green-500 text-green-600"
-                              : animal.condition === "INJURED"
-                                ? "border-red-500 text-red-600"
-                                : "border-orange-500 text-orange-600"
-                          }
-                        >
-                          {animal.condition}
-                        </Badge>
-                      </div>
-
-                      <p className="text-sm">
-                        <span className="font-semibold mr-1">
-                          {animal.user.firstName}
-                        </span>
-                        {animal.description}
-                      </p>
-
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <MapPin size={17} />
-                        <Button
-                          variant="link"
-                          onClick={() =>
-                            push(`/help-animal/location/${animal.id}`)
-                          }
-                        >
-                          {animal.location}
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                <span
+                  className={`
+      absolute top-3 left-3
+      px-3 py-1
+      rounded-full
+      text-xs font-semibold
+      backdrop-blur  text-blue-950
+      ${statusColors[animal.status]}
+    `}
+                >
+                  {animal.status}
+                </span>
               </div>
-            </div>
-          );
-        })}
+
+              <CardContent className="p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <Badge
+                    variant="outline"
+                    className={`${conditionColors[animal.condition]} bg-white`}
+                  >
+                    {animal.condition}
+                  </Badge>
+                  <PawPrint className="text-gray-400" size={18} />
+                </div>
+
+                <div className="flex items-center gap-1 text-sm text-gray-500">
+                  <MapPin size={14} />
+                  {animal.location}
+                </div>
+
+                <Button
+                  className="bg-orange-400 text-white
+               rounded-3xl font-bold text-base sm:text-lg 
+               md:text-xl px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4
+                shadow-[0_4px_0_#27408B] hover:scale-105 hover:shadow-amber-500
+                 active:translate-y-1 active:shadow-amber-200 transition-all
+                  hover:bg-orange-500 hover:text-white "
+                  onClick={() => push(`/help-animal/location/${animal.id}`)}
+                >
+                  Тусламж үзүүлэх
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );
