@@ -138,6 +138,7 @@ model Reaction {
   experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
 
   @@unique([userId, commentId])
+  @@unique([userId, helpPostId])
 }
 
 model AdoptAnimal {
