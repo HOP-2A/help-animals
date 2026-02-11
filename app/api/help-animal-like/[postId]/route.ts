@@ -8,7 +8,7 @@ export async function POST(
 ) {
   try {
     const body = await req.json();
-    const { userId, type } = body;
+    const { userId } = body;
     const { postId } = await context.params;
 
     const findPost = await prisma.helpAnimal.findUnique({
@@ -32,12 +32,11 @@ export async function POST(
       const createReaction = await prisma.reaction.create({
         data: {
           userId,
-          helpPostId: postId,
-          type,
+          helpPostId: postId
         },
       });
 
-      return NextResponse.json({ message: "liked" }, { status: 200 });
+      return NextResponse.json({ message: "liked" });
     }
   } catch (err) {
     return NextResponse.json({ error: err }, { status: 500 });
