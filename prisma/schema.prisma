@@ -53,6 +53,10 @@ enum Location {
   KHUVSGUL
 }
 
+enum ReactionType {
+  LIKE
+  DISLIKE
+}
 model User {
   id         String   @id @default(nanoid())
   firstName  String
@@ -107,7 +111,7 @@ model Comment {
   content String
   userId String
   parentCommentId String?
-  parent Comment? @relation("Thread", fields : [parentCommentId], references: [id])
+  parent Comment? @relation("Thread", fields : [parentCommentId], references: [id], onDelete: Cascade)
   replies Comment[] @relation("Thread")
   user   User   @relation(fields: [userId], references: [id])
   helpPostId String?
@@ -116,20 +120,24 @@ model Comment {
   adoptPost   AdoptAnimal? @relation(fields: [adoptPostId], references: [id], onDelete: Cascade)
   experienceId String?
   experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+  reactions Reaction[]
   createdAt DateTime @default(now())
 }
 
 model Reaction {
   id   String       @id @default(nanoid())
-
+  type      ReactionType
   userId String
   user   User   @relation(fields: [userId], references: [id])
-
   helpPostId String?
   helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id], onDelete: Cascade)
 
+  commentId String? 
+  comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   experienceId String?
   experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
 }
 
 model AdoptAnimal {
