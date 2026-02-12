@@ -10,10 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { upload } from "@vercel/blob/client";
 import { toast } from "sonner";
-import { useUser } from "@clerk/nextjs";
-import { useAuth } from "@/providers/useAuth";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,6 +29,7 @@ import {
   Ellipsis,
   Pen,
   Trash,
+  ImageIcon,
 } from "lucide-react";
 import { useAuth } from "@/providers/useAuth";
 import { SignInButton, useUser } from "@clerk/nextjs";
@@ -217,6 +215,49 @@ export default function Page() {
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
               <Button onClick={createExperience}>Post</Button>
+            </div>
+            <div className="rounded-xl border p-4 space-y-2">
+              <Label className="flex items-center gap-2">
+                <ImageIcon className="w-4 h-4 text-pink-500" />
+                Амьтны зураг
+              </Label>
+
+              <Input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFile}
+                className="cursor-pointer"
+              />
+
+              <div className="grid grid-cols-2 gap-2 mt-2">
+                {images.map((img, idx) => (
+                  <div key={idx} className="relative">
+                    <img
+                      src={img.url ? img.url : URL.createObjectURL(img.file)}
+                      alt={`preview ${idx}`}
+                      className="rounded-lg object-cover h-32 w-full"
+                    />
+                    <button
+                      onClick={() => {
+                        setImages((prev) => prev.filter((_, i) => i !== idx));
+                      }}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <Button
+                onClick={(updatedImages) => uploadImages()}
+                disabled={uploading}
+                className="w-full"
+                variant="secondary"
+              >
+                {uploading ? "Upload хийж байна..." : "Зураг оруулах"}
+              </Button>
             </div>
           </DialogContent>
         </Dialog>
