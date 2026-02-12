@@ -1,68 +1,84 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Search, X } from "lucide-react";
 
 export default function HeadBar() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    "ADOPT",
-    "HELP ANIMALS",
-    "HERHEN AMITAN TEJEEH BE",
-    "OOLDSON AMITAD",
-    "ANKET",
-    "ANIMNII EMNELEG",
-    "gazriin zurag | map",
+    "АМЬТДАД ТУСЛАХ",
+    "ОЛДСОН АМЬТАД",
+    "ТУРШЛАГА СОЛИЛЦОХ БУЛАН",
+    "ҮРЧЛЭХ",
+    "АМЬТНЫ ЭМНЭЛЭГҮҮД",
+    "ПРОФАЙЛ",
   ];
 
   return (
-    <div className="flex flex-col items-center mt-4 px-2">
-      {/* Animated Box */}
-      <AnimatePresence initial={false}>
-        {isVisible && (
-          <motion.div
-            key="box"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-[1000px] h-12 bg-orange-400 rounded-lg mb-4"
-          />
-        )}
-      </AnimatePresence>
+    <header className="w-full bg-white shadow-sm border-b">
+      <div className="max-w-1000 mx-auto lg:px-17 sm:px-3 py-2 flex items-center justify-between">
+        <img src="/safe-logo.png" alt="Logo" className="w-33 object-contain" />
 
-      {/* Header */}
-      <div className="flex w-full max-w-[1000px] border-4 rounded-3xl border-yellow-200 p-4 gap-4 items-center justify-between">
-        {/* Logo */}
-        <img className="w-24 h-auto" src="orange.logo.png" alt="Logo" />
-
-        {/* Navbar Links */}
-        <div className="flex gap-3 text-sm flex-wrap justify-center">
+        <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold tracking-wide">
           {navLinks.map((link) => (
-            <motion.div
+            <div
               key={link}
-              whileHover={{ scale: 1.1, y: -2, color: "#0cdcf7" }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              className="cursor-pointer whitespace-nowrap px-2 py-1 rounded hover:bg-yellow-100"
+              className="cursor-pointer hover:text-orange-500 transition text-base font-bold"
             >
               {link}
-            </motion.div>
+            </div>
           ))}
-        </div>
 
-        {/* Show/Hide Button */}
-        <motion.button
-          onClick={() => setIsVisible(!isVisible)}
-          whileHover={{ scale: 1.05, backgroundColor: "#0ab2e0" }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          className="px-4 py-2 bg-[#0cdcf7] rounded-lg text-[#0f1115] text-sm"
+          <div className="relative w-64">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="w-full border border-gray-300 rounded-md pr-10 pl-3 py-1 text-sm outline-none"
+            />
+            <button className="absolute right-1 top-1/2 transform -translate-y-1/2 p-1 hover:bg-orange-100 rounded">
+              <Search size={18} className="text-orange-500" />
+            </button>
+          </div>
+        </nav>
+
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="lg:hidden text-2xl"
         >
-          {isVisible ? "Hide" : "Show"}
-        </motion.button>
+          ☰
+        </button>
       </div>
-    </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="lg:hidden bg-white border-t px-6 py-4 flex flex-col gap-4"
+          >
+            {navLinks.map((link) => (
+              <div
+                key={link}
+                className="cursor-pointer hover:text-orange-500 transition text-base font-bold"
+              >
+                {link}
+              </div>
+            ))}
+
+            <div className="flex items-center border border-gray-300 rounded-md px-3 py-1">
+              <input
+                placeholder="Search..."
+                className="text-sm outline-none flex-1"
+              />
+              <Search size={18} className="ml-2 text-orange-500" />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </header>
   );
 }
