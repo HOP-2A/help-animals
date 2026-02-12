@@ -1,6 +1,9 @@
 {
-    "files.autoSave": "afterDelay",
-    "editor.formatOnSave": true,
-    "files.autoSaveWorkspaceFilesOnly": false,
-    "files.autoSaveWhenNoErrors": false
+  "files.autoSave": "afterDelay",
+  "editor.formatOnSave": true,
+  "files.autoSaveWorkspaceFilesOnly": false,
+  "files.autoSaveWhenNoErrors": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "css.format.enable": true,
+  "notebook.defaultFormatter": "esbenp.prettier-vscode"
 }
