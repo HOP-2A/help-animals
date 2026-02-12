@@ -6,6 +6,14 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import * as React from "react";
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+} from "@/components/ui/avatar";
 
 type Animal = {
   id: string;
@@ -66,17 +74,17 @@ const Page = () => {
 
   const [comment, setComment] = useState("");
 
-  // const handleComment = async (postId: string) => {
-  //   const response = await fetch("/api/help-comment", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({
-  //       postId,
-  //       content: comment,
-  //       userId,
-  //     }),
-  //   });
-  // };
+  const handleComment = async (postId: string) => {
+    const response = await fetch("/api/help-comment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        postId,
+        content: comment,
+        userId,
+      }),
+    });
+  };
   useEffect(() => {
     if (!postId) return;
 
@@ -191,7 +199,24 @@ const Page = () => {
                   <h2 className="text-2xl font-bold text-blue-900 pb-4 pt-3">
                     Сэтгэгдэл
                   </h2>
-                  {/* 
+                  <div>
+                    <div className="flex gap-2 mb-2">
+                      <div>
+                        <Avatar>
+                          <AvatarImage
+                            src={user?.profileImg}
+                            alt="img"
+                            className="grayscale"
+                          />
+                          <AvatarFallback className="bg-purple-900 text-white">
+                            {animal.user.firstName?.[0]}
+                            {animal.user.lastName?.[1]}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
+                      {animal.user.firstName} {animal.user.lastName}
+                    </div>
+                  </div>
                   <textarea
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
@@ -204,7 +229,7 @@ const Page = () => {
                     className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-xl"
                   >
                     Илгээх
-                  </button> */}
+                  </button>
                 </div>
               </div>
             </div>
