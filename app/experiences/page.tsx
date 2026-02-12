@@ -86,7 +86,7 @@ export default function Page() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: "393939",
+        userId: "8ZfLnsDxKKkbPezQ5ljk5",
         description,
         images: images.map((img) => img.url),
       }),
@@ -109,23 +109,25 @@ export default function Page() {
     getExperiences();
   };
   const deletePost = async (id: string) => {
-    await fetch("/api/experience-exchange/delete", {
+    const response = await fetch("/api/experience-exchange/delete", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id,
-        userId: "393939",
+        userId: "8ZfLnsDxKKkbPezQ5ljk5",
       }),
     });
     getExperiences();
+    if (response.ok) {
+      toast.success("Амьтан аврах хүсэлт амжилттай илгээгдлээ!");
+    }
   };
   const reaction = async (experienceId: string, type: string) => {
     await fetch("/api/experience-exchange/reaction", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: "393939",
-        type,
+        userId: "8ZfLnsDxKKkbPezQ5ljk5",
         experienceId,
       }),
     });
@@ -151,7 +153,7 @@ export default function Page() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId: "393939",
+        userId: "8ZfLnsDxKKkbPezQ5ljk5",
         content,
         experienceId,
       }),
@@ -178,7 +180,7 @@ export default function Page() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         id,
-        userId: "393939",
+        userId: "8ZfLnsDxKKkbPezQ5ljk5",
       }),
     });
     getComment();

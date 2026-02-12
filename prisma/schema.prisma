@@ -52,6 +52,10 @@ enum Location {
   KHOVD
   KHUVSGUL
 }
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> 238f1f6 (tetete)
 model User {
   id         String   @id @default(nanoid())
   firstName  String
@@ -117,6 +121,10 @@ model Comment {
  
 model Reaction {
   id   String       @id @default(nanoid())
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> 238f1f6 (tetete)
   userId String
   user   User   @relation(fields: [userId], references: [id])
  
