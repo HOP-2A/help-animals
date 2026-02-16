@@ -14,6 +14,7 @@ import {
   AvatarGroupCount,
   AvatarImage,
 } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 type Animal = {
   id: string;
@@ -26,6 +27,31 @@ type Animal = {
   status: string;
   condition: string;
   user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+};
+
+type Comment = {
+  id: string;
+  content: string;
+  replies: [
+    {
+      id: string;
+      content: string;
+      createdAt: string;
+      user: {
+        id: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+      };
+    },
+  ];
+
+  user: {
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -58,9 +84,10 @@ const conditionColors: any = {
 import dynamic from "next/dynamic";
 import AnimalMap from "@/app/components/AnimalMap";
 import { Input } from "@/components/ui/input";
-import { MapPin, PawPrint } from "lucide-react";
+import { MapPin, PawPrint, Send } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useAuth } from "@/providers/useAuth";
+import { toast } from "sonner";
 const Page = () => {
   const params = useParams();
   const postId = params.postId as string;
@@ -71,20 +98,66 @@ const Page = () => {
   const userId = user?.id;
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const [comments, setComments] = useState<Comment[]>([]);
   const [comment, setComment] = useState("");
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [replyContent, setReplyContent] = useState("");
 
+  const getComments = async () => {
+    const response = await fetch("/api/help-comment/get-comments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        helpPostId: postId,
+      }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setComments(data);
+    } else if (!response.ok) {
+      const data = await response.json();
+      console.log(data);
+    }
+  };
+
+  console.log(comments);
   const handleComment = async (postId: string) => {
     const response = await fetch("/api/help-comment", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        postId,
+        helpPostId: postId,
         content: comment,
         userId,
       }),
     });
+
+    if (response.ok) {
+      toast.success("Comment added");
+    }
+
+    getComments();
   };
+
+  const handleReplyComment = async (postId: string, parentId: string) => {
+    const response = await fetch("/api/help-comment", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        helpPostId: postId,
+        content: replyContent,
+        userId,
+        parentCommentId: parentId,
+      }),
+    });
+
+    getComments();
+  };
+
+  useEffect(() => {
+    getComments();
+  }, [postId]);
   useEffect(() => {
     if (!postId) return;
 
@@ -106,7 +179,7 @@ const Page = () => {
     return <div className="p-10">Not found</div>;
   }
 
-  console.log(animal.user);
+  console.log(comments);
 
   return (
     <div>
@@ -208,28 +281,133 @@ const Page = () => {
                             alt="img"
                             className="grayscale"
                           />
-                          <AvatarFallback className="bg-purple-900 text-white">
+                          <AvatarFallback className="bg-blue-900 text-white">
                             {animal.user.firstName?.[0]}
-                            {animal.user.lastName?.[1]}
+                            {animal.user.lastName?.[0]}
                           </AvatarFallback>
                         </Avatar>
                       </div>
                       {animal.user.firstName} {animal.user.lastName}
                     </div>
                   </div>
-                  <textarea
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Сэтгэгдэл үлдээх..."
-                    className="w-full border rounded-xl p-3"
-                  />
+                  <div className="relative w-full">
+                    <Input
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      placeholder="Сэтгэгдэл үлдээх..."
+                      className="w-full border rounded-xl py-8 border-amber-200 shadow-amber-300"
+                    />
 
-                  <button
-                    onClick={() => handleComment(animal.id)}
-                    className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-xl"
-                  >
-                    Илгээх
-                  </button>
+                    <button
+                      onClick={() => handleComment(animal.id)}
+                      className=" absolute right-3 top-4 -translate-y-1/2 
+ mt-4 bg-blue-400 text-white rounded-3xl font-bold text-base sm:text-lg md:text-xl sm:px-6 
+                     shadow-[0_4px_0_#27409B] hover:scale-105 hover:shadow-blue-400 active:translate-y-1 active:shadow-amber-200
+                     transition-all hover:bg-blue-900 hover:text-white cursor-pointer mb-4"
+                    >
+                      <Send />
+                    </button>
+                  </div>
+
+                  <div>
+                    {comments.map((comment, index) => {
+                      return (
+                        <div key={index}>
+                          <div className="bg-gray-100 border-2  border-blue-50 rounded-2xl p-5 mb-2 mt-2">
+                            <div>
+                              <div className="flex gap-2">
+                                <Avatar>
+                                  <AvatarImage
+                                    src={user?.profileImg}
+                                    alt="img"
+                                    className="grayscale"
+                                  />
+                                  <AvatarFallback className="bg-blue-900 text-white">
+                                    {animal.user.firstName?.[0]}
+                                    {animal.user.lastName?.[0]}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  {" "}
+                                  {comment.user.firstName}{" "}
+                                  {comment.user.lastName}
+                                </div>
+                              </div>{" "}
+                            </div>
+                            <div className="mt-2 ">{comment.content}</div>
+                            <div className="ml-12 border-l-2 border-blue-200 pl-4 mt-3 space-y-2">
+                              {comment.replies.map((reply) => (
+                                <div
+                                  key={reply.id}
+                                  className="bg-white rounded-xl p-4 shadow-sm"
+                                >
+                                  <div className="flex gap-2 items-center">
+                                    <Avatar className="w-8 h-8">
+                                      <AvatarFallback>
+                                        {reply.user.firstName?.[0]}
+                                        {reply.user.lastName?.[0]}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <span className="font-semibold text-sm">
+                                      {reply.user.firstName}{" "}
+                                      {reply.user.lastName}{" "}
+                                      <div className="text-xs text-gray-500">
+                                        {new Date(
+                                          reply.createdAt,
+                                        ).toLocaleString()}
+                                      </div>
+                                    </span>
+                                  </div>
+                                  <div className="mt-1 text-sm text-gray-700">
+                                    {reply.content}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="-mt-4 flex gap-5">
+                            <Button
+                              onClick={() => setReplyingTo(comment.id)}
+                              variant="link"
+                            >
+                              Хариулах
+                            </Button>
+
+                            <Button
+                              onClick={() => handleComment(animal.id)}
+                              variant="link"
+                              className="-ml-10"
+                            >
+                              Таалагдлаа
+                            </Button>
+                          </div>
+                          <div className="ml-12 mt-2">
+                            {replyingTo === comment.id && (
+                              <div className="relative">
+                                <Input
+                                  value={replyContent}
+                                  onChange={(e) =>
+                                    setReplyContent(e.target.value)
+                                  }
+                                  placeholder="Хариу бичих..."
+                                  className="bg-gray-100 border-2  border-blue-50 rounded-2xl p-5 mb-2 mt-2"
+                                />
+
+                                <button
+                                  onClick={() =>
+                                    handleReplyComment(animal.id, comment.id)
+                                  }
+                                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-500 p-2 rounded-full"
+                                >
+                                  <Send className="w-4 h-4 text-white" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
