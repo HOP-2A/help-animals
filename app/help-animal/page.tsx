@@ -6,12 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { upload } from "@vercel/blob/client";
 import dynamic from "next/dynamic";
+import HeadBar from "../_components/headbar";
+
 import {
   Heart,
   MapPinned,
   MessageCircle,
   MoreHorizontal,
   Send,
+  Star,
 } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import { useAuth } from "@/providers/useAuth";
@@ -95,6 +98,7 @@ const Page = () => {
   });
 
   const [allHelpAnimals, setHelpAnimals] = useState<HelpAnimal[]>([]);
+
   const [location, setLocation] = useState<{
     lat: number;
     lng: number;
@@ -250,13 +254,17 @@ const Page = () => {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <div className="text-center py-10 space-y-3">
-        <h1 className="text-4xl font-bold text-blue-900 flex justify-center items-center gap-2">
-          🐾 Тусламж хэрэгтэй амьтад
-        </h1>
-        <p className="text-2xl text-blue-900">
-          Нэг товшилт нэг амийг аварч чадна
-        </p>
+      <HeadBar />
+      <div className="text-center py-10 space-y-3 mt-4">
+        <div className="flex flex-col justify-center items-center">
+          <img src="cat-cute.gif" className="w-40 h-40 -mb-8 "></img>
+          <h1 className="text-4xl font-bold text-blue-900 flex justify-center items-center gap-2">
+            🐾 Тусламж хэрэгтэй амьтад
+          </h1>
+          <p className="text-2xl text-blue-900">
+            Нэг товшилт нэг амийг аварч чадна
+          </p>
+        </div>
         <div>
           <Dialog>
             <DialogTrigger asChild>
@@ -283,6 +291,7 @@ const Page = () => {
 
   "
                 >
+                  {" "}
                   <PawPrint className="text-3xl" />
                   Тусламж хэрэгтэй амьтан нэмэх
                 </Button>
@@ -507,6 +516,14 @@ const Page = () => {
       object-cover
     "
                 />
+                <span>
+                  {" "}
+                  {animal.userId === userId ? (
+                    <Star className="text-yellow-400 absolute top-4 right-3 fill-amber-400 " />
+                  ) : (
+                    ""
+                  )}
+                </span>
 
                 <span
                   className={`
@@ -553,6 +570,11 @@ const Page = () => {
             </Card>
           ))}
         </div>
+      </div>
+      <div className="flex justify-between">
+        {/* <img src="wave-cute.gif" className="w-40 h-40"></img> */}
+        <img src="husky-shiba.gif" className="w-60 h-60"></img>
+        <img src="meow-hungry.gif" className="w-40 h-40"></img>
       </div>
     </div>
   );
