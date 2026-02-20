@@ -139,9 +139,11 @@ const Page = () => {
 
     if (response.ok) {
       setComment("");
+      await getComments();
+    } else if (!response.ok) {
+      const data = await response.json();
+      toast.error(data.error);
     }
-
-    getComments();
   };
 
   const getComments = async () => {
@@ -311,10 +313,17 @@ const Page = () => {
                     {animal.user.firstName} {animal.user.lastName}
                   </p>
 
-                  <p className="text-slate-500 font-bold text-[20px]">Утас</p>
-                  <p className="font-semibold text-[18px]">
-                    {animal.phoneNumber}
-                  </p>
+                  {animal.phoneNumber && (
+                    <>
+                      <p className="text-slate-500 font-bold text-[20px]">
+                        Утас
+                      </p>
+                      <p className="font-semibold text-[18px]">
+                        {animal.phoneNumber}
+                      </p>
+                    </>
+                  )}
+
                   <Button
                     variant="link"
                     className="-translate-y-1/3
@@ -390,6 +399,7 @@ const Page = () => {
                     />
 
                     <button
+                      type="button"
                       onClick={() => handleComment(animal.id)}
                       className=" absolute right-3 top-4 -translate-y-1/2 
  mt-4 bg-blue-400 text-white rounded-3xl font-bold text-base sm:text-lg md:text-xl sm:px-6 

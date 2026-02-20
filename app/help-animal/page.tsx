@@ -82,7 +82,7 @@ type ImageItem = {
 const Page = () => {
   const { user: clerkUser } = useUser();
   const clerkId = clerkUser?.id ?? null;
-  const { user, loading, error } = useAuth(clerkId);
+  const { user } = useAuth(clerkId);
 
   const userId = user?.id;
 
@@ -207,8 +207,9 @@ const Page = () => {
     }
   };
 
-  console.log(allHelpAnimals);
-
+  const helpAnimal = allHelpAnimals.filter(
+    (animal) => animal.status !== "RESCUED",
+  );
   const like = async (postId: string) => {
     const response = await fetch(`/api/help-animal-like/${postId}`, {
       method: "POST",
@@ -236,7 +237,7 @@ const Page = () => {
     LOST: "bg-red-400 text-white",
     HOMELESS: "bg-blue-800 text-white",
     IN_PROGRESS: "bg-yellow-400 text-white",
-    SAFE: "bg-green-800 text-white",
+    RESCUED: "bg-green-600 text-white",
   };
 
   const conditionColors: any = {
@@ -492,7 +493,7 @@ const Page = () => {
          mx-auto
         "
         >
-          {allHelpAnimals.map((animal: HelpAnimal, index: number) => (
+          {helpAnimal.map((animal: HelpAnimal, index: number) => (
             <Card
               key={animal.id}
               className="
@@ -561,7 +562,7 @@ const Page = () => {
                md:text-xl px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4
                 shadow-[0_4px_0_#27408B] hover:scale-105 hover:shadow-amber-500
                  active:translate-y-1 active:shadow-amber-200 transition-all
-                  hover:bg-orange-500 hover:text-white "
+                  hover:bg-orange-500 hover:text-white  cursor-pointer"
                   onClick={() => push(`/help-animal/location/${animal.id}`)}
                 >
                   Тусламж үзүүлэх
@@ -572,9 +573,7 @@ const Page = () => {
         </div>
       </div>
       <div className="flex justify-between">
-        {/* <img src="wave-cute.gif" className="w-40 h-40"></img> */}
         <img src="husky-shiba.gif" className="w-60 h-60"></img>
-        <img src="meow-hungry.gif" className="w-40 h-40"></img>
       </div>
     </div>
   );
