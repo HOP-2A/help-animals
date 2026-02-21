@@ -37,3 +37,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: err }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const likes = await prisma.reaction.findMany({});
+    return NextResponse.json(likes, { status: 200 });
+  } catch (err) {
+    return NextResponse.json({ error: err }, { status: 500 });
+  }
+}

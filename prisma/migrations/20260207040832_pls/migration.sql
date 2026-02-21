@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "HelpStatus" AS ENUM ('LOST', 'IN_PROGRESS', 'RESCUED', 'CLOSED');
+CREATE TYPE "HelpStatus" AS ENUM ('LOST', 'HOMELESS', 'IN_PROGRESS', 'RESCUED');
 
 -- CreateEnum
 CREATE TYPE "AnimalCondition" AS ENUM ('HEALTHY', 'INJURED', 'STARVING');
@@ -12,9 +12,6 @@ CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE');
 
 -- CreateEnum
 CREATE TYPE "Location" AS ENUM ('ULAANBAATAR', 'ARKHANGAI', 'BAYANKHONGOR', 'BAYAN_OLGII', 'BULGAN', 'GOVI_ALTAI', 'GOVI_SUMBER', 'DARKHAN', 'DORNOD', 'DORNOGOVI', 'DUNDGOVI', 'ZAVKHAN', 'ORKHON', 'UVURKHANGAI', 'UMNUGOVI', 'SUKHBAATAR', 'SELENGE', 'TUV', 'UVS', 'KHOVD', 'KHUVSGUL');
-
--- CreateEnum
-CREATE TYPE "ReactionType" AS ENUM ('LIKE', 'HEART', 'SAD', 'ANGRY', 'WOW');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -49,6 +46,9 @@ CREATE TABLE "HelpAnimal" (
     "id" TEXT NOT NULL,
     "location" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "phoneNumber" TEXT,
+    "lat" DOUBLE PRECISION,
+    "lng" DOUBLE PRECISION,
     "images" TEXT[],
     "status" "HelpStatus" NOT NULL DEFAULT 'LOST',
     "userId" TEXT NOT NULL,
@@ -74,7 +74,6 @@ CREATE TABLE "Comment" (
 -- CreateTable
 CREATE TABLE "Reaction" (
     "id" TEXT NOT NULL,
-    "type" "ReactionType" NOT NULL,
     "userId" TEXT NOT NULL,
     "helpPostId" TEXT,
     "experienceId" TEXT,
