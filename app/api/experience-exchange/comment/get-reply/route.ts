@@ -1,22 +1,21 @@
-import { ExperienceExchange } from "./../../../../../node_modules/.prisma/client/index.d";
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { experienceId } = body;
+    const { parentCommentId } = body;
 
-    if (!experienceId) {
+    if (!parentCommentId) {
       return NextResponse.json(
-        { error: "experience id is required" },
+        { error: "parentCommendId id is required" },
         { status: 400 },
       );
     }
 
-    const comments = await prisma.comment.findMany({
+    const replies = await prisma.comment.findMany({
       where: {
-        experienceId,
+        parentCommentId,
       },
       include: {
         user: true,
@@ -24,7 +23,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(comments, { status: 200 });
+    return NextResponse.json(replies, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

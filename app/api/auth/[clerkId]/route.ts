@@ -6,7 +6,7 @@ export const GET = async (
   context: Promise<{ params: { clerkId: string } }>,
 ) => {
   const { params } = await context;
-  const { clerkId } = params;
+  const { clerkId } = await params;
 
   try {
     const userData = await prisma.user.findUnique({
