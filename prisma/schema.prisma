@@ -13,6 +13,17 @@ enum HelpStatus {
   RESCUED
 }
 
+enum Answer {
+  Yes 
+  No 
+  Unknown
+}
+
+enum Level {
+  High
+  Low
+  Medium
+}
 enum AnimalCondition {
   HEALTHY
   INJURED
@@ -27,6 +38,13 @@ enum AdoptStatus {
 enum Gender {
   MALE
   FEMALE
+}
+
+enum AdoptionFormStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
 }
 
 enum Location {
@@ -56,6 +74,11 @@ enum Location {
 enum ReactionType {
   LIKE
   DISLIKE
+}
+
+enum Type {
+  Cat
+  Dog
 }
 model User {
   id         String   @id @default(nanoid())
@@ -143,13 +166,26 @@ model Reaction {
 model AdoptAnimal {
   id          String      @id @default(nanoid())
   description String
+  name String
+  age String
+  breed String
+  animalType Type
+  gender Gender
+  sterilized Answer
+  CatFriendly Answer
+  DogFriendly Answer
+  KidFriendly  Answer
+  AggressionLevel Level
+  AggressionNote  String?  
+  personality String?
+  healthInfo String?
   images      String[]
   status      AdoptStatus
-  userId      String   @unique
+  temporaryEnd DateTime? 
+  userId      String  
   user        User        @relation(fields: [userId], references: [id])
   comments    Comment[]
   adoptionForms AdoptionForm[]
-   
   createdAt DateTime @default(now())
 }
 model AdoptionForm {
@@ -165,10 +201,10 @@ model AdoptionForm {
   email          String
   hasPet         Boolean
   petInfo        String?
- 
   petId          String?
   pet            AdoptAnimal? @relation(fields: [petId], references: [id])
- 
+  notes          String? 
+  status         AdoptionFormStatus @default(PENDING)  
   userId         String
   user           User        @relation(fields: [userId], references: [id])
 }
