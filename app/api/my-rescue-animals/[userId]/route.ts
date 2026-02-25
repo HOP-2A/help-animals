@@ -21,7 +21,7 @@ export const GET = async (
 export async function PUT(req: Request) {
   try {
     const body = await req.json();
-    const { postId, userId, status } = body;
+    const { postId, userId, status, condition } = body;
     if (!postId || !userId || !status) {
       return NextResponse.json({ error: "Missing field" }, { status: 400 });
     }
@@ -42,6 +42,7 @@ export async function PUT(req: Request) {
       },
       data: {
         status,
+        condition,
       },
     });
     return NextResponse.json(updatedAnimal, { status: 200 });
