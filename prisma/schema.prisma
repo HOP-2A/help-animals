@@ -105,7 +105,7 @@ model Pet {
   name       String
   breed      String
   gender     Gender
-  age        Int
+  age        String
   petImg     String[]
   healthInfo String?
   ownerId    String
