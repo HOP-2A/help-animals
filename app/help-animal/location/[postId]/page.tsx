@@ -302,7 +302,6 @@ const Page = () => {
       }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
-        <HeadBar />
         <div className="p-5 lg:p-8 space-y-6 overflow-y-auto">
           <div>
             <div className="p-6 text-blue-900 flex items-center gap-3">
@@ -321,7 +320,7 @@ const Page = () => {
           </div>
 
           <div className="rounded-3xl bg-white shadow-lg border border-amber-100 overflow-hidden">
-            <div className="relative bg-gradient-to-br from-amber-50 to-orange-50 p-6">
+            <div className="relative bg-linear-to-br  from-amber-50 to-orange-50 p-6">
               <Carousel className="w-full max-w-sm mx-auto">
                 <CarouselContent>
                   {animal?.images?.map((img, i) => (
@@ -333,7 +332,7 @@ const Page = () => {
                           fill
                           className="object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
                       </div>
                     </CarouselItem>
                   ))}
@@ -344,7 +343,7 @@ const Page = () => {
 
               <div className="flex justify-center mt-4 gap-3">
                 <span
-                  className={`px-4 py-2 rounded-full text-sm font-bold text-white shadow-md bg-gradient-to-r ${st.gradient}`}
+                  className={`px-4 py-2 rounded-full text-sm font-bold text-white shadow-md bg-linear-to-t ${st.gradient}`}
                 >
                   {st.emoji} {st.label}
                 </span>

@@ -264,7 +264,6 @@ const Page = () => {
       }}
     >
       <HeadBar />
-
       <div
         className="relative overflow-hidden py-16 px-6 text-center"
         style={{
@@ -300,7 +299,7 @@ const Page = () => {
           />
         ))}
 
-        <div className="relative z-10 max-w-2xl mx-auto">
+        <div className="relative z-10 max-w-2xl mx-auto -mt-10">
           <img src="cat-cute.gif" className="w-32 h-32 mx-auto mb-4" />
           <div className="inline-flex items-center gap-2 bg-amber-400/20 border border-amber-400/40 rounded-full px-5 py-2 text-amber-300 text-sm font-semibold mb-5 backdrop-blur-sm">
             <Heart size={14} fill="currentColor" /> Тусламж хэрэгтэй амьтад
