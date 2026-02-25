@@ -3,9 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import * as React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -13,7 +11,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   MapPin,
@@ -39,6 +36,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import AnimalMap from "@/app/components/AnimalMap";
+import HeadBar from "@/app/_components/headbar";
 
 type Animal = {
   id: string;
@@ -50,7 +48,12 @@ type Animal = {
   phoneNumber: string;
   status: string;
   condition: string;
-  user: { firstName: string; lastName: string; email: string };
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    profileImg: string;
+  };
 };
 
 type Comment = {
@@ -61,9 +64,21 @@ type Comment = {
     id: string;
     content: string;
     createdAt: string;
-    user: { id: string; firstName: string; lastName: string; email: string };
+    user: {
+      id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      profileImg: string;
+    };
   }[];
-  user: { id: string; firstName: string; lastName: string; email: string };
+  user: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    profileImg: string;
+  };
 };
 
 const statusConfig: Record<
@@ -98,28 +113,31 @@ const statusConfig: Record<
 
 const conditionConfig: Record<
   string,
-  { label: string; bg: string; text: string; emoji: string }
+  { label: string; bg: string; text: string }
 > = {
   HEALTHY: {
     label: "Эрүүл",
     bg: "bg-green-100",
     text: "text-green-700",
-    emoji: "💚",
   },
   INJURED: {
     label: "Бэртсэн",
     bg: "bg-red-100",
     text: "text-red-700",
-    emoji: "🩹",
   },
   STARVING: {
     label: "Өлссөн/сульдсан",
     bg: "bg-orange-100",
     text: "text-orange-700",
-    emoji: "🍖",
   },
 };
 
+type Like = {
+  id: string;
+  commentId: string;
+  userId: string;
+  type: "LIKE" | "DISLIKE";
+};
 const Page = () => {
   const params = useParams();
   const postId = params.postId as string;
@@ -135,7 +153,7 @@ const Page = () => {
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
   const [editComment, setEditComment] = useState("");
-  const [likes, setLikes] = useState<any[]>([]);
+  const [likes, setLikes] = useState<Like[]>([]);
 
   const handleComment = async (postId: string) => {
     if (!comment) return toast.error("Сэтгэгдэл хоосон байж болохгүй");
@@ -284,20 +302,18 @@ const Page = () => {
       }}
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+        <HeadBar />
         <div className="p-5 lg:p-8 space-y-6 overflow-y-auto">
-          <div
-            className="rounded-3xl overflow-hidden shadow-xl"
-            style={{ background: "linear-gradient(135deg,#1e3a5f,#1e40af)" }}
-          >
-            <div className="p-6 text-white flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+          <div>
+            <div className="p-6 text-blue-900 flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-blue-800 flex items-center justify-center">
                 <PawPrint size={24} className="text-amber-300" />
               </div>
               <div>
-                <h1 className="text-2xl font-black tracking-tight">
+                <h1 className="text-2xl font-black tracking-tight ">
                   Амьтны мэдээлэл
                 </h1>
-                <p className="text-blue-200 text-sm">
+                <p className="text-blue-900 text-sm">
                   Дэлгэрэнгүй мэдээлэл ба байршил
                 </p>
               </div>
@@ -335,7 +351,7 @@ const Page = () => {
                 <span
                   className={`px-4 py-2 rounded-full text-sm font-bold ${cd.bg} ${cd.text}`}
                 >
-                  {cd.emoji} {cd.label}
+                  {cd.label}
                 </span>
               </div>
             </div>
@@ -355,43 +371,44 @@ const Page = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100">
-                  <div className="flex items-center gap-2 mb-2">
-                    <User size={15} className="text-blue-500" />
-                    <p className="text-xs text-blue-500 font-bold uppercase tracking-wide">
-                      Нийтэлсэн
-                    </p>
-                  </div>
-                  <p className="font-bold text-gray-800">
-                    {animal.user.firstName} {animal.user.lastName}
-                  </p>
-                </div>
-
-                {animal.phoneNumber && (
-                  <div className="bg-green-50 rounded-2xl p-4 border border-green-100">
+              <div className="flex justify-between items-end gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
+                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100">
                     <div className="flex items-center gap-2 mb-2">
-                      <Phone size={15} className="text-green-500" />
-                      <p className="text-xs text-green-500 font-bold uppercase tracking-wide">
-                        Утас
+                      <User size={15} className="text-blue-500" />
+                      <p className="text-xs text-blue-500 font-bold uppercase tracking-wide">
+                        Нийтэлсэн
                       </p>
                     </div>
                     <p className="font-bold text-gray-800">
-                      {animal.phoneNumber}
+                      {animal.user.firstName} {animal.user.lastName}
                     </p>
                   </div>
-                )}
-              </div>
 
-              <button
-                className="w-full py-3.5 rounded-2xl font-extrabold text-blue-900 text-base transition-all cursor-pointer
+                  {animal.phoneNumber && (
+                    <div className="bg-green-50 rounded-2xl p-4 border border-green-100">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Phone size={15} className="text-green-500" />
+                        <p className="text-xs text-green-500 font-bold uppercase tracking-wide">
+                          Утас
+                        </p>
+                      </div>
+                      <p className="font-bold text-gray-800">
+                        {animal.phoneNumber}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <button
+                  className="py-4  px-3 rounded-2xl font-extrabold text-blue-900 text-base transition-all cursor-pointer
                 shadow-[0_5px_0_#92400e] hover:shadow-[0_7px_0_#92400e] hover:-translate-y-1 active:translate-y-1"
-                style={{
-                  background: "linear-gradient(135deg,#fbbf24,#f97316)",
-                }}
-              >
-                📞 Холбогдох
-              </button>
+                  style={{
+                    background: "linear-gradient(135deg,#fbbf24,#f97316)",
+                  }}
+                >
+                  📞 Холбогдох
+                </button>
+              </div>
 
               <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100">
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">
@@ -458,10 +475,10 @@ const Page = () => {
                 {comments.map((c) => {
                   const isOwn = c.user.id === userId;
                   const likeCount = likes.filter(
-                    (l: any) => l.commentId === c.id && l.type === "LIKE",
+                    (l) => l.commentId === c.id && l.type === "LIKE",
                   ).length;
                   const isLiked = likes.some(
-                    (l: any) =>
+                    (l) =>
                       l.userId === userId &&
                       l.commentId === c.id &&
                       l.type === "LIKE",
@@ -481,6 +498,7 @@ const Page = () => {
                             <Avatar
                               className={`w-9 h-9 border-2 ${isOwn ? "border-amber-400" : "border-blue-200"}`}
                             >
+                              <AvatarImage src={c.user?.profileImg} />
                               <AvatarFallback
                                 className={`text-white text-xs font-bold ${isOwn ? "bg-amber-500" : "bg-blue-600"}`}
                               >
@@ -617,6 +635,9 @@ const Page = () => {
                                     <Avatar
                                       className={`w-7 h-7 border-2 ${reply.user.id === userId ? "border-amber-400" : "border-blue-200"}`}
                                     >
+                                      <AvatarImage
+                                        src={reply.user.profileImg}
+                                      />
                                       <AvatarFallback
                                         className={`text-white text-xs font-bold ${reply.user.id === userId ? "bg-amber-500" : "bg-blue-600"}`}
                                       >
@@ -679,7 +700,7 @@ const Page = () => {
                                         <DialogContent className="rounded-3xl">
                                           <DialogHeader>
                                             <DialogTitle className="text-center font-black">
-                                              Хариулт өөрчлөх
+                                              Сэтгэгдлийг өөрчлөх
                                             </DialogTitle>
                                             <div className="space-y-3 mt-3">
                                               <Input

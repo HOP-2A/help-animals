@@ -1,10 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import HeadBar from "../../_components/headbar";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
+
 import { PawPrint, Heart, SlidersHorizontal, X } from "lucide-react";
 import {
   DropdownMenu,
@@ -55,18 +54,17 @@ const Page = () => {
   const hasActiveFilters = genderFilter || statusFilter;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
+    <div className="min-h-screen bg-linear-to-t from-amber-50 via-orange-50 to-rose-50">
       <HeadBar />
 
-      {/* Hero Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 py-14 px-6 text-center">
+      <div className="relative overflow-hidden bg-linear-to-t from-orange-400 via-amber-400 to-yellow-400 py-14 px-6 text-center">
         <div className="absolute top-4 left-8 opacity-20 rotate-[-15deg]">
           <PawPrint size={48} className="text-white" />
         </div>
-        <div className="absolute bottom-4 right-10 opacity-20 rotate-[20deg]">
+        <div className="absolute bottom-4 right-10 opacity-20 rotate-20">
           <PawPrint size={64} className="text-white" />
         </div>
-        <div className="absolute top-8 right-1/3 opacity-10 rotate-[10deg]">
+        <div className="absolute top-8 right-1/3 opacity-10 rotate-10">
           <PawPrint size={36} className="text-white" />
         </div>
 
@@ -93,9 +91,12 @@ const Page = () => {
             fill="rgb(255 247 237)"
           />
         </svg>
+        <img
+          src="/love-dog.gif"
+          className="hidden md:block right-2.5 absolute mb-20 -mt-33 w-50 h-46"
+        ></img>
       </div>
 
-      {/* Filter Bar */}
       <div className="max-w-6xl mx-auto px-4 pt-8 pb-2">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-amber-700 font-semibold">
@@ -105,7 +106,7 @@ const Page = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
+              <div
                 className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 font-medium text-sm transition-all
                   ${
                     statusFilter
@@ -127,7 +128,7 @@ const Page = () => {
                     }}
                   />
                 )}
-              </button>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="rounded-2xl shadow-xl border-orange-100">
               <DropdownMenuItem
@@ -201,13 +202,12 @@ const Page = () => {
             </button>
           )}
 
-          <span className="ml-auto text-sm text-amber-600 font-semibold bg-amber-100 px-3 py-1.5 rounded-full">
+          <span className="ml-auto text-sm text-amber-600 font-semibold bg-amber-100 px-3 py-1.5 rounded-full sun-glow">
             {filteredAnimals.length} нохой олдлоо
           </span>
         </div>
       </div>
 
-      {/* Dog Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 max-w-6xl w-full mx-auto px-4 pt-6 pb-24">
         {filteredAnimals.map((dog) => (
           <div
@@ -241,8 +241,8 @@ const Page = () => {
                     absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white shadow-md
                     ${
                       dog.status === "TEMPORARY"
-                        ? "bg-gradient-to-r from-sky-400 to-blue-500"
-                        : "bg-gradient-to-r from-violet-400 to-purple-600"
+                        ? "bg-linear-to-t from-sky-400 to-blue-500"
+                        : "bg-linear-to-t from-violet-400 to-purple-600"
                     }
                   `}
                 >
@@ -263,7 +263,7 @@ const Page = () => {
                 </span>
 
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t from-orange-500/30 to-transparent transition-opacity duration-300 ${
+                  className={`absolute inset-0 bg-linear-to-t from-orange-500/30 to-transparent transition-opacity duration-300 ${
                     hoveredId === dog.id ? "opacity-100" : "opacity-0"
                   }`}
                 />
@@ -293,13 +293,13 @@ const Page = () => {
 
                 <button
                   className="w-full py-2.5 rounded-2xl font-bold text-sm text-white transition-all duration-200
-                    bg-gradient-to-r from-orange-400 to-amber-400
+                    bg-linear-to-r from-orange-400 to-amber-400
                     shadow-[0_4px_0_#c2410c]
                     hover:from-orange-500 hover:to-amber-500
                     hover:shadow-[0_6px_0_#9a3412]
                     active:translate-y-1 active:shadow-[0_2px_0_#9a3412]
                     cursor-pointer"
-                  onClick={() => push(`/help-animal/location/${dog.id}`)}
+                  onClick={() => push(`/adoption/adopt/${dog.id}`)}
                 >
                   🐾 Үрчлэх — {dog.name}
                 </button>

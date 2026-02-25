@@ -53,6 +53,22 @@ type HelpAnimal = {
   user: { id: string; firstName: string; lastName: string; profileImg: string };
 };
 
+type DecoPosition = {
+  size: number;
+  top?: string;
+  bottom?: string;
+  left?: string;
+  right?: string;
+  rot: number;
+  op: number;
+};
+
+const decorations: DecoPosition[] = [
+  { size: 52, top: "10%", left: "6%", rot: -20, op: 0.15 },
+  { size: 36, top: "15%", right: "8%", rot: 15, op: 0.12 },
+  { size: 28, bottom: "12%", right: "20%", rot: 30, op: 0.1 },
+];
+
 const SelectLocationMap = dynamic(() => import("../components/googlemap"), {
   ssr: false,
 });
@@ -86,25 +102,22 @@ const statusConfig: Record<
 
 const conditionConfig: Record<
   string,
-  { label: string; bg: string; text: string; emoji: string }
+  { label: string; bg: string; text: string }
 > = {
   HEALTHY: {
     label: "Эрүүл",
     bg: "bg-green-100",
     text: "text-green-700",
-    emoji: "💚",
   },
   INJURED: {
     label: "Бэртсэн",
     bg: "bg-red-100",
     text: "text-red-700",
-    emoji: "🩹",
   },
   STARVING: {
     label: "Өлссөн/сульдсан",
     bg: "bg-orange-100",
     text: "text-orange-700",
-    emoji: "🍖",
   },
 };
 
@@ -272,25 +285,19 @@ const Page = () => {
           }}
         />
 
-        {[
-          { size: 52, top: "10%", left: "6%", rot: -20, op: 0.15 },
-          { size: 36, top: "15%", right: "8%", rot: 15, op: 0.12 },
-          { size: 28, bottom: "12%", right: "20%", rot: 30, op: 0.1 },
-        ].map((p, i) => (
+        {decorations.map((p, i) => (
           <div
             key={i}
             className="absolute"
             style={{
               top: p.top,
               left: p.left,
-              right: (p as any).right,
-              bottom: (p as any).bottom,
+              right: p.right,
+              bottom: p.bottom,
               transform: `rotate(${p.rot}deg)`,
               opacity: p.op,
             }}
-          >
-            <PawPrint size={p.size} className="text-amber-300" />
-          </div>
+          />
         ))}
 
         <div className="relative z-10 max-w-2xl mx-auto">
@@ -499,7 +506,9 @@ const Page = () => {
                       background: "linear-gradient(135deg,#f97316,#fbbf24)",
                     }}
                   >
-                    {uploading ? "⏳ Upload хийж байна..." : "📸 Зураг хуулах"}
+                    {uploading
+                      ? "⏳ Зураг байршуулаж байна..."
+                      : "📸 Зураг байршуулах"}
                   </button>
                 </div>
 
@@ -645,7 +654,7 @@ const Page = () => {
                   )}
 
                   <div
-                    className={`absolute inset-0 bg-gradient-to-t from-orange-600/35 to-transparent transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}
+                    className={`absolute inset-0 bg-linear-to-t from-orange-600/35 to-transparent transition-opacity duration-300 ${isHovered ? "opacity-100" : "opacity-0"}`}
                   />
                 </div>
 
@@ -654,7 +663,7 @@ const Page = () => {
                     <span
                       className={`text-xs font-bold px-2.5 py-1.5 rounded-full ${cd.bg} ${cd.text}`}
                     >
-                      {cd.emoji} {cd.label}
+                      {cd.label}
                     </span>
                     <PawPrint size={16} className="text-orange-300" />
                   </div>
@@ -664,14 +673,10 @@ const Page = () => {
                       size={13}
                       className="text-orange-400 mt-0.5 shrink-0"
                     />
-                    <span className="line-clamp-2">{animal.location}</span>
+                    <span className="line-clamp-2 wrap-break-word">
+                      {animal.location}
+                    </span>
                   </div>
-
-                  {animal.phoneNumber && (
-                    <div className="text-xs text-blue-600 font-semibold bg-blue-50 rounded-lg px-2.5 py-1.5">
-                      📞 {animal.phoneNumber}
-                    </div>
-                  )}
 
                   <button
                     onClick={() => push(`/help-animal/location/${animal.id}`)}

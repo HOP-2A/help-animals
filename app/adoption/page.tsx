@@ -1,10 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import HeadBar from "../_components/headbar";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
 import { PawPrint, Plus, Sparkles } from "lucide-react";
 
 type AdoptAnimal = {
@@ -37,11 +35,11 @@ const Page = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-blue-50">
+    <div className="min-h-screen bg-linear-to-br from-amber-50 via-orange-50 to-blue-50">
       <HeadBar />
 
       <div
-        className="relative overflow-hidden bg-gradient-to-r from-navy-800 via-blue-900 to-blue-800 py-16 px-6"
+        className="relative overflow-hidden bg-linear-to-br from-navy-800 via-blue-900 to-blue-800 py-16 px-6"
         style={{
           background:
             "linear-gradient(135deg, #1e3a5f 0%, #1e40af 50%, #1e3a5f 100%)",
@@ -65,10 +63,10 @@ const Page = () => {
         <div className="absolute top-6 left-12 opacity-15 rotate-[-20deg]">
           <PawPrint size={52} className="text-amber-300" />
         </div>
-        <div className="absolute top-10 right-16 opacity-10 rotate-[15deg]">
+        <div className="absolute top-10 right-16 opacity-10 rotate-15d">
           <PawPrint size={40} className="text-yellow-300" />
         </div>
-        <div className="absolute bottom-6 right-1/3 opacity-10 rotate-[30deg]">
+        <div className="absolute bottom-6 right-1/3 opacity-10 rotate-30">
           <PawPrint size={32} className="text-orange-300" />
         </div>
 
@@ -88,7 +86,7 @@ const Page = () => {
             </span>
           </h1>
           <p className="mt-4 text-blue-200 text-lg max-w-xl mx-auto leading-relaxed">
-            Хайртай НАЙЗАА олж, амьтдын амьдралыг өөрчил — өнөөдрөөс эхэл!
+            Та хайж буй найзаа олоорой — тэд таныг хүлээж байна!
           </p>
 
           <button
@@ -156,11 +154,11 @@ const Page = () => {
             <button
               key={cat.label}
               onClick={() => push(cat.route)}
-              className={`group relative flex flex-col items-center gap-3 p-6 rounded-3xl border-2 ${cat.border} bg-gradient-to-br ${cat.bg}
+              className={`group relative flex flex-col items-center gap-3 p-6 rounded-3xl border-2 ${cat.border} bg-linear-to-br ${cat.bg}
                 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer overflow-hidden`}
             >
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${cat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-3xl`}
+                className={`absolute inset-0 bg-linear-to-br ${cat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-3xl`}
               />
               <img
                 src={cat.gif}
@@ -168,7 +166,7 @@ const Page = () => {
                 className="w-24 h-24 object-contain rounded-2xl group-hover:scale-110 transition-transform duration-300"
               />
               <div
-                className={`px-4 py-2 rounded-xl font-bold text-white text-sm bg-gradient-to-r ${cat.color} shadow-md`}
+                className={`px-4 py-2 rounded-xl font-bold text-white text-sm bg-linear-to-br ${cat.color} shadow-md`}
                 style={{ boxShadow: `0 3px 0 ${cat.shadow}` }}
               >
                 {cat.emoji} {cat.label}
@@ -180,11 +178,11 @@ const Page = () => {
 
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center gap-4">
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent" />
+          <div className="flex-1 h-px bg-linear-to-br from-transparent via-orange-200 to-transparent" />
           <span className="text-orange-400 font-bold text-sm uppercase tracking-widest flex items-center gap-2">
             <PawPrint size={14} /> Бүх амьтад
           </span>
-          <div className="flex-1 h-px bg-gradient-to-r from-transparent via-orange-200 to-transparent" />
+          <div className="flex-1 h-px bg-linear-to-br from-transparent via-orange-200 to-transparent" />
         </div>
       </div>
 
@@ -218,8 +216,8 @@ const Page = () => {
                   className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg
                   ${
                     animal.status === "TEMPORARY"
-                      ? "bg-gradient-to-r from-sky-400 to-blue-600"
-                      : "bg-gradient-to-r from-violet-500 to-purple-700"
+                      ? "bg-linear-to-br from-sky-400 to-blue-600"
+                      : "bg-linear-to-br from-violet-500 to-purple-700"
                   }`}
                 >
                   {animal.status === "TEMPORARY" ? "⏳ Түр" : "🏡 Байнгын"}
@@ -233,7 +231,7 @@ const Page = () => {
                 </span>
 
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t from-orange-600/40 via-transparent to-transparent transition-opacity duration-300 ${hoveredId === animal.id ? "opacity-100" : "opacity-0"}`}
+                  className={`absolute inset-0 bg-linear-to-t from-orange-600/40 via-transparent to-transparent transition-opacity duration-300 ${hoveredId === animal.id ? "opacity-100" : "opacity-0"}`}
                 />
               </div>
 

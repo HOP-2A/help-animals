@@ -185,7 +185,7 @@ model AdoptAnimal {
   userId      String  
   user        User        @relation(fields: [userId], references: [id])
   comments    Comment[]
-  adoptionForms AdoptionForm[]
+  adoptionForms AdoptionForm[] 
   createdAt DateTime @default(now())
 }
 model AdoptionForm {
@@ -201,8 +201,8 @@ model AdoptionForm {
   email          String
   hasPet         Boolean
   petInfo        String?
-  petId          String?
-  pet            AdoptAnimal? @relation(fields: [petId], references: [id])
+  petId          String
+  pet            AdoptAnimal @relation(fields: [petId], references: [id])
   notes          String? 
   status         AdoptionFormStatus @default(PENDING)  
   userId         String

@@ -1,10 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import HeadBar from "../../_components/headbar";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
+
 import { PawPrint, Heart, SlidersHorizontal, X } from "lucide-react";
 import {
   DropdownMenu,
@@ -55,18 +54,17 @@ const Page = () => {
   const hasActiveFilters = genderFilter || statusFilter;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-rose-50">
+    <div className="min-h-screen bg-linear-to-br from-amber-50 via-orange-50 to-rose-50">
       <HeadBar />
 
-      {/* Hero Header */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-400 py-14 px-6 text-center">
+      <div className="relative overflow-hidden bg-linear-to-r from-orange-400 via-pink-400 to-pink-500 py-14 px-6 text-center">
         <div className="absolute top-4 left-8 opacity-20 rotate-[-15deg]">
           <PawPrint size={48} className="text-white" />
         </div>
-        <div className="absolute bottom-4 right-10 opacity-20 rotate-[20deg]">
+        <div className="absolute bottom-4 right-10 opacity-20 rotate-20">
           <PawPrint size={64} className="text-white" />
         </div>
-        <div className="absolute top-8 right-1/3 opacity-10 rotate-[10deg]">
+        <div className="absolute top-8 right-1/3 opacity-10 rotate-10">
           <PawPrint size={36} className="text-white" />
         </div>
 
@@ -93,9 +91,12 @@ const Page = () => {
             fill="rgb(255 247 237)"
           />
         </svg>
+        <img
+          src="/ginger-cat.gif"
+          className="hidden md:block right-2.5 absolute mb-20 -mt-36 w-59 h-50"
+        ></img>
       </div>
 
-      {/* Filter Bar */}
       <div className="max-w-6xl mx-auto px-4 pt-8 pb-2">
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 text-amber-700 font-semibold">
@@ -105,7 +106,7 @@ const Page = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
+              <div
                 className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 font-medium text-sm transition-all
                   ${
                     statusFilter
@@ -127,7 +128,7 @@ const Page = () => {
                     }}
                   />
                 )}
-              </button>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="rounded-2xl shadow-xl border-orange-100">
               <DropdownMenuItem
@@ -148,7 +149,7 @@ const Page = () => {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
+              <div
                 className={`flex items-center gap-2 px-4 py-2 rounded-full border-2 font-medium text-sm transition-all
                   ${
                     genderFilter
@@ -170,7 +171,7 @@ const Page = () => {
                     }}
                   />
                 )}
-              </button>
+              </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="rounded-2xl shadow-xl border-rose-100">
               <DropdownMenuItem
@@ -201,19 +202,18 @@ const Page = () => {
             </button>
           )}
 
-          <span className="ml-auto text-sm text-amber-600 font-semibold bg-amber-100 px-3 py-1.5 rounded-full">
+          <span className="ml-auto text-sm text-amber-600 font-semibold bg-amber-100 px-3 py-1.5 rounded-full shadow-2xl sun-glow">
             {filteredAnimals.length} муур олдлоо
           </span>
         </div>
       </div>
 
-      {/* Dog Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 max-w-6xl w-full mx-auto px-4 pt-6 pb-24">
-        {filteredAnimals.map((dog) => (
+        {filteredAnimals.map((cat) => (
           <div
-            key={dog.id}
+            key={cat.id}
             className="group relative"
-            onMouseEnter={() => setHoveredId(dog.id)}
+            onMouseEnter={() => setHoveredId(cat.id)}
             onMouseLeave={() => setHoveredId(null)}
           >
             <div
@@ -221,7 +221,7 @@ const Page = () => {
                 rounded-3xl overflow-hidden bg-white shadow-md border-2 border-transparent
                 transition-all duration-300
                 ${
-                  hoveredId === dog.id
+                  hoveredId === cat.id
                     ? "shadow-2xl shadow-orange-200 -translate-y-2 border-orange-300"
                     : "hover:shadow-lg"
                 }
@@ -229,10 +229,10 @@ const Page = () => {
             >
               <div className="relative overflow-hidden">
                 <img
-                  src={dog.images?.[0] || "/placeholder.png"}
-                  alt={dog.name}
+                  src={cat.images?.[0] || "/placeholder.png"}
+                  alt={cat.name}
                   className={`w-full aspect-square object-cover transition-transform duration-500 ${
-                    hoveredId === dog.id ? "scale-105" : "scale-100"
+                    hoveredId === cat.id ? "scale-105" : "scale-100"
                   }`}
                 />
 
@@ -240,31 +240,31 @@ const Page = () => {
                   className={`
                     absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white shadow-md
                     ${
-                      dog.status === "TEMPORARY"
-                        ? "bg-gradient-to-r from-sky-400 to-blue-500"
-                        : "bg-gradient-to-r from-violet-400 to-purple-600"
+                      cat.status === "TEMPORARY"
+                        ? "bg-linear-to-r from-sky-400 to-blue-500"
+                        : "bg-linear-to-r from-violet-400 to-purple-600"
                     }
                   `}
                 >
-                  {dog.status === "TEMPORARY" ? "⏳ Түр" : "🏡 Байнгын"}
+                  {cat.status === "TEMPORARY" ? "⏳ Түр" : "🏡 Байнгын"}
                 </span>
 
                 <span
                   className={`
                     absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-md
                     ${
-                      dog.gender === "MALE"
+                      cat.gender === "MALE"
                         ? "bg-blue-100 text-blue-600"
                         : "bg-rose-100 text-rose-500"
                     }
                   `}
                 >
-                  {dog.gender === "MALE" ? "♂" : "♀"}
+                  {cat.gender === "MALE" ? "♂" : "♀"}
                 </span>
 
                 <div
-                  className={`absolute inset-0 bg-gradient-to-t from-orange-500/30 to-transparent transition-opacity duration-300 ${
-                    hoveredId === dog.id ? "opacity-100" : "opacity-0"
+                  className={`absolute inset-0 bg-linear-to-t from-orange-500/30 to-transparent transition-opacity duration-300 ${
+                    hoveredId === cat.id ? "opacity-100" : "opacity-0"
                   }`}
                 />
               </div>
@@ -272,36 +272,36 @@ const Page = () => {
               <div className="p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="text-xl font-extrabold text-gray-800 tracking-tight">
-                    {dog.name}
+                    {cat.name}
                   </h3>
                   <PawPrint size={18} className="text-orange-300" />
                 </div>
 
                 <span
                   className={`inline-block text-xs font-semibold px-2.5 py-1 rounded-full ${
-                    dog.gender === "MALE"
+                    cat.gender === "MALE"
                       ? "bg-blue-100 text-blue-600"
                       : "bg-rose-100 text-rose-500"
                   }`}
                 >
-                  {dog.gender === "MALE" ? "Эрэгтэй" : "Эмэгтэй"}
+                  {cat.gender === "MALE" ? "Эрэгтэй" : "Эмэгтэй"}
                 </span>
 
                 <p className="text-xs text-gray-400 font-medium">
-                  📅 {new Date(dog.createdAt).toLocaleDateString()}
+                  📅 {new Date(cat.createdAt).toLocaleDateString()}
                 </p>
 
                 <button
                   className="w-full py-2.5 rounded-2xl font-bold text-sm text-white transition-all duration-200
-                    bg-gradient-to-r from-orange-400 to-amber-400
+                   bg-linear-to-r from-orange-400 to-amber-400
                     shadow-[0_4px_0_#c2410c]
                     hover:from-orange-500 hover:to-amber-500
                     hover:shadow-[0_6px_0_#9a3412]
                     active:translate-y-1 active:shadow-[0_2px_0_#9a3412]
                     cursor-pointer"
-                  onClick={() => push(`/help-animal/location/${dog.id}`)}
+                  onClick={() => push(`/adoption/adopt/${cat.id}`)}
                 >
-                  🐾 Үрчлэх — {dog.name}
+                  🐾 Үрчлэх — {cat.name}
                 </button>
               </div>
             </div>
