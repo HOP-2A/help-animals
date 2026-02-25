@@ -143,6 +143,16 @@
     animation: sun-pulse 1.2s infinite alternate;
   }
 
+  .sun-glow {
+    text-shadow:
+      0 0 10px rgb(255, 230, 120),
+      0 0 25px rgb(255, 200, 60),
+      0 0 50px rgb(255, 180, 40);
+    filter: drop-shadow(0 0 20px rgba(255, 200, 60, 0.8))
+      drop-shadow(0 0 40px rgba(255, 180, 40, 0.6));
+    animation: sun-pulse 1.2s infinite alternate;
+  }
+
   @keyframes sun-pulse {
     from {
       transform: scale(1);

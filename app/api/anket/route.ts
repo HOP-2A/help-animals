@@ -18,23 +18,21 @@ export async function POST(req: Request) {
       petId,
       userId,
       petInfo,
+      status,
+      notes,
     } = body;
 
     if (
-  age == null ||
-  !firstName ||
-  !lastName ||
-  !phoneNumber ||
-  !location ||
-  !district ||
-  !email ||
-  hasPet === undefined ||
-  !userId ||
-  (hasPet === true && !petId)
-) {
-  return NextResponse.json({ error: "Missing fields" }, { status: 400 });
-}
-
+      !age ||
+      !firstName ||
+      !lastName ||
+      !phoneNumber ||
+      !location ||
+      !email ||
+      !userId
+    ) {
+      return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+    }
 
     const isUser = await prisma.user.findUnique({ where: { id: userId } });
     if (!isUser) {
@@ -56,6 +54,8 @@ export async function POST(req: Request) {
         petInfo,
         petId,
         userId,
+        status,
+        notes,
       },
     });
 
