@@ -3,25 +3,16 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import { upload } from "@vercel/blob/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,8 +32,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { useAuth } from "@/providers/useAuth";
-import { SignInButton, useUser } from "@clerk/nextjs";
-import { useClerk } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import {
   Carousel,
   CarouselContent,
@@ -52,7 +42,6 @@ import {
 } from "@/components/ui/carousel";
 
 type ImageItem = { file: File | null; url: string };
-
 export default function Page() {
   const [posts, setPosts] = useState<any[]>([]);
   const [description, setDescription] = useState("");
