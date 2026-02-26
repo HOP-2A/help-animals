@@ -77,6 +77,40 @@ type Comment = {
   reactions: Reaction[];
 };
 
+type ImageItem = { file: File | null; url: string };
+type User = {
+  id: string;
+  profileImg: string;
+  firstName: string;
+  lastName: string;
+  birthdate: string;
+  createdAt: string;
+};
+type Post = {
+  id: string;
+  images: string[];
+  description: string;
+  user: User;
+  createdAt: string;
+  userId: string;
+  reactions: Reaction;
+  comments: Comment;
+};
+type Reaction = {
+  id: string;
+  type: string;
+  userId: string;
+  user: User;
+  comments: Comment;
+};
+type Comment = {
+  content: string;
+  id: string;
+  userId: string;
+  experienceId: string;
+  user: User;
+  reactions: Reaction;
+};
 export default function Page() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [description, setDescription] = useState("");
