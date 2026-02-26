@@ -202,7 +202,7 @@ export default function Page() {
     const res = await fetch("/api/experience-exchange/delete", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, userId: USER_ID }),
+      body: JSON.stringify({ userId: USER_ID }),
     });
     if (res.ok) {
       toast.success("Пост устгагдлаа");
@@ -474,7 +474,8 @@ export default function Page() {
                             );
                           }}
                         >
-                          <Pen className="w-4 h-4" /> Засах
+                          <Pen className="w-4 h-4" />
+                          <div> Засах</div>
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="gap-2 text-red-500 focus:text-red-500"
@@ -817,7 +818,7 @@ export default function Page() {
             <textarea
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}
-              className="w-full min-h-[120px] p-3 rounded-xl border-orange-100 focus:ring-orange-400 border-2 outline-none resize-none"
+              className="w-full min-h-30 p-3 rounded-xl border-orange-100 focus:ring-orange-400 border-2 outline-none resize-none"
               placeholder="Сэтгэгдэлээ энд бичээрэй..."
             />
             {editImages.length > 0 && (
