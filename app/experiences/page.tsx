@@ -42,19 +42,52 @@ import {
 } from "@/components/ui/carousel";
 
 type ImageItem = { file: File | null; url: string };
+type User = {
+  id: string;
+  profileImg: string;
+  firstName: string;
+  lastName: string;
+  birthdate: string;
+  createdAt: string;
+};
+type Post = {
+  id: string;
+  images: string[];
+  description: string;
+  user: User;
+  createdAt: string;
+  userId: string;
+  reactions: Reaction;
+  comments: Comment;
+};
+type Reaction = {
+  id: string;
+  type: string;
+  userId: string;
+  user: User;
+  comments: Comment;
+};
+type Comment = {
+  content: string;
+  id: string;
+  userId: string;
+  experienceId: string;
+  user: User;
+  reactions: Reaction;
+};
 export default function Page() {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
   const [replyContent, setReplyContent] = useState("");
-  const [comments, setComments] = useState<any[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user: clerkUser } = useUser();
   const clerkId = clerkUser?.id;
   const { user } = useAuth(clerkId ?? "");
-  const [editingPost, setEditingPost] = useState<any | null>(null);
-  const [editingComment, setEditingComment] = useState<any | null>(null);
-  const [reply, setReply] = useState<any[]>([]);
+  const [editingPost, setEditingPost] = useState<Post | null>(null);
+  const [editingComment, setEditingComment] = useState<Comment | null>(null);
+  const [reply, setReply] = useState<Comment[]>([]);
   const [newDescription, setNewDescription] = useState("");
   const [newComment, setNewComment] = useState("");
   const [images, setImages] = useState<ImageItem[]>([]);
