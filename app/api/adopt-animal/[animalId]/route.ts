@@ -15,9 +15,13 @@ export const GET = async (
     const animal = await prisma.adoptAnimal.findUnique({
       where: { id: animalId },
     });
-    
+
     return NextResponse.json(animal, { status: 200 });
   } catch (err) {
     return NextResponse.json({ error: err }, { status: 500 });
   }
 };
+
+
+
+

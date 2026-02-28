@@ -202,7 +202,7 @@ model AdoptionForm {
   hasPet         Boolean
   petInfo        String?
   petId          String
-  pet            AdoptAnimal @relation(fields: [petId], references: [id])
+  pet            AdoptAnimal @relation(fields: [petId], references: [id],onDelete: Cascade )
   notes          String? 
   status         AdoptionFormStatus @default(PENDING)  
   userId         String
