@@ -166,7 +166,7 @@ const Page = () => {
     });
 
     if (res.ok) {
-      toast.success("Successfully deleted!");
+      toast.success("Амжилттай устгагдлаа!");
       push(`/profile/${userId}`);
     }
   };
