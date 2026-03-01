@@ -14,8 +14,11 @@ export async function POST(req: Request) {
     }
 
     const experiences = await prisma.experienceExchange.findMany({
-      where: {
-        id,
+      where: { id },
+      include: {
+        user: true,
+        reactions: true,
+        comments: { include: { user: true, reactions: true } },
       },
     });
 

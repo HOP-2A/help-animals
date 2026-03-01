@@ -1,11 +1,9 @@
-
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
 export async function POST(req: Request) {
-      try {
+  try {
     const body = await req.json();
-    const {description, images, userId } = body;
+    const { description, images, userId } = body;
 
     if (!userId) {
       return NextResponse.json({ error: "user not" }, { status: 400 });
@@ -16,7 +14,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-
     const ExperienceExchange = await prisma.experienceExchange.create({
       data: {
         description,
@@ -24,8 +21,6 @@ export async function POST(req: Request) {
         userId,
       },
     });
-
-
 
     return NextResponse.json(ExperienceExchange, { status: 200 });
   } catch (err) {
