@@ -241,9 +241,9 @@ const Page = () => {
             </div>
           )}
           <h1 className="text-4xl font-black text-white drop-shadow">
-            Сайн уу! Намайг
-            <span className="text-yellow-900 underline decoration-wavy decoration-white/60">
-              {animal?.name ?? "..."}{" "}
+            Сайн уу! Намайг{" "}
+            <span className="inline-block text-yellow-900 pb-1 border-b-5 decoration-wavy border-white/60">
+              {animal?.name ?? "..."}
             </span>{" "}
             гэдэг 🐾
           </h1>
@@ -464,7 +464,6 @@ const Page = () => {
           </div>
         </div>
 
-        {/* ── CENTER connector to journey ── */}
         <div className="flex flex-col items-center mt-1">
           <svg width="100" height="48" viewBox="0 0 100 48" fill="none">
             <path
@@ -482,7 +481,6 @@ const Page = () => {
           <div className="w-0.5 h-5 border-l-4 border-dashed border-orange-300" />
         </div>
 
-        {/* ── CARD 4: Journey timeline ── */}
         <div className="relative bg-white rounded-3xl shadow-lg border-2 border-orange-200 p-5">
           <div className="absolute -top-4 left-1/2 -translate-x-1/2 text-2xl drop-shadow z-10">
             🏠
@@ -566,7 +564,7 @@ const Page = () => {
           </button>
           <img src="/click-dog.gif" className="w-40 h-40 pt-5"></img>
           <p className="mt-3 text-xs text-gray-500">
-            * Үрчлэлтийн шийдвэр гаргахаас өмнө сайтар бодоорой.
+            * Үрчлэх шийдвэр гаргахаас өмнө сайтар бодоорой.
           </p>
         </div>
       </div>

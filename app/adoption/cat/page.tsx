@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import HeadBar from "../../_components/headbar";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";

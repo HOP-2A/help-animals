@@ -123,7 +123,6 @@ const ToggleGroup = ({
     {options.map((opt) => (
       <button
         key={opt.value}
-        type="button"
         onClick={() => onChange(opt.value)}
         className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border-2 text-sm font-bold transition-all
           ${value === opt.value ? `${opt.color} shadow-sm scale-105` : "border-gray-200 bg-gray-50 text-gray-400 hover:border-gray-300"}`}

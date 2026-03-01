@@ -30,7 +30,7 @@ const locations: { value: string; label: string }[] = [
   { value: "BULGAN", label: "Булган" },
   { value: "GOVI_ALTAI", label: "Говь-Алтай" },
   { value: "GOVI_SUMBER", label: "Говьсүмбэр" },
-  { value: "DARKHAN_UUL", label: "Дархан-Уул" },
+  { value: "DARKHAN", label: "Дархан" },
   { value: "DORNOD", label: "Дорнод" },
   { value: "DORNOGOVI", label: "Дорноговь" },
   { value: "DUNDGOVI", label: "Дундговь" },
@@ -54,6 +54,7 @@ export default function AnketPage() {
   const params = useParams();
   const petId = params.petId;
 
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     age: "",
     firstName: "",
@@ -64,7 +65,7 @@ export default function AnketPage() {
     district: "",
     address: "",
     email: "",
-    hasPet: "",
+    hasPet: false,
     petInfo: "",
     petId: "",
     userId: "",
@@ -84,20 +85,45 @@ export default function AnketPage() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (loading) return;
+
+    setLoading(true);
+
     if (!form) {
       return;
     }
-    e.preventDefault();
+
     const res = await fetch("/api/anket", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form, age: Number(form.age), petId, userId }),
     });
-    if (!res.ok) {
+    if (res.ok) {
+      toast.success("🐾 Анкет амжилттай илгээгдлээ!");
+      setForm({
+        age: "",
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        secondaryPhone: "",
+        location: "",
+        district: "",
+        address: "",
+        email: "",
+        hasPet: false,
+        petInfo: "",
+        petId: "",
+        userId: "",
+        status: "PENDING",
+        notes: "",
+      });
+    } else {
       toast.error("Алдаа гарлаа. Дахин оролдоно уу.");
       return;
     }
-    toast.success("🐾 Анкет амжилттай илгээгдлээ!");
+    setLoading(false);
   };
 
   const inputClass = `w-full px-4 py-3 rounded-2xl border-2 border-amber-100 bg-amber-50/40 
@@ -170,6 +196,7 @@ export default function AnketPage() {
                 className={inputClass}
                 name="firstName"
                 placeholder="Таны нэр"
+                value={form.firstName}
                 onChange={handleChange}
                 required
               />
@@ -181,6 +208,7 @@ export default function AnketPage() {
               <input
                 className={inputClass}
                 name="lastName"
+                value={form.lastName}
                 placeholder="Таны овог"
                 onChange={handleChange}
                 required
@@ -195,6 +223,7 @@ export default function AnketPage() {
               className={inputClass}
               name="age"
               type="number"
+              value={form.age}
               placeholder="Таны нас"
               onChange={handleChange}
               required
@@ -217,6 +246,7 @@ export default function AnketPage() {
               name="phoneNumber"
               placeholder="8888-8888"
               onChange={handleChange}
+              value={form.phoneNumber}
               required
             />
           </Field>
@@ -227,6 +257,7 @@ export default function AnketPage() {
             <input
               className={inputClass}
               name="secondaryPhone"
+              value={form.secondaryPhone}
               placeholder="Нэмэлт дугаар (заавал биш)"
               onChange={handleChange}
             />
@@ -239,6 +270,7 @@ export default function AnketPage() {
               className={inputClass}
               name="email"
               type="email"
+              value={form.email}
               placeholder="example@email.com"
               onChange={handleChange}
               required
@@ -284,6 +316,7 @@ export default function AnketPage() {
                 className={inputClass}
                 name="district"
                 placeholder="Дүүрэг / Сум"
+                value={form.district}
                 onChange={handleChange}
                 required
               />
@@ -295,6 +328,7 @@ export default function AnketPage() {
               <input
                 className={inputClass}
                 name="address"
+                value={form.address}
                 placeholder="Гудамж, байр (заавал биш)"
                 onChange={handleChange}
               />
@@ -312,6 +346,7 @@ export default function AnketPage() {
               <input
                 type="checkbox"
                 name="hasPet"
+                checked={form.hasPet}
                 onChange={handleChange}
                 className="w-5 h-5 rounded-lg border-2 border-amber-300 checked:bg-amber-400 cursor-pointer accent-amber-400"
               />
@@ -334,6 +369,7 @@ export default function AnketPage() {
               <textarea
                 className={`${inputClass} resize-none`}
                 name="petInfo"
+                value={form.petInfo}
                 rows={3}
                 placeholder="Ямар амьтан тэжээж байсан, хэр удаан, ямар нөхцөлд гэх мэт..."
                 onChange={handleChange}
@@ -348,6 +384,7 @@ export default function AnketPage() {
             <textarea
               className={`${inputClass} resize-none`}
               name="notes"
+              value={form.notes}
               rows={4}
               placeholder="Өөрийнхөө тухай нэмэлт мэдээлэл, яагаад амьтан үрчилж авах болсон шалтгаан гэх мэт..."
               onChange={handleChange}
@@ -357,12 +394,22 @@ export default function AnketPage() {
 
         <button
           type="submit"
-          className="w-full py-4 rounded-2xl font-extrabold text-white transition-all cursor-pointer
-            shadow-[0_6px_0_#92400e] hover:shadow-[0_8px_0_#92400e] hover:-translate-y-1
-            active:translate-y-1 active:shadow-[0_3px_0_#92400e] text-lg sun-glow-hover"
+          className="w-full py-4 rounded-2xl font-extrabold text-white transition-all
+            shadow-[0_6px_0_#92400e] hover:shadow-[0_8px_0_#92400e] 
+           active:shadow-[0_3px_0_#92400e] text-lg"
+          disabled={loading}
           style={{ background: "linear-gradient(135deg,#fbbf24,#f97316)" }}
         >
-          🐾 Анкет илгээх
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Илгээж байна...
+            </span>
+          ) : !loading ? (
+            "🐾 Анкет илгээх"
+          ) : (
+            ""
+          )}
         </button>
 
         <p className="text-center text-gray-400 text-xs pb-6">
