@@ -1,24 +1,24 @@
 generator client {
   provider = "prisma-client-js"
 }
-
+ 
 datasource db {
   provider = "postgresql"
 }
-
+ 
 enum HelpStatus {
   LOST
   HOMELESS  
   IN_PROGRESS
   RESCUED
 }
-
+ 
 enum Answer {
-  Yes 
-  No 
+  Yes
+  No
   Unknown
 }
-
+ 
 enum Level {
   High
   Low
@@ -29,24 +29,24 @@ enum AnimalCondition {
   INJURED
   STARVING
 }
-
+ 
 enum AdoptStatus {
   TEMPORARY
   PERMANENT
 }
-
+ 
 enum Gender {
   MALE
   FEMALE
 }
-
+ 
 enum AdoptionFormStatus {
   PENDING
   APPROVED
   REJECTED
   COMPLETED
 }
-
+ 
 enum Location {
   ULAANBAATAR
   ARKHANGAI
@@ -65,20 +65,24 @@ enum Location {
   UMNUGOVI
   SUKHBAATAR
   SELENGE
-  TUV 
+  TUV
   UVS
   KHOVD
   KHUVSGUL
 }
-
+ 
 enum ReactionType {
   LIKE
   DISLIKE
 }
-
+ 
 enum Type {
   Cat
   Dog
+}
+enum ChatRole {
+  USER
+  AI
 }
 model User {
   id         String   @id @default(nanoid())
@@ -98,20 +102,21 @@ model User {
   conversations Conversation[]
   adoptionForms AdoptionForm[]
   experiences   ExperienceExchange[]
+  AiChat AIChat[]
 }
-
+ 
 model Pet {
   id         String  @id @default(nanoid())
   name       String
   breed      String
   gender     Gender
-  age        String
+  age        Int
   petImg     String[]
   healthInfo String?
   ownerId    String
   owner      User    @relation(fields: [ownerId], references: [id])
 }
-
+ 
 model HelpAnimal {
   id          String     @id @default(nanoid())
   location    String
@@ -128,7 +133,7 @@ model HelpAnimal {
   reactions Reaction[]
   createdAt DateTime @default(now())
 }
-
+ 
 model Comment {
   id      String @id @default(nanoid())
   content String
@@ -146,7 +151,7 @@ model Comment {
   reactions Reaction[]
   createdAt DateTime @default(now())
 }
-
+ 
 model Reaction {
   id   String       @id @default(nanoid())
   type      ReactionType
@@ -154,15 +159,15 @@ model Reaction {
   user   User   @relation(fields: [userId], references: [id])
   helpPostId String?
   helpPost   HelpAnimal? @relation(fields: [helpPostId], references: [id], onDelete: Cascade)
-
-  commentId String? 
+ 
+  commentId String?
   comment Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
   experienceId String?
   experience   ExperienceExchange? @relation(fields: [experienceId], references: [id], onDelete: Cascade)
-
+ 
   @@unique([userId, commentId])
 }
-
+ 
 model AdoptAnimal {
   id          String      @id @default(nanoid())
   description String
@@ -181,11 +186,11 @@ model AdoptAnimal {
   healthInfo String?
   images      String[]
   status      AdoptStatus
-  temporaryEnd DateTime? 
+  temporaryEnd DateTime?
   userId      String  
   user        User        @relation(fields: [userId], references: [id])
   comments    Comment[]
-  adoptionForms AdoptionForm[] 
+  adoptionForms AdoptionForm[]
   createdAt DateTime @default(now())
 }
 model AdoptionForm {
@@ -202,8 +207,8 @@ model AdoptionForm {
   hasPet         Boolean
   petInfo        String?
   petId          String
-  pet            AdoptAnimal @relation(fields: [petId], references: [id],onDelete: Cascade )
-  notes          String? 
+  pet            AdoptAnimal @relation(fields: [petId], references: [id])
+  notes          String?
   status         AdoptionFormStatus @default(PENDING)  
   userId         String
   user           User        @relation(fields: [userId], references: [id])
@@ -215,32 +220,46 @@ model Conversation {
   messages  Message[]
   createdAt DateTime  @default(now())
 }
-
+ 
 model Message {
   id      String @id @default(nanoid())
   content String
-
+ 
   senderId String
   sender   User   @relation(fields: [senderId], references: [id])
-
+ 
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-
+ 
   createdAt DateTime @default(now())
 }
-
+ 
 model ExperienceExchange {
   id String @id @default(nanoid())
-
+ 
   description String
   images      String[]
-
+ 
   userId String
   user   User   @relation(fields: [userId], references: [id])
-
+ 
   comments  Comment[]
   reactions Reaction[]
-
+ 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+ 
+ 
+model AIChat {
+  id        String    @id @default(nanoid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role      ChatRole
+  content   String
+
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }

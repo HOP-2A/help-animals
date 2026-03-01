@@ -6,6 +6,8 @@ export async function GET(req: Request) {
     const allExperience = await prisma.experienceExchange.findMany({
       include: {
         user: true,
+        reactions: true,
+        comments: true,
       },
     });
 
