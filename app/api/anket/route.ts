@@ -18,6 +18,8 @@ export async function POST(req: Request) {
       petId,
       userId,
       petInfo,
+      status,
+      notes,
     } = body;
 
     if (
@@ -26,10 +28,7 @@ export async function POST(req: Request) {
       !lastName ||
       !phoneNumber ||
       !location ||
-      !district ||
       !email ||
-      hasPet === undefined ||
-      !petId ||
       !userId
     ) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
@@ -55,6 +54,8 @@ export async function POST(req: Request) {
         petInfo,
         petId,
         userId,
+        status,
+        notes,
       },
     });
 
@@ -63,3 +64,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error }, { status: 500 });
   }
 }
+
+

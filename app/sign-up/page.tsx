@@ -43,7 +43,7 @@ export default function SignUpPage() {
     if (!res.ok) {
       toast.error(data.error);
     } else {
-      toast.success("successfully registered");
+      toast.success("Амжилттай бүртгэгдлээ");
       openSignIn();
     }
   };

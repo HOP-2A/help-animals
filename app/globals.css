@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "leaflet/dist/leaflet.css";
+@import "../node_modules/leaflet/dist/leaflet.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -121,5 +123,76 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .sun-glow {
+    text-shadow: none;
+    filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
+    transition: all 0.3s ease;
+  }
+
+  .sun-glow-hover:hover {
+    text-shadow:
+      0 0 10px rgb(255, 230, 120),
+      0 0 25px rgb(255, 200, 60),
+      0 0 50px rgb(255, 180, 40);
+    filter: drop-shadow(0 0 20px rgba(255, 200, 60, 0.8))
+      drop-shadow(0 0 40px rgba(255, 180, 40, 0.6));
+    animation: sun-pulse 1.2s infinite alternate;
+  }
+
+  .sun-glow {
+    text-shadow:
+      0 0 10px rgb(255, 230, 120),
+      0 0 25px rgb(255, 200, 60),
+      0 0 50px rgb(255, 180, 40);
+    filter: drop-shadow(0 0 20px rgba(255, 200, 60, 0.8))
+      drop-shadow(0 0 40px rgba(255, 180, 40, 0.6));
+    animation: sun-pulse 1.2s infinite alternate;
+  }
+
+  @keyframes sun-pulse {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.06);
+    }
+  }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Tailwind plugin or global.css */
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+
+@layer utilities {
+  .text-glow-purple-hover:hover:hover {
+    text-shadow:
+      0 0 15px rgb(197, 116, 241),
+      0 0 30px rgba(191, 41, 255, 0.8),
+      0 0 60px rgba(159, 59, 246, 0.7);
   }
 }
