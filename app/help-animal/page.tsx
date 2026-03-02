@@ -126,8 +126,6 @@ const Page = () => {
   const clerkId = clerkUser?.id ?? null;
   const { user } = useAuth(clerkId);
   const userId = user?.id;
-
-  console.log(clerkId);
   const [inputValues, setInputValues] = useState({
     animalStatus: "",
     healthCondition: "",
