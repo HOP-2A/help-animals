@@ -201,7 +201,7 @@ export default function RescuedAnimals() {
                 <span>🐈</span>
               </div>
               <p className="text-sm text-gray-600 font-semibold">
-                Эдгээр амьтдыг аврасан бүх сайн сэтгэлт хүмүүст — баярлалаа ❤️
+                Эдгээр амьтдыг аврасан бүх сайн сэтгэлтэй хүмүүст — баярлалаа ❤️
               </p>
             </div>
           </>
