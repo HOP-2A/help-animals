@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { clerkId: string } },
+  { params }: { params: Promise<{ clerkId: string }> },
 ) {
-  const { clerkId } = params;
+  const { clerkId } = await params;
 
   if (!clerkId) {
     return new Response("Missing clerkId", { status: 400 });
