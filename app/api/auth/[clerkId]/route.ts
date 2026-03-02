@@ -3,18 +3,15 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  context: Promise<{ params: { clerkId: string } }>,
-) => {
-  const { params } = await context;
+  { params }: { params: Promise<{ clerkId: string }> },
+) {
   const { clerkId } = await params;
 
+  if (!clerkId) {
+    return new Response("Missing clerkId", { status: 400 });
+  }
+
   try {
-    const { clerkId } = await context.params;
-
-    if (!clerkId) {
-      return new Response("Missing clerkId", { status: 400 });
-    }
-
     const userData = await prisma.user.findUnique({
       where: { clerkId },
     });
@@ -23,8 +20,11 @@ export async function GET(
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return Response.json(userData);
+    return NextResponse.json(userData);
   } catch (err) {
-    return NextResponse.json({ error: err }, { status: 500 });
+    return NextResponse.json(
+      { error: (err as Error).message },
+      { status: 500 },
+    );
   }
 }
