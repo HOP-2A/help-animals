@@ -342,7 +342,7 @@ export default function Page() {
             <PawPrint className="text-white w-8 h-8" />
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight">
-            Туршлага Солилцоо
+            Туршлага Солилцох Булан
           </h1>
         </header>
         {loadingPost ? (
@@ -371,7 +371,9 @@ export default function Page() {
                     <h3 className="font-bold text-gray-800 text-lg">
                       {post.user?.firstName} {post.user?.lastName}
                     </h3>
-                    <p className="text-sm text-gray-400">{post.createdAt}</p>
+                    <p className="text-sm text-gray-400">
+                      {new Date(post.createdAt).toLocaleString()}
+                    </p>
                   </div>
                 </div>
                 {USER_ID && USER_ID === post.userId && (
@@ -466,7 +468,7 @@ export default function Page() {
 
               <div className="flex gap-3 mb-7">
                 <Avatar className="w-9 h-9 shrink-0 mt-1">
-                  <AvatarImage src={myAvatar} />
+                  <AvatarImage src={user?.profileImg} />
                   <AvatarFallback className="bg-orange-100 text-orange-600 text-xs font-bold">
                     {myInitial}
                   </AvatarFallback>
@@ -735,7 +737,7 @@ export default function Page() {
             </DialogHeader>
             <div className="flex items-start gap-3">
               <Avatar className="w-9 h-9 shrink-0 mt-1">
-                <AvatarImage src={myAvatar} />
+                <AvatarImage src={user?.profileImg} />
                 <AvatarFallback className="bg-orange-100 text-orange-600 text-xs font-bold">
                   {myInitial}
                 </AvatarFallback>

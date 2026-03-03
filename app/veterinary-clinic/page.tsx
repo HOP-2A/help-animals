@@ -85,6 +85,28 @@ const veterinaryClinics: Clinic[] = [
     fbLink: "https://www.facebook.com/Sonor91170547",
     email: "animals.healthy@yahoo.com",
   },
+  {
+    id: 7,
+    name: "ХААИС Мал амьтны эмнэлэг",
+    address:
+      "Улаанбаатар хот, Хан-Уул дүүрэг 22-р хороо Зайсан Мал эмнэлгийн сургуулийн ард",
+    phone: "75107777",
+    hours: "Мягмар–Баасан гарагт 09:00–17:00",
+    image: ["/logo_muls.png"],
+    fbLink: "https://www.facebook.com/lms.muls.edu.mn/",
+    email: "",
+  },
+  {
+    id: 8,
+    name: "Жаргал мал эмнэлэг",
+    address:
+      "Баянгол дүүрэг, Баруун 4 зам, Гранд Плаза төвийн замын хойно Hillside хотхоны баруун талд 5 давхар байр, 1-р давхар",
+    phone: "9985 2575",
+    hours: "Даваа - Баасан: 09:00 - 18:00",
+    image: ["/jargal.jog"],
+    fbLink: "https://www.facebook.com/jargalvet",
+    email: "jargalvetclinic@gmail.com",
+  },
 ];
 
 const PALETTES = [

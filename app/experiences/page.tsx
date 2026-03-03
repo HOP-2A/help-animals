@@ -232,7 +232,6 @@ export default function Page() {
     }
   };
 
-  // ── Write actions — all guarded with !USER_ID ────────────────────────────────
   const createExperience = async () => {
     if (!description.trim() || !USER_ID) return;
     const uploaded = await uploadImages(images, setImages);
@@ -394,14 +393,14 @@ export default function Page() {
             <PawPrint className="text-white w-8 h-8" />
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight">
-            Туршлага Солилцоо
+            Туршлага Солилцох Булан
           </h1>
         </header>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <button className="w-full bg-white p-4 rounded-2xl border-2 border-orange-100 mb-8 text-left shadow-sm hover:border-orange-300 hover:shadow-md transition-all flex items-center gap-3 group">
               <Avatar className="w-10 h-10 shrink-0">
-                <AvatarImage src={myAvatar} />
+                <AvatarImage src={user?.profileImg} />
                 <AvatarFallback className="bg-orange-100 text-orange-600 font-bold">
                   {myInitial}
                 </AvatarFallback>
@@ -425,14 +424,14 @@ export default function Page() {
             </DialogHeader>
             <div className="flex items-start gap-3 mb-2">
               <Avatar className="w-10 h-10 shrink-0 mt-1">
-                <AvatarImage src={myAvatar} />
+                <AvatarImage src={user?.profileImg} />
                 <AvatarFallback className="bg-orange-100 text-orange-600 font-bold">
                   {myInitial}
                 </AvatarFallback>
               </Avatar>
               <textarea
                 placeholder="Сэтгэгдэлээ энд бичээрэй..."
-                className="flex-1 min-h-[100px] p-3 rounded-xl border-orange-100 focus:ring-2 focus:ring-orange-300 border-2 outline-none resize-none text-gray-700"
+                className="flex-1 min-h-25 p-3 rounded-xl border-orange-100 focus:ring-2 focus:ring-orange-300 border-2 outline-none resize-none text-gray-700"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -532,7 +531,9 @@ export default function Page() {
                       <h3 className="font-bold text-gray-800 group-hover:text-orange-600 transition-colors">
                         {post.user.firstName} {post.user.lastName}
                       </h3>
-                      <p className="text-xs text-gray-400">{post.createdAt}</p>
+                      <p className="text-xs text-gray-400">
+                        {new Date(post.createdAt).toLocaleString()}
+                      </p>
                     </div>
                   </Link>
                   {USER_ID && USER_ID === post.userId && (
@@ -608,7 +609,7 @@ export default function Page() {
                     disabled={!USER_ID}
                   >
                     <Heart
-                      className={`w-4.5 h-4.5 w-5 h-5 ${
+                      className={`w-4.5 h-5 w-5 h-5 ${
                         post.reactions?.some((r) => r.userId === USER_ID)
                           ? "fill-red-500"
                           : ""
@@ -640,7 +641,7 @@ export default function Page() {
 
                       <div className="flex gap-2 px-4 py-3 border-b border-orange-50 bg-orange-50/30">
                         <Avatar className="w-8 h-8 shrink-0">
-                          <AvatarImage src={myAvatar} />
+                          <AvatarImage src={user?.profileImg} />
                           <AvatarFallback className="bg-orange-100 text-orange-600 text-xs">
                             {myInitial}
                           </AvatarFallback>
