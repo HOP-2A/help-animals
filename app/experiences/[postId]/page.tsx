@@ -86,7 +86,6 @@ export default function Page() {
 
   const USER_ID = user?.id;
 
-  const myAvatar = clerkUser?.imageUrl;
   const myInitial = clerkUser?.firstName?.[0]?.toUpperCase() ?? "?";
 
   const [content, setContent] = useState("");
@@ -336,56 +335,91 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fcf9f5] text-[#4a3f35]">
-      <div className="max-w-3xl mx-auto p-4 py-8">
-        <header className="flex items-center gap-3 mb-8">
-          <button
-            onClick={() => router.back()}
-            className="p-2 hover:bg-orange-100 rounded-xl transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5 text-orange-500" />
-          </button>
-          <div className="bg-orange-400 p-2 rounded-2xl shadow-sm">
-            <PawPrint className="text-white w-8 h-8" />
+    <div className="min-h-screen bg-linear-to-br from-orange-50 via-amber-50 to-yellow-50 text-[#4a3f35] relative overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03]">
+        <div className="absolute top-10 left-10 transform rotate-12">
+          <PawPrint className="w-24 h-24" />
+        </div>
+        <div className="absolute top-40 right-20 transform -rotate-45">
+          <PawPrint className="w-32 h-32" />
+        </div>
+        <div className="absolute bottom-32 left-1/4 transform rotate-90">
+          <PawPrint className="w-28 h-28" />
+        </div>
+        <div className="absolute bottom-20 right-1/3 transform -rotate-12">
+          <PawPrint className="w-20 h-20" />
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto p-4 py-8 relative z-10">
+        <header className="mb-8 bg-linear-to-r from-orange-400 via-amber-400 to-yellow-400 rounded-[2rem] p-5 shadow-lg relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+          <div className="relative z-10 flex items-center gap-4">
+            <button
+              onClick={() => router.back()}
+              className="p-2.5 bg-white/90 hover:bg-white rounded-2xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+            >
+              <ArrowLeft className="w-6 h-6 text-orange-500" />
+            </button>
+            <div className="bg-white p-3 rounded-2xl shadow-md">
+              <PawPrint className="text-orange-500 w-9 h-9" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
+                🐾 Дэлгэрэнгүй
+              </h1>
+              <p className="text-white/90 text-sm mt-0.5 font-medium">
+                Туршлагын дэлгэрэнгүй мэдээлэл
+              </p>
+            </div>
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight">
-            Туршлага Солилцох Булан
-          </h1>
         </header>
+
         {loadingPost ? (
           <div className="flex flex-col items-center justify-center py-24 space-y-4">
-            <Loader2 className="w-12 h-12 text-orange-400 animate-spin" />
-            <p className="text-gray-500 text-lg">Пост ачааллаж байна...</p>
+            <div className="relative">
+              <Loader2 className="w-14 h-14 text-orange-400 animate-spin" />
+              <PawPrint className="w-7 h-7 text-orange-300 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+            </div>
+            <p className="text-gray-500 text-lg font-medium">
+              Пост ачааллаж байна... 🐾
+            </p>
           </div>
         ) : !post ? (
-          <div className="flex flex-col items-center justify-center py-24 space-y-4 bg-white rounded-3xl border-2 border-dashed border-orange-200">
-            <PawPrint className="w-20 h-20 text-orange-200" />
-            <p className="text-gray-500 text-xl font-medium">Пост олдсонгүй</p>
+          <div className="flex flex-col items-center justify-center py-24 space-y-4 bg-white rounded-3xl border-2 border-dashed border-orange-200 shadow-lg">
+            <div className="bg-linear-to-br from-orange-100 to-amber-100 p-6 rounded-full">
+              <PawPrint className="w-20 h-20 text-orange-400" />
+            </div>
+            <p className="text-gray-600 text-xl font-bold">Пост олдсонгүй 🐾</p>
+            <p className="text-gray-400 text-sm">
+              Энэ пост устгагдсан эсвэл байхгүй байна
+            </p>
           </div>
         ) : (
           <>
-            <div className="bg-white rounded-[2rem] border border-orange-50 shadow-sm overflow-hidden mb-6">
+            <div className="bg-white rounded-[2rem] border-2 border-orange-100 shadow-lg overflow-hidden mb-6 hover:shadow-2xl transition-all">
               <div className="flex justify-between items-start p-6 pb-4">
                 <div className="flex items-center gap-4">
-                  <Avatar className="w-14 h-14 ring-2 ring-orange-100">
+                  <Avatar className="w-14 h-14 ring-2 ring-orange-200 shadow-md">
                     <AvatarImage src={post.user?.profileImg} alt="profilepic" />
-                    <AvatarFallback className="bg-orange-100 text-orange-600 text-lg font-bold">
+                    <AvatarFallback className="bg-linear-to-br from-orange-400 to-amber-400 text-white text-lg font-bold">
                       {post.user?.firstName?.[0]?.toUpperCase()}
                       {post.user?.lastName?.[0]?.toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-bold text-gray-800 text-lg">
+                    <h3 className="font-bold text-gray-800 text-lg flex items-center gap-2">
                       {post.user?.firstName} {post.user?.lastName}
+                      <PawPrint className="w-4 h-4 text-orange-400" />
                     </h3>
-                    <p className="text-sm text-gray-400">
+                    <p className="text-sm text-gray-400 font-medium">
                       {new Date(post.createdAt).toLocaleString()}
                     </p>
                   </div>
                 </div>
                 {USER_ID && USER_ID === post.userId && (
                   <DropdownMenu>
-                    <DropdownMenuTrigger className="p-2 hover:bg-gray-50 rounded-full transition-colors">
+                    <DropdownMenuTrigger className="p-2 hover:bg-orange-50 rounded-full transition-colors">
                       <Ellipsis className="w-5 h-5 text-gray-400" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="rounded-xl">
@@ -417,8 +451,9 @@ export default function Page() {
                   {post.description}
                 </p>
               </div>
+
               {post.images?.length > 0 && (
-                <div className="border-y border-orange-50">
+                <div className="border-y-2 border-orange-100">
                   <Carousel>
                     <CarouselContent>
                       {post.images.map((image, index) => (
@@ -433,22 +468,22 @@ export default function Page() {
                     </CarouselContent>
                     {post.images.length > 1 && (
                       <>
-                        <CarouselPrevious className="left-3" />
-                        <CarouselNext className="right-3" />
+                        <CarouselPrevious className="left-3 bg-white/90 hover:bg-white" />
+                        <CarouselNext className="right-3 bg-white/90 hover:bg-white" />
                       </>
                     )}
                   </Carousel>
                 </div>
               )}
 
-              <div className="flex items-center gap-3 px-6 py-4 border-t border-orange-50">
+              <div className="flex items-center gap-3 px-6 py-5 border-t-2 border-orange-100 bg-linear-to-r from-orange-50/30 to-amber-50/30">
                 <button
                   onClick={reaction}
                   disabled={!USER_ID}
-                  className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-semibold transition-all text-sm disabled:opacity-50 ${
+                  className={`flex items-center gap-2 px-6 py-3 rounded-2xl font-bold transition-all text-sm disabled:opacity-50 shadow-sm ${
                     post.reactions?.some((r) => r.userId === USER_ID)
-                      ? "bg-red-50 text-red-500"
-                      : "bg-gray-50 text-gray-500 hover:bg-red-50 hover:text-red-500"
+                      ? "bg-red-50 text-red-500 border-2 border-red-200"
+                      : "bg-white text-gray-500 hover:bg-red-50 hover:text-red-500 border-2 border-transparent hover:border-red-200"
                   }`}
                 >
                   <Heart
@@ -460,35 +495,40 @@ export default function Page() {
                   />
                   {post.reactions?.length || 0} Таалагдлаа
                 </button>
-                <div className="flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gray-50 text-gray-500 text-sm font-semibold">
+                <div className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white text-gray-500 text-sm font-bold border-2 border-orange-100 shadow-sm">
                   <MessageCircle className="w-5 h-5" />
                   {post.comments?.length || 0} Сэтгэгдэл
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-[2rem] border border-orange-50 shadow-sm p-6">
-              <h2 className="font-extrabold text-xl mb-5 text-gray-800 flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-orange-400" />
+            <div className="bg-white rounded-[2rem] border-2 border-orange-100 shadow-lg p-6">
+              <h2 className="font-extrabold text-xl mb-6 text-gray-800 flex items-center gap-2">
+                <div className="bg-linear-to-br from-orange-400 to-amber-400 p-2 rounded-xl">
+                  <MessageCircle className="w-5 h-5 text-white" />
+                </div>
                 Сэтгэгдэлүүд
+                <span className="ml-auto text-sm font-medium text-gray-400 bg-orange-50 px-3 py-1 rounded-full">
+                  {comments.length}
+                </span>
               </h2>
 
-              <div className="flex gap-3 mb-7">
-                <Avatar className="w-9 h-9 shrink-0 mt-1">
+              <div className="flex gap-3 mb-7 bg-linear-to-r from-orange-50/50 to-amber-50/50 p-4 rounded-2xl border-2 border-orange-100">
+                <Avatar className="w-10 h-10 shrink-0 mt-1 ring-2 ring-orange-200">
                   <AvatarImage src={user?.profileImg} />
-                  <AvatarFallback className="bg-orange-100 text-orange-600 text-xs font-bold">
+                  <AvatarFallback className="bg-linear-to-br from-orange-400 to-amber-400 text-white text-sm font-bold">
                     {myInitial}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 flex gap-2">
                   <Input
                     placeholder={
-                      USER_ID ? "Сэтгэгдэл бичих..." : "Нэвтэрч орно уу..."
+                      USER_ID ? "Сэтгэгдэл бичих... 🐾" : "Нэвтэрч орно уу..."
                     }
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     disabled={!USER_ID}
-                    className="rounded-2xl border-orange-100 bg-orange-50/40 focus-visible:ring-orange-300 h-11 disabled:opacity-60"
+                    className="rounded-2xl border-2 border-orange-200 bg-white focus-visible:ring-2 focus-visible:ring-orange-300 h-11 disabled:opacity-60"
                     onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault();
@@ -498,7 +538,7 @@ export default function Page() {
                   />
                   <Button
                     onClick={comment}
-                    className="bg-orange-500 hover:bg-orange-600 rounded-2xl h-11 px-4"
+                    className="bg-linear-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-2xl h-11 px-5 shadow-md font-bold"
                     disabled={submittingComment || !content.trim() || !USER_ID}
                   >
                     {submittingComment ? (
@@ -512,13 +552,18 @@ export default function Page() {
 
               {loadingComments ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-7 h-7 text-orange-400 animate-spin" />
+                  <div className="relative">
+                    <Loader2 className="w-8 h-8 text-orange-400 animate-spin" />
+                    <PawPrint className="w-4 h-4 text-orange-300 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                  </div>
                 </div>
               ) : comments.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-                  <MessageCircle className="w-14 h-14 mb-3 opacity-20" />
-                  <p className="text-base font-medium">
-                    Одоогоор сэтгэгдэл байхгүй байна
+                  <div className="bg-orange-50 p-5 rounded-full mb-3">
+                    <MessageCircle className="w-14 h-14 text-orange-300" />
+                  </div>
+                  <p className="text-base font-bold text-gray-500">
+                    Одоогоор сэтгэгдэл байхгүй байна 🐾
                   </p>
                   <p className="text-sm mt-1 opacity-70">
                     Эхний сэтгэгдэлийг үлдээгээрэй!
@@ -529,9 +574,9 @@ export default function Page() {
                   {comments.map((c) => (
                     <div key={c.id} className="space-y-2">
                       <div className="group flex gap-3">
-                        <Avatar className="w-9 h-9 shrink-0 mt-0.5">
+                        <Avatar className="w-10 h-10 shrink-0 mt-0.5 ring-2 ring-orange-100">
                           <AvatarImage src={c.user?.profileImg} />
-                          <AvatarFallback className="bg-orange-200 text-orange-700 text-xs font-bold">
+                          <AvatarFallback className="bg-linear-to-br from-orange-300 to-amber-300 text-white text-xs font-bold">
                             {c.user?.firstName?.[0]?.toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
@@ -542,13 +587,13 @@ export default function Page() {
                               <Input
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
-                                className="rounded-xl bg-orange-50"
+                                className="rounded-2xl bg-orange-50 border-2 border-orange-200"
                               />
                               <div className="flex gap-2">
                                 <Button
                                   size="sm"
                                   onClick={handleEditComment}
-                                  className="bg-green-600 rounded-lg"
+                                  className="bg-green-600 hover:bg-green-700 rounded-xl font-bold"
                                 >
                                   Хадгалах
                                 </Button>
@@ -556,7 +601,7 @@ export default function Page() {
                                   size="sm"
                                   variant="ghost"
                                   onClick={() => setEditingComment(null)}
-                                  className="rounded-lg"
+                                  className="rounded-xl font-bold"
                                 >
                                   Цуцлах
                                 </Button>
@@ -564,10 +609,11 @@ export default function Page() {
                             </div>
                           ) : (
                             <>
-                              <div className="bg-orange-50/60 rounded-2xl rounded-tl-sm px-4 py-3">
+                              <div className="bg-linear-to-br from-orange-50 to-amber-50 rounded-2xl rounded-tl-sm px-4 py-3 border border-orange-100">
                                 <div className="flex justify-between items-center mb-1">
-                                  <span className="font-bold text-sm text-orange-800">
+                                  <span className="font-bold text-sm text-orange-800 flex items-center gap-1">
                                     {c.user?.firstName}
+                                    <PawPrint className="w-3 h-3 text-orange-400 opacity-50" />
                                   </span>
                                   {USER_ID && USER_ID === c.userId && (
                                     <DropdownMenu>
@@ -593,21 +639,21 @@ export default function Page() {
                                     </DropdownMenu>
                                   )}
                                 </div>
-                                <p className="text-sm text-gray-700">
+                                <p className="text-sm text-gray-700 leading-relaxed">
                                   {c.content}
                                 </p>
                               </div>
 
-                              <div className="flex items-center gap-3 mt-1.5 ml-2 text-xs">
+                              <div className="flex items-center gap-3 mt-2 ml-2 text-xs">
                                 <button
                                   onClick={() => likeComment(c.id)}
                                   disabled={!USER_ID}
-                                  className={`flex items-center gap-1 transition-all font-medium disabled:opacity-40 ${
+                                  className={`flex items-center gap-1 transition-all font-bold disabled:opacity-40 px-2 py-1 rounded-lg ${
                                     c.reactions?.some(
                                       (r) => r.userId === USER_ID,
                                     )
-                                      ? "text-red-500"
-                                      : "text-gray-400 hover:text-red-400"
+                                      ? "text-red-500 bg-red-50"
+                                      : "text-gray-400 hover:text-red-400 hover:bg-red-50"
                                   }`}
                                 >
                                   <Heart
@@ -632,7 +678,7 @@ export default function Page() {
                                       getReply(c.id);
                                     }
                                   }}
-                                  className="text-gray-400 hover:text-blue-500 font-medium transition-colors disabled:opacity-40"
+                                  className="text-gray-400 hover:text-blue-500 font-bold transition-colors disabled:opacity-40 px-2 py-1 rounded-lg hover:bg-blue-50"
                                 >
                                   Хариулах
                                 </button>
@@ -641,14 +687,15 @@ export default function Page() {
                           )}
                         </div>
                       </div>
+
                       {replyingTo === c.id && (
-                        <div className="ml-12 space-y-3">
+                        <div className="ml-12 space-y-3 bg-linear-to-r from-orange-50/30 to-amber-50/30 p-3 rounded-2xl border border-orange-100">
                           <div className="flex gap-2">
                             <Input
                               value={replyContent}
                               onChange={(e) => setReplyContent(e.target.value)}
-                              className="rounded-2xl bg-orange-50/40 border-orange-100 text-sm h-10"
-                              placeholder="Хариулт бичих..."
+                              className="rounded-2xl bg-white border-2 border-orange-200 text-sm h-10"
+                              placeholder="Хариулт бичих... 🐾"
                               onKeyDown={(e) => {
                                 if (e.key === "Enter" && !e.shiftKey) {
                                   e.preventDefault();
@@ -658,7 +705,7 @@ export default function Page() {
                             />
                             <Button
                               onClick={() => replyComment(c.id)}
-                              className="bg-orange-500 hover:bg-orange-600 rounded-2xl h-10 px-3"
+                              className="bg-linear-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-2xl h-10 px-4 font-bold shadow-md"
                               size="sm"
                               disabled={
                                 submittingReply ||
@@ -682,16 +729,16 @@ export default function Page() {
                             <div className="space-y-2">
                               {reply.map((r) => (
                                 <div key={r.id} className="flex gap-2.5">
-                                  <Avatar className="w-7 h-7 shrink-0 mt-0.5">
+                                  <Avatar className="w-8 h-8 shrink-0 mt-0.5 ring-2 ring-orange-100">
                                     <AvatarImage src={r.user?.profileImg} />
-                                    <AvatarFallback className="bg-orange-200 text-orange-700 text-[10px] font-bold">
+                                    <AvatarFallback className="bg-linear-to-br from-orange-300 to-amber-300 text-white text-[10px] font-bold">
                                       {r.user?.firstName?.[0]?.toUpperCase()}
                                     </AvatarFallback>
                                   </Avatar>
                                   <div className="flex-1">
-                                    <div className="bg-white rounded-2xl rounded-tl-sm border border-orange-100 px-3 py-2">
+                                    <div className="bg-white rounded-2xl rounded-tl-sm border-2 border-orange-100 px-3 py-2 shadow-sm">
                                       <div className="flex justify-between items-center mb-0.5">
-                                        <span className="font-semibold text-xs text-orange-700">
+                                        <span className="font-bold text-xs text-orange-700">
                                           {r.user?.firstName}
                                         </span>
                                         <button
@@ -735,25 +782,28 @@ export default function Page() {
             </div>
           </>
         )}
+
+        {/* Edit Post Dialog - Enhanced */}
         <Dialog open={editingPost} onOpenChange={() => setEditingPost(false)}>
-          <DialogContent className="rounded-3xl shadow-2xl">
+          <DialogContent className="rounded-3xl shadow-2xl bg-linear-to-br from-white to-orange-50 border-2 border-orange-200">
             <DialogHeader>
-              <DialogTitle className="text-xl font-bold">
+              <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                <Pen className="w-5 h-5 text-orange-500" />
                 Пост засах
               </DialogTitle>
             </DialogHeader>
             <div className="flex items-start gap-3">
-              <Avatar className="w-9 h-9 shrink-0 mt-1">
+              <Avatar className="w-10 h-10 shrink-0 mt-1 ring-2 ring-orange-200">
                 <AvatarImage src={user?.profileImg} />
-                <AvatarFallback className="bg-orange-100 text-orange-600 text-xs font-bold">
+                <AvatarFallback className="bg-linear-to-br from-orange-400 to-amber-400 text-white text-sm font-bold">
                   {myInitial}
                 </AvatarFallback>
               </Avatar>
               <textarea
                 value={newDescription}
                 onChange={(e) => setNewDescription(e.target.value)}
-                className="flex-1 min-h-[120px] p-4 rounded-xl border-orange-100 focus:ring-2 focus:ring-orange-300 border-2 outline-none resize-none text-base text-gray-700"
-                placeholder="Сэтгэгдэлээ энд бичээрэй..."
+                className="flex-1 min-h-30 p-4 rounded-2xl border-2 border-orange-200 focus:ring-2 focus:ring-orange-300 focus:border-orange-300 outline-none resize-none text-base text-gray-700 bg-white"
+                placeholder="Сэтгэгдэлээ энд бичээрэй... 🐾"
               />
             </div>
             {editImages.length > 0 && (
@@ -765,7 +815,7 @@ export default function Page() {
                         img.url ||
                         (img.file ? URL.createObjectURL(img.file) : "")
                       }
-                      className="rounded-xl h-24 w-full object-cover"
+                      className="rounded-xl h-24 w-full object-cover border-2 border-orange-100"
                       alt={`Edit ${idx + 1}`}
                     />
                     <button
@@ -774,7 +824,7 @@ export default function Page() {
                           prev.filter((_, i) => i !== idx),
                         )
                       }
-                      className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow-md p-1 hover:bg-red-50"
+                      className="absolute -top-2 -right-2 bg-white text-red-500 rounded-full shadow-lg p-1.5 hover:bg-red-50 border-2 border-white"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -783,9 +833,9 @@ export default function Page() {
               </div>
             )}
             <div className="flex flex-col gap-2">
-              <label className="flex items-center gap-2 font-medium text-orange-700 cursor-pointer bg-orange-50 p-3 rounded-xl hover:bg-orange-100 transition-colors">
+              <label className="flex items-center gap-2 font-bold text-orange-700 cursor-pointer bg-linear-to-r from-orange-50 to-amber-50 p-4 rounded-2xl hover:from-orange-100 hover:to-amber-100 transition-all border-2 border-orange-100">
                 <ImageIcon className="w-5 h-5" />
-                Зураг нэмэх
+                📷 Зураг нэмэх
                 <input
                   type="file"
                   hidden
@@ -796,7 +846,7 @@ export default function Page() {
               </label>
               <Button
                 onClick={editPost}
-                className="bg-orange-500 rounded-xl hover:bg-orange-600 h-11 font-bold"
+                className="bg-linear-to-r from-orange-500 to-amber-500 rounded-2xl hover:from-orange-600 hover:to-amber-600 h-12 font-bold shadow-md"
                 disabled={uploading || !newDescription.trim() || !USER_ID}
               >
                 {uploading ? (
@@ -805,7 +855,10 @@ export default function Page() {
                     Түр хүлээнэ үү...
                   </>
                 ) : (
-                  "Өөрчлөлтийг хадгалах"
+                  <>
+                    <PawPrint className="w-5 h-5 mr-2" />
+                    Өөрчлөлтийг хадгалах
+                  </>
                 )}
               </Button>
             </div>
