@@ -1,9 +1,13 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Send } from "lucide-react";
+import { Send, ArrowLeft, Sparkles, PawPrint } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/providers/useAuth";
 
 type Message = {
   role: "USER" | "AI";
@@ -15,6 +19,13 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  const { user: clerkUser } = useUser();
+  const clerkId = clerkUser?.id;
+  const { user } = useAuth(clerkId ?? "");
+
+  const myInitial = clerkUser?.firstName?.[0]?.toUpperCase() ?? "?";
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -59,235 +70,72 @@ export default function ChatPage() {
   };
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
-
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-          --forest:        #1b4d36;
-          --forest-mid:    #256647;
-          --forest-light:  #37896a;
-          --mint:          #d2f0e3;
-          --mint-dark:     #a8d9bf;
-          --cream:         #f4fbf7;
-          --warm-white:    #edf8f3;
-          --gold:          #e8a63a;
-          --gold-light:    #f5c76e;
-          --text-dark:     #122b1f;
-          --text-mid:      #375e4a;
-          --text-light:    #6ea082;
-          --shadow:        rgba(27,77,54,0.13);
-        }
-
-        body { font-family: 'Nunito', sans-serif; background: var(--cream); }
-
-        .chat-wrap {
-          display: flex; flex-direction: column; height: 100vh;
-          background: var(--cream); position: relative; overflow: hidden;
-        }
-        .chat-wrap::before {
-          content: ''; position: fixed; inset: 0;
-          background-image: radial-gradient(circle, rgba(27,77,54,0.04) 1px, transparent 1px);
-          background-size: 28px 28px; pointer-events: none; z-index: 0;
-        }
-
-        /* HEADER */
-        .header {
-          background: var(--forest); padding: 13px 22px;
-          display: flex; align-items: center; gap: 13px;
-          box-shadow: 0 3px 18px rgba(27,77,54,0.4);
-          position: relative; z-index: 10;
-        }
-        .header-mascot {
-          width: 48px; height: 48px;
-          background: linear-gradient(135deg, var(--gold-light), var(--gold));
-          border-radius: 14px; display: flex; align-items: center;
-          justify-content: center; font-size: 26px; flex-shrink: 0;
-          box-shadow: 0 3px 12px rgba(232,166,58,0.5);
-          animation: floatPaw 3.5s ease-in-out infinite;
-        }
-        @keyframes floatPaw {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          50%       { transform: translateY(-5px) rotate(-5deg); }
-        }
-        .header-title { font-family: 'Fredoka One', cursive; font-size: 23px; color: #fff; line-height: 1.1; }
-        .header-sub   { font-size: 11px; color: var(--mint-dark); font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 2px; }
-        .header-badges { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
-        .badge {
-          background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.22);
-          border-radius: 20px; padding: 3px 11px; font-size: 11.5px; font-weight: 700;
-          color: var(--mint); white-space: nowrap;
-        }
-
-        /* MESSAGES */
-        .main {
-          flex: 1; overflow-y: auto; padding: 24px 16px 12px;
-          display: flex; flex-direction: column; gap: 18px;
-          position: relative; z-index: 1;
-          scrollbar-width: thin; scrollbar-color: var(--mint-dark) transparent;
-        }
-        .main::-webkit-scrollbar { width: 5px; }
-        .main::-webkit-scrollbar-thumb { background: var(--mint-dark); border-radius: 10px; }
-
-        /* EMPTY STATE */
-        .empty-state {
-          text-align: center; margin: auto; padding: 40px 20px;
-          display: flex; flex-direction: column; align-items: center; gap: 12px;
-          animation: fadeUp 0.6s ease forwards;
-        }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(18px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .empty-icon {
-          font-size: 78px;
-          filter: drop-shadow(0 5px 10px rgba(27,77,54,0.22));
-          animation: floatPaw 3.5s ease-in-out infinite;
-        }
-        .empty-title { font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--forest); }
-        .empty-sub   { font-size: 14px; color: var(--text-light); font-weight: 600; max-width: 270px; line-height: 1.65; }
-        .quick-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 6px; }
-        .chip {
-          background: white; border: 2px solid var(--mint-dark); border-radius: 20px;
-          padding: 7px 15px; font-size: 12.5px; font-weight: 700; color: var(--forest-mid);
-          cursor: pointer; transition: all 0.2s ease; font-family: 'Nunito', sans-serif;
-        }
-        .chip:hover {
-          background: var(--forest-mid); color: white; border-color: var(--forest-mid);
-          transform: translateY(-2px); box-shadow: 0 5px 14px rgba(27,77,54,0.22);
-        }
-
-        /* ROWS */
-        .msg-row {
-          display: flex; align-items: flex-end; gap: 10px;
-          animation: fadeUp 0.3s ease forwards;
-          max-width: 760px; width: 100%;
-        }
-        .msg-row.user { flex-direction: row-reverse; margin-left: auto; }
-        .msg-row.ai   { flex-direction: row;         margin-right: auto; }
-
-        .avatar {
-          width: 36px; height: 36px; border-radius: 50%;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 18px; flex-shrink: 0; box-shadow: 0 2px 8px var(--shadow);
-        }
-        .user-av { background: linear-gradient(135deg, var(--gold-light), var(--gold)); }
-        .ai-av   { background: linear-gradient(135deg, var(--forest-light), var(--forest)); }
-
-        /* BUBBLES */
-        .bubble {
-          padding: 12px 16px; border-radius: 18px;
-          font-size: 14px; line-height: 1.7; font-weight: 600;
-          max-width: calc(100% - 56px);
-          box-shadow: 0 2px 10px var(--shadow);
-        }
-        .user-bubble {
-          background: linear-gradient(135deg, var(--forest-light), var(--forest));
-          color: #fff; border-bottom-right-radius: 4px;
-        }
-        .ai-bubble {
-          background: white; color: var(--text-dark);
-          border-bottom-left-radius: 4px; border: 1.5px solid var(--mint-dark);
-        }
-
-        /* MARKDOWN STYLES inside ai bubble */
-        .md-body p              { margin-bottom: 8px; }
-        .md-body p:last-child   { margin-bottom: 0; }
-        .md-body h1, .md-body h2, .md-body h3 {
-          font-family: 'Fredoka One', cursive; color: var(--forest);
-          margin: 14px 0 6px; line-height: 1.25;
-        }
-        .md-body h1 { font-size: 18px; }
-        .md-body h2 { font-size: 16px; }
-        .md-body h3 { font-size: 14.5px; }
-        .md-body ul, .md-body ol { padding-left: 20px; margin-bottom: 8px; }
-        .md-body li  { margin-bottom: 4px; }
-        .md-body strong { color: var(--forest); }
-        .md-body em     { color: var(--text-mid); }
-        .md-body code {
-          background: var(--mint); color: var(--forest);
-          border-radius: 5px; padding: 1px 6px;
-          font-size: 12.5px; font-family: 'Courier New', monospace;
-        }
-        .md-body pre {
-          background: var(--forest); color: var(--mint);
-          border-radius: 10px; padding: 12px 14px;
-          overflow-x: auto; margin: 8px 0; font-size: 12.5px;
-        }
-        .md-body pre code { background: none; color: inherit; padding: 0; }
-        .md-body blockquote {
-          border-left: 3px solid var(--forest-light); padding-left: 12px;
-          color: var(--text-mid); margin: 8px 0; font-style: italic;
-        }
-        .md-body table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
-        .md-body th { background: var(--mint); color: var(--forest); padding: 6px 10px; text-align: left; font-weight: 800; }
-        .md-body td { padding: 5px 10px; border-bottom: 1px solid var(--mint-dark); }
-        .md-body a  { color: var(--forest-light); text-decoration: underline; }
-        .md-body hr { border: none; border-top: 1.5px solid var(--mint-dark); margin: 10px 0; }
-
-        /* TYPING */
-        .typing-row { display: flex; align-items: flex-end; gap: 10px; animation: fadeUp 0.3s ease forwards; }
-        .typing-bubble {
-          background: white; border: 1.5px solid var(--mint-dark);
-          border-radius: 18px; border-bottom-left-radius: 4px;
-          padding: 14px 18px; display: flex; align-items: center; gap: 5px;
-          box-shadow: 0 2px 10px var(--shadow);
-        }
-        .dot { width: 8px; height: 8px; background: var(--forest-light); border-radius: 50%; animation: bounce 1.2s ease infinite; }
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes bounce {
-          0%, 60%, 100% { transform: translateY(0);    opacity: 0.45; }
-          30%            { transform: translateY(-7px); opacity: 1; }
-        }
-
-        /* FOOTER */
-        .footer {
-          background: var(--warm-white); border-top: 2px solid var(--mint-dark);
-          padding: 12px 16px 14px; box-shadow: 0 -2px 14px var(--shadow);
-          position: relative; z-index: 10;
-        }
-        .input-form { max-width: 760px; margin: 0 auto; display: flex; gap: 10px; align-items: center; }
-        .input-field {
-          flex: 1; padding: 13px 20px; border-radius: 50px;
-          border: 2px solid var(--mint-dark); background: white;
-          font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 600;
-          color: var(--text-dark); outline: none; transition: all 0.2s ease;
-        }
-        .input-field::placeholder { color: var(--text-light); }
-        .input-field:focus { border-color: var(--forest-light); box-shadow: 0 0 0 3px rgba(55,137,106,0.14); }
-        .send-btn {
-          width: 48px; height: 48px; border-radius: 50%;
-          background: linear-gradient(135deg, var(--forest-light), var(--forest));
-          border: none; cursor: pointer; display: flex; align-items: center;
-          justify-content: center; color: white; transition: all 0.2s ease;
-          box-shadow: 0 3px 12px rgba(27,77,54,0.4); flex-shrink: 0;
-        }
-        .send-btn:hover:not(:disabled) { transform: scale(1.1) rotate(-6deg); box-shadow: 0 6px 18px rgba(27,77,54,0.48); }
-        .send-btn:disabled { background: linear-gradient(135deg, #ccc, #bbb); box-shadow: none; cursor: not-allowed; }
-        .footer-note { text-align: center; font-size: 10.5px; color: var(--text-light); font-weight: 700; margin-top: 8px; letter-spacing: 0.3px; }
-      `}</style>
-
-      <div className="chat-wrap">
-        <header className="header">
-          <div className="header-mascot">🐾</div>
-          <div>
-            <div className="header-title">PawsHelper</div>
-            <div className="header-sub">Таны тэжээвэр амьтны найз туслагч</div>
+    <div className="flex flex-col h-screen bg-linear-to-br from-green-50 via-emerald-50 to-teal-50 relative overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03]">
+        <div className="absolute top-10 left-10 transform rotate-12">
+          <PawPrint className="w-24 h-24" />
+        </div>
+        <div className="absolute top-40 right-20 transform -rotate-45">
+          <PawPrint className="w-32 h-32" />
+        </div>
+        <div className="absolute bottom-32 left-1/4 transform rotate-90">
+          <PawPrint className="w-28 h-28" />
+        </div>
+        <div className="absolute bottom-20 right-1/3 transform -rotate-12">
+          <PawPrint className="w-20 h-20" />
+        </div>
+        <div className="absolute top-1/2 left-10 transform rotate-45">
+          <PawPrint className="w-16 h-16" />
+        </div>
+        <div className="absolute top-1/3 right-10 transform -rotate-90">
+          <PawPrint className="w-24 h-24" />
+        </div>
+      </div>
+      <header className="bg-linear-to-r from-green-500 via-emerald-500 to-teal-500 px-6 py-4 shadow-lg relative z-10">
+        <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+        <div className="relative z-10 flex items-center gap-4">
+          <button
+            onClick={() => router.back()}
+            className="p-2.5 bg-white/90 hover:bg-white rounded-2xl transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+          >
+            <ArrowLeft className="w-6 h-6 text-green-600" />
+          </button>
+          <div className="bg-white p-3 rounded-2xl shadow-md animate-bounce-slow">
+            <PawPrint className="w-10 h-10 text-green-600" />
           </div>
-        </header>
-
-        <main className="main">
+          <div className="flex-1">
+            <h1 className="text-2xl font-extrabold text-white drop-shadow-md flex items-center gap-2">
+              🐾 PawsHelper AI
+              <Sparkles className="w-5 h-5 text-yellow-200 animate-pulse" />
+            </h1>
+            <p className="text-white/90 text-sm font-semibold">
+              Таны тэжээвэр амьтны найз туслагч
+            </p>
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            <span className="bg-white/20 border-2 border-white/30 rounded-full px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
+              24/7
+            </span>
+            <span className="bg-white/20 border-2 border-white/30 rounded-full px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
+              AI 🤖
+            </span>
+          </div>
+        </div>
+      </header>
+      <main className="flex-1 overflow-y-auto px-4 py-6 relative z-10 scrollbar-thin scrollbar-thumb-green-300 scrollbar-track-transparent">
+        <div className="max-w-5xl mx-auto space-y-4">
           {messages.length === 0 && (
-            <div className="empty-state">
-              <div className="empty-icon">🐶</div>
-              <div className="empty-title">Сайн байна уу! 👋</div>
-              <div className="empty-sub">
-                Гэрийн тэжээвэр амьтдын талаар хүссэн бүхнээ асуугаарай!
+            <div className="text-center py-12 px-6 animate-fade-in">
+              <div className="inline-block bg-linear-to-br from-green-100 to-emerald-100 p-8 rounded-full mb-6 shadow-lg animate-bounce-slow">
+                <div className="text-7xl">🐶</div>
               </div>
-              <div className="quick-chips">
+              <h2 className="text-3xl font-extrabold text-green-700 mb-3">
+                Сайн байна уу! 👋
+              </h2>
+              <p className="text-gray-600 text-base font-semibold mb-8 max-w-md mx-auto leading-relaxed">
+                Гэрийн тэжээвэр амьтдын талаар хүссэн бүхнээ асуугаарай!
+              </p>
+              <div className="flex flex-wrap gap-3 justify-center max-w-2xl mx-auto">
                 {[
                   "🍖 Миний тэжээвэр амьтан юу идэж болох вэ?",
                   "😾 Миний муур яагаад нуугдаад байна вэ?",
@@ -297,8 +145,8 @@ export default function ChatPage() {
                 ].map((chip) => (
                   <button
                     key={chip}
-                    className="chip"
                     onClick={() => handleChipClick(chip)}
+                    className="bg-white border-2 border-green-200 hover:border-green-400 rounded-2xl px-4 py-2.5 text-sm font-bold text-green-700 hover:bg-green-600 hover:text-white transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-1"
                   >
                     {chip}
                   </button>
@@ -310,65 +158,209 @@ export default function ChatPage() {
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`msg-row ${msg.role === "USER" ? "user" : "ai"}`}
+              className={`flex gap-3 items-end animate-fade-in ${
+                msg.role === "USER" ? "flex-row-reverse" : "flex-row"
+              }`}
             >
+              {msg.role === "USER" ? (
+                <Avatar className="w-10 h-10 shrink-0 shadow-lg ring-2 ring-green-200">
+                  <AvatarImage src={user?.profileImg} />
+                  <AvatarFallback className="bg-linear-to-br from-green-500 to-emerald-600 text-white font-bold text-sm">
+                    {myInitial}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 shadow-lg ring-2 bg-linear-to-br from-teal-500 to-cyan-600 ring-teal-200">
+                  🐾
+                </div>
+              )}
+
               <div
-                className={`avatar ${msg.role === "USER" ? "user-av" : "ai-av"}`}
-              >
-                {msg.role === "USER" ? "🧑" : "🐾"}
-              </div>
-              <div
-                className={`bubble ${msg.role === "USER" ? "user-bubble" : "ai-bubble"}`}
+                className={`px-5 py-3 rounded-3xl shadow-lg ${
+                  msg.role === "USER"
+                    ? "bg-linear-to-br from-green-500 to-emerald-600 text-white rounded-br-md max-w-[70%]"
+                    : "bg-white text-gray-800 border-2 border-green-100 rounded-bl-md max-w-[85%]"
+                }`}
               >
                 {msg.role === "AI" ? (
-                  <div className="md-body">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  <div className="prose prose-sm max-w-none">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        p: ({ children }) => (
+                          <p className="mb-2 last:mb-0 leading-relaxed font-semibold text-gray-700">
+                            {children}
+                          </p>
+                        ),
+                        h1: ({ children }) => (
+                          <h1 className="text-xl font-extrabold text-green-700 mb-2 mt-3 first:mt-0">
+                            {children}
+                          </h1>
+                        ),
+                        h2: ({ children }) => (
+                          <h2 className="text-lg font-extrabold text-green-700 mb-2 mt-3 first:mt-0">
+                            {children}
+                          </h2>
+                        ),
+                        h3: ({ children }) => (
+                          <h3 className="text-base font-bold text-green-700 mb-2 mt-2 first:mt-0">
+                            {children}
+                          </h3>
+                        ),
+                        ul: ({ children }) => (
+                          <ul className="list-disc list-inside mb-2 space-y-1">
+                            {children}
+                          </ul>
+                        ),
+                        ol: ({ children }) => (
+                          <ol className="list-decimal list-inside mb-2 space-y-1">
+                            {children}
+                          </ol>
+                        ),
+                        li: ({ children }) => (
+                          <li className="text-gray-700 font-semibold">
+                            {children}
+                          </li>
+                        ),
+                        strong: ({ children }) => (
+                          <strong className="text-green-800 font-extrabold">
+                            {children}
+                          </strong>
+                        ),
+                        em: ({ children }) => (
+                          <em className="text-gray-600 font-semibold">
+                            {children}
+                          </em>
+                        ),
+                        code: ({ children }) => (
+                          <code className="bg-green-50 text-green-800 rounded px-2 py-0.5 text-xs font-mono font-bold">
+                            {children}
+                          </code>
+                        ),
+                        pre: ({ children }) => (
+                          <pre className="bg-gray-800 text-green-300 rounded-xl p-3 overflow-x-auto my-2 text-xs font-mono">
+                            {children}
+                          </pre>
+                        ),
+                        blockquote: ({ children }) => (
+                          <blockquote className="border-l-4 border-green-500 pl-4 italic text-gray-600 my-2 font-semibold">
+                            {children}
+                          </blockquote>
+                        ),
+                        table: ({ children }) => (
+                          <table className="w-full border-collapse text-sm my-2">
+                            {children}
+                          </table>
+                        ),
+                        th: ({ children }) => (
+                          <th className="bg-green-100 text-green-800 font-extrabold p-2 text-left">
+                            {children}
+                          </th>
+                        ),
+                        td: ({ children }) => (
+                          <td className="border-b border-green-100 p-2 font-semibold">
+                            {children}
+                          </td>
+                        ),
+                        a: ({ children, href }) => (
+                          <a
+                            href={href}
+                            className="text-green-700 underline font-bold hover:text-green-800"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {children}
+                          </a>
+                        ),
+                        hr: () => (
+                          <hr className="border-green-200 my-3 border-t-2" />
+                        ),
+                      }}
+                    >
                       {msg.content}
                     </ReactMarkdown>
                   </div>
                 ) : (
-                  msg.content
+                  <p className="font-bold text-sm leading-relaxed">
+                    {msg.content}
+                  </p>
                 )}
               </div>
             </div>
           ))}
 
           {isLoading && (
-            <div className="typing-row">
-              <div className="avatar ai-av">🐾</div>
-              <div className="typing-bubble">
-                <div className="dot" />
-                <div className="dot" />
-                <div className="dot" />
+            <div className="flex gap-3 items-end animate-fade-in">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl shrink-0 shadow-lg bg-linear-to-br from-teal-500 to-cyan-600 ring-2 ring-teal-200">
+                🐾
+              </div>
+              <div className="bg-white border-2 border-green-100 rounded-3xl rounded-bl-md px-5 py-4 flex gap-1.5 shadow-lg">
+                <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-bounce"></div>
+                <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
               </div>
             </div>
           )}
           <div ref={scrollRef} />
-        </main>
+        </div>
+      </main>
 
-        <footer className="footer">
-          <form className="input-form" onSubmit={handleSubmit}>
-            <input
-              className="input-field"
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Тэжээвэр амьтныхаа талаар асуугаарай... 🐾"
-            />
-            <button
-              className="send-btn"
-              type="submit"
-              disabled={isLoading || !input.trim()}
-            >
-              <Send size={18} />
-            </button>
-          </form>
-          <p className="footer-note">
-            🐾 AI-ийн тусламжтай · Эрүүл мэндийн асуудлаар заавал мэргэжлийн
-            эмчээс зөвлөгөө авна уу
-          </p>
-        </footer>
-      </div>
-    </>
+      <footer className="bg-white/80 backdrop-blur-md border-t-2 border-green-200 px-4 py-4 shadow-lg relative z-10">
+        <form
+          onSubmit={handleSubmit}
+          className="max-w-5xl mx-auto flex gap-3 items-center"
+        >
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Тэжээвэр амьтныхаа талаар асуугаарай... 🐾"
+            className="flex-1 px-6 py-4 rounded-full border-2 border-green-200 bg-white font-semibold text-gray-700 text-sm placeholder:text-gray-400 focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100 transition-all shadow-md"
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !input.trim()}
+            className="w-14 h-14 rounded-full bg-linear-to-br from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-gray-300 disabled:to-gray-400 border-none flex items-center justify-center text-white transition-all shadow-lg hover:shadow-xl hover:scale-110 disabled:hover:scale-100 disabled:cursor-not-allowed disabled:shadow-md"
+          >
+            <Send className="w-5 h-5" />
+          </button>
+        </form>
+        <p className="text-center text-xs text-gray-500 font-bold mt-3 flex items-center justify-center gap-2">
+          <PawPrint className="w-3 h-3" />
+          AI-ийн тусламжтай · Эрүүл мэндийн асуудлаар заавал мэргэжлийн эмчээс
+          зөвлөгөө авна уу
+          <PawPrint className="w-3 h-3" />
+        </p>
+      </footer>
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes bounce-slow {
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-10px);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.4s ease forwards;
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 3s ease-in-out infinite;
+        }
+      `}</style>
+    </div>
   );
 }
