@@ -36,12 +36,6 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <div>
-            <SignedOut></SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </div>
           {children}
           <Toaster toastOptions={{ duration: 3000 }} richColors={true} />
         </body>

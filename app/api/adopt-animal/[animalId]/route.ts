@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
-  req: Request,
-  context: { params: { animalId: string } },
+  req: NextRequest,
+  context: { params: Promise<{ animalId: string }> },
 ) => {
   try {
     const { animalId } = await context.params;
@@ -21,7 +21,3 @@ export const GET = async (
     return NextResponse.json({ error: err }, { status: 500 });
   }
 };
-
-
-
-

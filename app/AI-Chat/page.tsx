@@ -277,11 +277,6 @@ export default function ChatPage() {
             <div className="header-title">PawsHelper</div>
             <div className="header-sub">Таны тэжээвэр амьтны найз туслагч</div>
           </div>
-          <div className="header-badges">
-            <span className="badge">🐕 Нохой</span>
-            <span className="badge">🐈 Муур</span>
-            <span className="badge">🐇 Бусад</span>
-          </div>
         </header>
 
         <main className="main">

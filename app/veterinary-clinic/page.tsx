@@ -80,10 +80,54 @@ const veterinaryClinics: Clinic[] = [
     name: "Animals Healthy мал эмнэлэг",
     address: "БЗД, Сансарын Баянцээлийн зүүн хойно 115-р байр",
     phone: "8804-4664",
-    hours: "Лхагваас бусад бүх өдөр 11:00–18:00",
+    hours: "Лхагваас бусад бүх өдөр 11:00-18:00",
     image: ["/ah.jpg"],
     fbLink: "https://www.facebook.com/Sonor91170547",
     email: "animals.healthy@yahoo.com",
+  },
+  {
+    id: 7,
+    name: "ХААИС Мал амьтны эмнэлэг",
+    address:
+      "Улаанбаатар хот, Хан-Уул дүүрэг 22-р хороо Зайсан Мал эмнэлгийн сургуулийн ард",
+    phone: "75107777",
+    hours: "Мягмар–Баасан гарагт 09:00-17:00",
+    image: ["/logo_muls.png"],
+    fbLink: "https://www.facebook.com/lms.muls.edu.mn/",
+    email: "",
+  },
+  {
+    id: 8,
+    name: "Жаргал мал эмнэлэг",
+    address:
+      "Баянгол дүүрэг, Баруун 4 зам, Гранд Плаза төвийн замын хойно Hillside хотхоны баруун талд 5 давхар байр, 1-р давхар",
+    phone: "9985 2575",
+    hours: "Даваа - Баасан: 09:00 - 18:00",
+    image: ["/jargalo.jpg"],
+    fbLink: "https://www.facebook.com/jargalvet",
+    email: "jargalvetclinic@gmail.com",
+  },
+  {
+    id: 9,
+    name: "Энэрэх мал эмнэлэг",
+    address:
+      "Улаанбаатар хот, Хан-Уул дүүрэг, 20-р хороо, Чингисийн өргөн чөлөө 145/5",
+    phone: "7011 4723",
+    hours: "Даваа - Баасан: 09:00 - 16:30 Бямба: 09:00 - 17:30",
+    image: ["/doggyg.jpg"],
+    fbLink:
+      "https://www.facebook.com/p/Энэрэх-мал-эмнэлэг-сургалтын-төв-100057807363343/",
+    email: "Enerekhhospital@gmail.com",
+  },
+  {
+    id: 10,
+    name: "Жонон мал эмнэлэг",
+    address: "Чингэлтэй дүүрэг, 6-р хороо Чикаго клубын зүүн талд",
+    phone: "7777 6680",
+    hours: "Даваа - Баасан: 09:00 - 19:00 Бямба - Ням: 10:00 - 18:00",
+    image: ["/jonon.jpg"],
+    fbLink: "https://www.facebook.com/JononVeternaryClinic/",
+    email: "jononvetclinic@gmail.com",
   },
 ];
 
