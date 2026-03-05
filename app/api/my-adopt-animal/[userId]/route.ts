@@ -1,9 +1,9 @@
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
-  req: Request,
-  context: { params: { userId: string } },
+  req: NextRequest,
+  context: { params: Promise<{ userId: string }> },
 ) => {
   try {
     const { userId } = await context.params;
@@ -18,11 +18,12 @@ export const GET = async (
 
     return NextResponse.json(adoptAnimal, { status: 200 });
   } catch (err) {
-    return NextResponse.json({ error: err }, { status: 500 });
+    console.error(err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 };
 
-export async function DELETE(req: Request) {
+export async function DELETE(req: NextRequest) {
   try {
     const body = await req.json();
     const { userId, adoptAnimalId } = body;
@@ -35,17 +36,24 @@ export async function DELETE(req: Request) {
       where: { id: adoptAnimalId },
     });
 
-    if (userId === adoptAnimal?.userId) {
-      await prisma.adoptAnimal.delete({
-        where: { id: adoptAnimalId },
-      });
-
-      return NextResponse.json(
-        { message: "successfully deleted" },
-        { status: 200 },
-      );
+    if (!adoptAnimal) {
+      return NextResponse.json({ error: "Animal not found" }, { status: 404 });
     }
+
+    if (userId !== adoptAnimal.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+    }
+
+    await prisma.adoptAnimal.delete({
+      where: { id: adoptAnimalId },
+    });
+
+    return NextResponse.json(
+      { message: "Successfully deleted" },
+      { status: 200 },
+    );
   } catch (err) {
-    return NextResponse.json({ error: err }, { status: 500 });
+    console.error(err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

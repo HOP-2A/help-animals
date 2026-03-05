@@ -1,16 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 export const GET = async (
-  req: Request,
-  context: { params: { postId: string } },
+  req: NextRequest,
+  context: { params: Promise<{ postId: string }> },
 ) => {
-  const { postId } = await context.params;
-
-  if (!postId) {
-    return NextResponse.json({ error: "postId missing" }, { status: 400 });
-  }
   try {
+    const { postId } = await context.params;
+
+    if (!postId) {
+      return NextResponse.json({ error: "postId missing" }, { status: 400 });
+    }
+
     const findPost = await prisma.helpAnimal.findUnique({
       where: { id: postId },
       include: {
@@ -19,11 +20,12 @@ export const GET = async (
     });
 
     if (!findPost) {
-      return NextResponse.json({ error: "Post not found" });
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
     return NextResponse.json(findPost, { status: 200 });
   } catch (err) {
-    return NextResponse.json({ error: err }, { status: 500 });
+    console.error(err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 };
