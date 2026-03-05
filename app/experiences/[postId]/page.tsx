@@ -149,21 +149,28 @@ export default function Page() {
     if (post?.id) getComment(post.id);
   }, [post?.id]);
 
-  const uploadImages = async (imgs: ImageItem[], setState: Function) => {
+  const uploadImages = async (
+    imgs: ImageItem[],
+    setState: React.Dispatch<React.SetStateAction<ImageItem[]>>,
+  ) => {
     setUploading(true);
+
     try {
-      const updatedImages = await Promise.all(
+      const updated = await Promise.all(
         imgs.map(async (img) => {
           if (img.url && !img.file) return img;
+
           const uploaded = await upload(img.file!.name, img.file!, {
             access: "public",
             handleUploadUrl: "/api/upload",
           });
+
           return { ...img, url: uploaded.url, file: null };
         }),
       );
-      setState(updatedImages);
-      return updatedImages;
+
+      setState(updated);
+      return updated;
     } catch {
       toast.error("Зураг оруулахад алдаа гарлаа");
       return imgs;

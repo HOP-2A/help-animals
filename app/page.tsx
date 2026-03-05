@@ -19,7 +19,6 @@ function Header() {
     >
       <div className="max-w-7xl mx-auto px-6 h-18 flex items-center justify-between py-3">
         <div>
-          {" "}
           <img src="/safe-logo.png" className="w-40 h-18 my-10"></img>
         </div>
         <div className="flex items-center gap-3">

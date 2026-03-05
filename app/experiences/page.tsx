@@ -52,16 +52,7 @@ type User = {
   birthdate: string;
   createdAt: string;
 };
-type Post = {
-  id: string;
-  images: string[];
-  description: string;
-  user: User;
-  createdAt: string;
-  userId: string;
-  reactions: Reaction[];
-  comments: Comment[];
-};
+
 type Reaction = {
   id: string;
   type: string;
@@ -77,15 +68,6 @@ type Comment = {
   reactions: Reaction[];
 };
 
-type ImageItem = { file: File | null; url: string };
-type User = {
-  id: string;
-  profileImg: string;
-  firstName: string;
-  lastName: string;
-  birthdate: string;
-  createdAt: string;
-};
 type Post = {
   id: string;
   images: string[];
@@ -93,24 +75,10 @@ type Post = {
   user: User;
   createdAt: string;
   userId: string;
-  reactions: Reaction;
-  comments: Comment;
+  reactions: Reaction[];
+  comments: Comment[];
 };
-type Reaction = {
-  id: string;
-  type: string;
-  userId: string;
-  user: User;
-  comments: Comment;
-};
-type Comment = {
-  content: string;
-  id: string;
-  userId: string;
-  experienceId: string;
-  user: User;
-  reactions: Reaction;
-};
+
 export default function Page() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [description, setDescription] = useState("");
@@ -163,19 +131,26 @@ export default function Page() {
     ]);
   };
 
-  const uploadImages = async (imgs: ImageItem[], setState: Function) => {
+  const uploadImages = async (
+    imgs: ImageItem[],
+    setState: React.Dispatch<React.SetStateAction<ImageItem[]>>,
+  ) => {
     setUploading(true);
+
     try {
       const updated = await Promise.all(
         imgs.map(async (img) => {
           if (img.url && !img.file) return img;
+
           const uploaded = await upload(img.file!.name, img.file!, {
             access: "public",
             handleUploadUrl: "/api/upload",
           });
+
           return { ...img, url: uploaded.url, file: null };
         }),
       );
+
       setState(updated);
       return updated;
     } catch {
@@ -185,7 +160,6 @@ export default function Page() {
       setUploading(false);
     }
   };
-
   const getExperiences = async () => {
     try {
       const res = await fetch("/api/experience-exchange/get-all");
