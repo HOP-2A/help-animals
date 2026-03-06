@@ -214,25 +214,7 @@ model AdoptionForm {
   user           User        @relation(fields: [userId], references: [id])
 }
  
-model Conversation {
-  id        String    @id @default(nanoid())
-  users     User[]
-  messages  Message[]
-  createdAt DateTime  @default(now())
-}
  
-model Message {
-  id      String @id @default(nanoid())
-  content String
- 
-  senderId String
-  sender   User   @relation(fields: [senderId], references: [id])
- 
-  conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id])
- 
-  createdAt DateTime @default(now())
-}
  
 model ExperienceExchange {
   id String @id @default(nanoid())

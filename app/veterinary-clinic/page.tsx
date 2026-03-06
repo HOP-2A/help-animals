@@ -33,6 +33,52 @@ const veterinaryClinics: Clinic[] = [
     fbLink: "https://www.facebook.com/SOS.Animal.Health",
     email: "sos77111950@gmail.com",
   },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   {
     id: 2,
     name: "UB Vet амьтны эмнэлэг",
