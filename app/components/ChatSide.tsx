@@ -116,8 +116,8 @@ export default function ConversationList() {
 
         {!loading && conversations.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center px-5 gap-2 opacity-60">
-            <span className="text-4xl">🐾</span>
-            <p className="font-black text-gray-500 text-sm">
+            <span className="text-4xl mt-5">🐾</span>
+            <p className="font-black text-gray-500 text-sm mb-5 ">
               Чат байхгүй байна
             </p>
           </div>

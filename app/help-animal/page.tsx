@@ -323,7 +323,7 @@ const Page = () => {
 
           <Dialog>
             <DialogTrigger asChild>
-              <button
+              <div
                 className="mt-8 inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl font-extrabold text-blue-900 text-lg transition-all duration-200 cursor-pointer
                 shadow-[0_6px_0_#92400e] hover:shadow-[0_8px_0_#92400e] hover:-translate-y-1 active:translate-y-1 active:shadow-[0_3px_0_#92400e]"
                 style={{
@@ -332,7 +332,7 @@ const Page = () => {
               >
                 <PawPrint size={20} strokeWidth={2.5} />
                 Тусламж хэрэгтэй амьтан нэмэх
-              </button>
+              </div>
             </DialogTrigger>
 
             <DialogContent

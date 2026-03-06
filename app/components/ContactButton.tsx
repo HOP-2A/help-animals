@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
-  postOwnerId: string; // animal.user.id // userId (өөрийн DB id)
+  postOwnerId: string;
 };
 
 export function ContactButton({ postOwnerId }: Props) {
@@ -21,9 +21,6 @@ export function ContactButton({ postOwnerId }: Props) {
       router.push("/sign-up");
       return;
     }
-
-    // Өөрийн post-дээ дарахгүй байх
-    // if (currentUserId === postOwnerId) return;
 
     setLoading(true);
     try {

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export const GET = async (
   req: Request,
-  { params }: { params: { userId: string } },
+  { params }: { params: Promise<{ userId: string }> },
 ) => {
   try {
     const { userId } = await params;
@@ -18,15 +18,15 @@ export const GET = async (
           some: {
             id: userId,
           },
-        },
+        },  
       },
       include: {
         users: true,
-        messages: {
-          orderBy: { createdAt: "desc" },
-          take: 1,
-          include: { sender: true },
-        },
+          messages: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            include: { sender: true },
+          },
       },
       orderBy: {
         createdAt: "desc",
