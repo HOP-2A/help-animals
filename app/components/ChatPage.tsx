@@ -110,17 +110,17 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
     };
   }, [conversation.id]);
 
-  // useEffect(() => {
-  //   const socket = getSocket();
-  //   socket.emit("register_user", currentUserId);
-  //   const handleUpdate = (users: string[]) => {
-  //     setOnlineUsers(users);
-  //   };
-  //   socket.on("online_users", handleUpdate);
-  //   return () => {
-  //     socket.off("online_users", handleUpdate);
-  //   };
-  // }, [currentUserId]);
+  useEffect(() => {
+    const socket = getSocket();
+    socket.emit("register_user", currentUserId);
+    const handleUpdate = (users: string[]) => {
+      setOnlineUsers(users);
+    };
+    socket.on("online_users", handleUpdate);
+    return () => {
+      socket.off("online_users", handleUpdate);
+    };
+  }, [currentUserId]);
   useEffect(() => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
@@ -170,26 +170,12 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
 
         <div className="relative">
           <Avatar user={otherUser} size="md" />
-          {connected && (
-            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white" />
-          )}
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="font-black text-[#431407] text-sm truncate leading-tight">
             {otherUser?.name ?? "Хэрэглэгч"}
           </div>
-          {/* <div
-            style={{
-              color: onlineUsers.includes(otherUser?.id ?? "")
-                ? "green"
-                : "gray",
-            }}
-          >
-            {onlineUsers.includes(otherUser?.id ?? "")
-              ? "● Онлайн"
-              : "○ Холбогдож байна..."}
-          </div> */}
         </div>
 
         <button className="w-8 h-8 flex items-center justify-center text-orange-300 hover:bg-orange-50 rounded-xl transition-colors">
@@ -273,7 +259,7 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
                   <span
                     className={`text-[10px] text-gray-400 px-2 ${isMe ? "text-right" : "text-left"}`}
                   >
-                    {formatTime(msg.createdAt)}
+                    {new Date(msg.createdAt).toLocaleTimeString()}
                   </span>
                 )}
               </div>
