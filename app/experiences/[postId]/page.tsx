@@ -107,6 +107,9 @@ export default function Page() {
   const [editImages, setEditImages] = useState<ImageItem[]>([]);
   const [uploading, setUploading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+  const userId = user?.id;
+
   const getExperience = async () => {
     try {
       const res = await fetch("/api/experience-exchange/get-post", {
@@ -334,6 +337,29 @@ export default function Page() {
     }
   };
 
+  const handleContact = async (postOwnerId: string) => {
+    if (!userId) {
+      router.push("/sign-up");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/conversation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postOwnerId, userId }),
+      });
+
+      const data = await res.json();
+      router.push(`/chat/${data.id}`);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-linear-to-br from-orange-50 via-amber-50 to-yellow-50 text-[#4a3f35] relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none opacity-[0.03]">
@@ -408,7 +434,10 @@ export default function Page() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h3 className="font-bold text-gray-800 text-lg flex items-center gap-2">
+                    <h3
+                      className="font-bold text-gray-800 text-lg flex items-center gap-2 cursor-pointer"
+                      onClick={() => handleContact(post.user.id)}
+                    >
                       {post.user?.firstName} {post.user?.lastName}
                       <PawPrint className="w-4 h-4 text-orange-400" />
                     </h3>
