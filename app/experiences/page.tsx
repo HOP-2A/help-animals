@@ -42,6 +42,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import HeadBar from "../_components/headbar";
 
 type ImageItem = { file: File | null; url: string };
 type User = {
@@ -373,7 +374,7 @@ export default function Page() {
           <PawPrint className="w-24 h-24" />
         </div>
       </div>
-
+      <HeadBar />
       <button
         onClick={() => router.push("/AI-Chat")}
         className="flex items-center gap-2 text-green-700 font-semibold cursor-pointer bg-gradient-to-r from-green-100 to-emerald-100 hover:from-green-200 hover:to-emerald-200 transition-all justify-center w-full text-center h-12 shadow-sm relative z-10"

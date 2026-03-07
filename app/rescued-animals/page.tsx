@@ -193,7 +193,7 @@ export default function RescuedAnimals() {
               })}
             </div>
 
-            <div className="mt-16 text-center space-y-2">
+            <div className="mt-16 text-center space-y-2 -mb-14">
               <div className="flex justify-center gap-2 text-2xl">
                 <span>🐕</span>
                 <span>🐈</span>

@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Search,
 } from "lucide-react";
+import HeadBar from "../_components/headbar";
 
 type Clinic = {
   id: number;
@@ -226,7 +227,7 @@ const Page = () => {
         <div className="absolute top-4 right-20 text-white/10 text-8xl select-none rotate-12 pointer-events-none">
           🐾
         </div>
-
+        <HeadBar />
         <div className="relative max-w-5xl mx-auto px-6 py-12">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>

@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import AnimalMap from "@/app/components/AnimalMap";
 import HeadBar from "@/app/_components/headbar";
+import { ContactButton } from "@/app/components/ContactButton";
 
 type Animal = {
   id: string;
@@ -48,11 +49,13 @@ type Animal = {
   phoneNumber: string;
   status: string;
   condition: string;
+  userId: string;
   user: {
     firstName: string;
     lastName: string;
     email: string;
     profileImg: string;
+    id: string;
   };
 };
 
@@ -293,6 +296,7 @@ const Page = () => {
     emoji: "❓",
   };
 
+  console.log(animal);
   return (
     <div
       className="min-h-screen"
@@ -383,7 +387,6 @@ const Page = () => {
                       {animal.user.firstName} {animal.user.lastName}
                     </p>
                   </div>
-
                   {animal.phoneNumber && (
                     <div className="bg-green-50 rounded-2xl p-4 border border-green-100">
                       <div className="flex items-center gap-2 mb-2">
@@ -398,15 +401,11 @@ const Page = () => {
                     </div>
                   )}
                 </div>
-                <button
-                  className="py-4  px-3 rounded-2xl font-extrabold text-blue-900 text-base transition-all cursor-pointer
-                shadow-[0_5px_0_#92400e] hover:shadow-[0_7px_0_#92400e] hover:-translate-y-1 active:translate-y-1"
-                  style={{
-                    background: "linear-gradient(135deg,#fbbf24,#f97316)",
-                  }}
-                >
-                  📞 Холбогдох
-                </button>
+                {userId === animal.userId ? (
+                  "+"
+                ) : (
+                  <ContactButton postOwnerId={animal.userId} />
+                )}
               </div>
 
               <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100">

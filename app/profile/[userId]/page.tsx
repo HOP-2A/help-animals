@@ -21,6 +21,7 @@ import { DialogClose } from "@radix-ui/react-dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import FormReqSection from "@/app/components/FormReqSection";
+import ChatSide from "@/app/components/ChatSide";
 
 type User = {
   id: string;
@@ -200,21 +201,17 @@ const Pill = ({
 );
 
 const SectionTitle = ({
-  emoji,
   title,
   count,
   accent,
 }: {
-  emoji: string;
   title: string;
   count: number;
   accent: string;
 }) => (
   <div className={`flex items-center gap-3 mb-5`}>
     <div className={`w-1.5 h-8 rounded-full ${accent}`} />
-    <h2 className="text-xl font-black text-gray-800">
-      {emoji} {title}
-    </h2>
+    <h2 className="text-xl font-black text-gray-800">{title}</h2>
     <span
       className={`ml-1 text-xs font-black px-2.5 py-1 rounded-full text-white ${accent}`}
     >
@@ -539,7 +536,7 @@ const Page = () => {
             <div className="flex gap-3 mt-3">
               {helpAnimals.length > 0 && (
                 <div className="bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-xl text-white text-xs font-bold flex items-center gap-1">
-                  🆘 {helpAnimals.length} тусламж
+                  {helpAnimals.length} тусламж
                 </div>
               )}
               {myAdoptAnimal.length > 0 && (
@@ -551,12 +548,11 @@ const Page = () => {
           </div>
         </div>
       </div>
-
+      <div className="flex absolute right-0">{user && <ChatSide />}</div>
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-10">
         {helpAnimals.length > 0 && (
           <section>
             <SectionTitle
-              emoji="🆘"
               title="Тусламж хэрэгтэй амьтад"
               count={helpAnimals.length}
               accent="bg-rose-400"
@@ -613,7 +609,6 @@ const Page = () => {
         {myAdoptAnimal.length > 0 && (
           <section>
             <SectionTitle
-              emoji="🐾"
               title="Үрчлүүлэх амьтад"
               count={myAdoptAnimal.length}
               accent="bg-amber-400"
