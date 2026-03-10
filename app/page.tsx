@@ -222,7 +222,7 @@ export default function Home() {
                 <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
               </div>
 
-              <div className="absolute -bottom-5 -left-8 bg-white rounded-2xl px-4 py-3 shadow-xl flex items-center gap-2.5 float">
+              <div className="absolute -bottom-5 -left-8 bg-white rounded-2xl px-4 py-3 fshadow-xl flex items-center gap-2.5 float">
                 <span className="text-2xl">❤️</span>
                 <div>
                   <div className="text-xs font-black text-[#431407]">
