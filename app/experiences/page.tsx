@@ -377,7 +377,7 @@ export default function Page() {
       <HeadBar />
       <button
         onClick={() => router.push("/AI-Chat")}
-        className="flex items-center gap-2 text-green-700 font-semibold cursor-pointer bg-gradient-to-r from-green-100 to-emerald-100 hover:from-green-200 hover:to-emerald-200 transition-all justify-center w-full text-center h-12 shadow-sm relative z-10"
+        className="flex items-center gap-2 text-green-700 font-semibold cursor-pointer bg-linear-to-r from-green-100 to-emerald-100 hover:from-green-200 hover:to-emerald-200 transition-all justify-center w-full text-center h-12 shadow-sm relative z-10"
       >
         <Sparkles className="w-5 h-5 text-green-600" />
         🐾 AI Туслагчаас асуух
@@ -513,7 +513,7 @@ export default function Page() {
             </div>
           ) : posts.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 space-y-4 bg-white rounded-3xl border-2 border-dashed border-orange-200 shadow-lg">
-              <div className="bg-gradient-to-br from-orange-100 to-amber-100 p-6 rounded-full">
+              <div className="bg-linear-to-br from-orange-100 to-amber-100 p-6 rounded-full">
                 <PawPrint className="w-20 h-20 text-orange-400" />
               </div>
               <p className="text-gray-600 text-xl font-bold">
@@ -531,7 +531,7 @@ export default function Page() {
               >
                 <div className="flex justify-between items-start p-6 pb-3">
                   <Link
-                    href={`/experiences/${post.id}`}
+                    href={`/profile/${post.user.id}`}
                     className="flex items-center gap-3 group"
                   >
                     <Avatar className="w-12 h-12 ring-2 ring-orange-100 group-hover:ring-orange-300 transition-all">
