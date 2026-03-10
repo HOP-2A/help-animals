@@ -31,7 +31,10 @@ type Props = {
 
 let _socket: Socket | null = null;
 function getSocket(): Socket {
-  if (!_socket) _socket = io("http://localhost:3001", { autoConnect: true });
+  if (!_socket)
+    _socket = io("https://lucky-respect-production-7a7f.up.railway.app/", {
+      autoConnect: true,
+    });
   return _socket;
 }
 

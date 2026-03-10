@@ -112,14 +112,6 @@ export default function ChatPage() {
               Таны тэжээвэр амьтны найз туслагч
             </p>
           </div>
-          <div className="flex gap-2 flex-wrap">
-            <span className="bg-white/20 border-2 border-white/30 rounded-full px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
-              24/7
-            </span>
-            <span className="bg-white/20 border-2 border-white/30 rounded-full px-3 py-1 text-xs font-bold text-white backdrop-blur-sm">
-              AI 🤖
-            </span>
-          </div>
         </div>
       </header>
       <main className="flex-1 overflow-y-auto px-4 py-6 relative z-10 scrollbar-thin scrollbar-thumb-green-300 scrollbar-track-transparent">
@@ -130,7 +122,7 @@ export default function ChatPage() {
                 <div className="text-7xl">🐶</div>
               </div>
               <h2 className="text-3xl font-extrabold text-green-700 mb-3">
-                Сайн байна уу! 👋
+                Сайн байна уу!
               </h2>
               <p className="text-gray-600 text-base font-semibold mb-8 max-w-md mx-auto leading-relaxed">
                 Гэрийн тэжээвэр амьтдын талаар хүссэн бүхнээ асуугаарай!

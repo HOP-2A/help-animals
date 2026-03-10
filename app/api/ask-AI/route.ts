@@ -1,5 +1,4 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -40,8 +39,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ reply: text });
-  } catch (error: any) {
-    console.error(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

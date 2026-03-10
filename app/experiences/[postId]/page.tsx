@@ -40,6 +40,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { upload } from "@vercel/blob/client";
+import Link from "next/link";
 
 type ImageItem = { file: File | null; url: string };
 type User = {
