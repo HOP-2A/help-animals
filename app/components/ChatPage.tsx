@@ -32,8 +32,12 @@ type Props = {
 let _socket: Socket | null = null;
 function getSocket(): Socket {
   if (!_socket)
-    _socket = io("https://lucky-respect-production-7a7f.up.railway.app/", {
+    _socket = io("https://lucky-respect-production-7a7f.up.railway.app", {
       autoConnect: true,
+
+      transports: ["websocket"],
+      upgrade: false,
+      secure: true,
     });
   return _socket;
 }
