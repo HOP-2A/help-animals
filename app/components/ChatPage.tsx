@@ -104,6 +104,9 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
       setConnected(true);
       socket.emit("join_conversation", conversation.id);
     };
+    socket.on("connect", () => {
+      console.log("CONNECTED SOCKET");
+    });
     const onDisconnect = () => setConnected(false);
     const onMessage = (msg: Message) => setMessages((prev) => [...prev, msg]);
     socket.on("connect", onConnect);
@@ -148,6 +151,7 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
       sendMessage();
     }
   };
+
   return (
     <div
       className="flex flex-col h-screen bg-[#fdf8f2]"

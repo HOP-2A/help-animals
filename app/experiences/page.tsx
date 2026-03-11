@@ -91,6 +91,7 @@ export default function Page() {
   const clerkId = clerkUser?.id;
   const { user } = useAuth(clerkId ?? "");
   const USER_ID = user?.id;
+  const { push } = useRouter();
 
   const myAvatar = clerkUser?.imageUrl;
   const myInitial = clerkUser?.firstName?.[0]?.toUpperCase() ?? "?";
@@ -113,6 +114,8 @@ export default function Page() {
   const [submittingComment, setSubmittingComment] = useState(false);
   const [submittingReply, setSubmittingReply] = useState(false);
   const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -352,6 +355,32 @@ export default function Page() {
     }
   };
 
+  console.log(USER_ID);
+
+  const handleContact = async (postOwnerId: string) => {
+    if (!USER_ID) {
+      router.push("/sign-up");
+      return;
+    }
+
+    if (postOwnerId === USER_ID) {
+      push(`/profile/${USER_ID}`);
+      return;
+    } else if (postOwnerId !== USER_ID) {
+      try {
+        const res = await fetch("/api/conversation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ postOwnerId, userId: USER_ID }),
+        });
+
+        const data = await res.json();
+        router.push(`/chat/${data.id}`);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
   return (
     <div className="min-h-screen bg-linear-to-br from-orange-50 via-amber-50 to-yellow-50 text-[#4a3f35] relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none opacity-[0.03]">
@@ -530,8 +559,8 @@ export default function Page() {
                 className="bg-white rounded-[2rem] border-2 border-orange-100 shadow-lg hover:shadow-2xl transition-all overflow-hidden hover:scale-[1.01] duration-300"
               >
                 <div className="flex justify-between items-start p-6 pb-3">
-                  <Link
-                    href={`/profile/${post.user.id}`}
+                  <div
+                    onClick={() => handleContact(post.user.id)}
                     className="flex items-center gap-3 group"
                   >
                     <Avatar className="w-12 h-12 ring-2 ring-orange-100 group-hover:ring-orange-300 transition-all">
@@ -545,7 +574,10 @@ export default function Page() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="font-bold text-gray-800 group-hover:text-orange-600 transition-colors flex items-center gap-1">
+                      <h3
+                        className="font-bold text-gray-800 group-hover:text-orange-600 transition-colors flex items-center gap-1"
+                        onClick={() => handleContact(post.userId)}
+                      >
                         {post.user.firstName} {post.user.lastName}
                         <PawPrint className="w-3 h-3 text-orange-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </h3>
@@ -553,7 +585,7 @@ export default function Page() {
                         {new Date(post.createdAt).toLocaleString()}
                       </p>
                     </div>
-                  </Link>
+                  </div>
                   {USER_ID && USER_ID === post.userId && (
                     <DropdownMenu>
                       <DropdownMenuTrigger className="p-2 hover:bg-orange-50 rounded-full transition-colors">
