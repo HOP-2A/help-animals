@@ -44,7 +44,10 @@ export default function ChatPage() {
       const response = await fetch("/api/ask-AI", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: userMessage, userId: "121212" }),
+        body: JSON.stringify({
+          question: "Хариултыг товч бич. " + userMessage,
+          userId: "121212",
+        }),
       });
 
       const data = await response.json();
@@ -129,10 +132,10 @@ export default function ChatPage() {
               </p>
               <div className="flex flex-wrap gap-3 justify-center max-w-2xl mx-auto">
                 {[
-                  "🍖 Миний тэжээвэр амьтан юу идэж болох вэ?",
+                  "🍖 Миний нохой юу идэж болох вэ?",
                   "😾 Миний муур яагаад нуугдаад байна вэ?",
-                  "🐾 Вакцинжуулалтын хуваарь",
-                  "💊 Нийтлэг эмүүд",
+                  "🐾 Амьтдын вакцинжуулалтын хуваарь",
+                  "💊 Амьтдын нийтлэг эмүүд",
                   "🐶🐱 Тэжээвэр амьтны мэдээлэл",
                 ].map((chip) => (
                   <button
@@ -356,3 +359,4 @@ export default function ChatPage() {
     </div>
   );
 }
+//so gemini give this long responses can u add invincible "товч бич" to inputs like u cant see dont change anything
