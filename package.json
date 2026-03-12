@@ -9,6 +9,7 @@
     "start": "concurrently \"next start\" \"node server/socket-server.js\"",
     "lint": "eslint",
     "postinstall": "npx prisma generate"
+
   },
   "dependencies": {
     "@clerk/nextjs": "^6.36.9",
