@@ -380,7 +380,7 @@ export default function Page() {
         className="flex items-center gap-2 text-green-700 font-semibold cursor-pointer bg-linear-to-r from-green-100 to-emerald-100 hover:from-green-200 hover:to-emerald-200 transition-all justify-center w-full text-center h-12 shadow-sm relative z-10"
       >
         <Sparkles className="w-5 h-5 text-green-600" />
-        🐾 AI Туслагчаас асуух
+        AI Туслагчаас асуух
       </button>
 
       <div className="max-w-2xl mx-auto p-4 py-8 relative z-10">
@@ -392,7 +392,7 @@ export default function Page() {
             </div>
             <div>
               <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
-                🐾 Туршлага Солилцох Булан
+                Туршлага Солилцох Булан
               </h1>
               <p className="text-white/90 text-sm mt-1 font-medium">
                 Амьтдын тухай өөрийн туршлагаа хуваалцаарай
@@ -446,7 +446,7 @@ export default function Page() {
             <div className="bg-linear-to-br from-orange-50 to-amber-50 rounded-2xl p-4 space-y-3 border-2 border-orange-100">
               <label className="flex items-center gap-2 font-semibold text-orange-700 cursor-pointer hover:text-orange-800 transition-colors">
                 <ImageIcon className="w-5 h-5" />
-                📷 Зураг нэмэх
+                Зураг нэмэх
                 <input
                   type="file"
                   hidden
