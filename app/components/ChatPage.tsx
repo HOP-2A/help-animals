@@ -31,14 +31,7 @@ type Props = {
 
 let _socket: Socket | null = null;
 function getSocket(): Socket {
-  if (!_socket)
-    _socket = io("https://lucky-respect-production-7a7f.up.railway.app", {
-      autoConnect: true,
-
-      transports: ["websocket"],
-      upgrade: false,
-      secure: true,
-    });
+  if (!_socket) _socket = io("http://localhost:3001", { autoConnect: true });
   return _socket;
 }
 
@@ -79,12 +72,6 @@ function Avatar({
   );
 }
 
-function formatTime(date: string | Date): string {
-  return new Date(date).toLocaleTimeString("mn-MN", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 export default function ChatPage({ conversation, currentUserId }: Props) {
   const [messages, setMessages] = useState<Message[]>(conversation.messages);
   const [input, setInput] = useState("");
@@ -104,6 +91,7 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
       setConnected(true);
       socket.emit("join_conversation", conversation.id);
     };
+
     const onDisconnect = () => setConnected(false);
     const onMessage = (msg: Message) => setMessages((prev) => [...prev, msg]);
     socket.on("connect", onConnect);
@@ -148,6 +136,7 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
       sendMessage();
     }
   };
+
   return (
     <div
       className="flex flex-col h-screen bg-[#fdf8f2]"

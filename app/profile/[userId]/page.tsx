@@ -548,7 +548,9 @@ const Page = () => {
           </div>
         </div>
       </div>
-      <div className="flex absolute right-0">{user && <ChatSide />}</div>
+      <div className="hidden md:flex absolute right-0">
+        {user && <ChatSide />}
+      </div>
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-10">
         {helpAnimals.length > 0 && (
           <section>

@@ -281,7 +281,7 @@ const Page = () => {
         </div>
         <img
           src={"/happy-cat.gif"}
-          className="hidden md:block w-50 h-50 absolute top-26 right-5"
+          className="hidden md:block w-50 h-50 absolute top-41 right-5"
         ></img>
       </div>
 

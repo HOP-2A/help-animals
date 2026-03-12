@@ -117,7 +117,8 @@ const Page = () => {
   const userId = user?.id;
   const params = useParams();
   const anketId = params.anketId;
-
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const [form, setForm] = useState<Form>();
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
@@ -180,6 +181,29 @@ const Page = () => {
         </div>
       </div>
     );
+
+  const handleContact = async (postOwnerId: string) => {
+    if (!userId) {
+      router.push("/sign-up");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/conversation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postOwnerId, userId }),
+      });
+
+      const data = await res.json();
+      router.push(`/chat/${data.id}`);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const currentStatus = STATUS_CONFIG[form.status] ?? STATUS_CONFIG["PENDING"];
 
@@ -490,9 +514,10 @@ const Page = () => {
             </div>
             <div className="flex justify-center">
               <button
-                onClick={() => push(`/profile/${form.pet.userId}`)}
+                // onClick={() => push(`/profile/${form.pet.userId}`)}
+                onClick={() => handleContact(form.pet.userId)}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-black text-white text-sm
-    bg-gradient-to-r from-sky-400 to-blue-500
+   bg-linear-to-r from-sky-400 to-blue-500
     hover:from-sky-500 hover:to-blue-600
     active:scale-95 transition-all duration-150
     shadow-lg ring-4 ring-sky-100"
