@@ -9,6 +9,9 @@ export async function GET(req: Request) {
         reactions: true,
         comments: true,
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
 
     if (!allExperience || allExperience.length === 0) {
