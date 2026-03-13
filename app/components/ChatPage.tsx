@@ -76,7 +76,6 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
   const [messages, setMessages] = useState<Message[]>(conversation.messages);
   const [input, setInput] = useState("");
   const [connected, setConnected] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const otherUser = conversation.users.find((u) => u.id !== currentUserId);
 
   const scrollToBottom = useCallback(() => {
@@ -108,13 +107,6 @@ export default function ChatPage({ conversation, currentUserId }: Props) {
   useEffect(() => {
     const socket = getSocket();
     socket.emit("register_user", currentUserId);
-    const handleUpdate = (users: string[]) => {
-      setOnlineUsers(users);
-    };
-    socket.on("online_users", handleUpdate);
-    return () => {
-      socket.off("online_users", handleUpdate);
-    };
   }, [currentUserId]);
   useEffect(() => {
     scrollToBottom();
