@@ -12,13 +12,9 @@ const io = new Server(httpServer, {
 });
 
 const PORT = process.env.PORT || 3001;
-
 io.on("connection", (socket) => {
   console.log("connected", socket.id);
-  socket.on("register_user", (userId) => {
-    onlineUsers[userId] = true;
-    io.emit("online_users", onlineUsers);
-  });
+
   socket.on("join_conversation", (conversationId) => {
     socket.join(conversationId);
   });
@@ -43,5 +39,5 @@ io.on("connection", (socket) => {
 });
 
 httpServer.listen(PORT, () => {
-  console.log("Server running on", PORT);
+  console.log("Server running");
 });
